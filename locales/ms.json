@@ -22,6 +22,13 @@
   "name-length-30": "Nama mestilah kurang daripada 30 aksara",
   "email": "E-mel (Pilihan)",
   "email-valid": "E-mel mesti adalah e-mel yang sah",
+  "city": "Bandar",
+  "city-required": "Bandar diperlukan!",
+  "state": "Negeri",
+  "state-required": "Negeri diperlukan!",
+  "country": "Negara",
+  "country-required": "Negera diperlukan!",
+
   "note-length-1000": "Catatan mesti kurang daripada 1000 aksara",
   "comfirm": "SAHKAN",
   "comfirm-personal-details": "SAHKAN BUTIRAN ANDA",
@@ -29,10 +36,16 @@
   "delivery-detail": "Butiran Penghantaran",
   "DELIVERY": "PENGHANTARAN",
   "SELF-COLLECT": "SENDIRI MENGUMPUL",
+
   "delivery-date": "Tarikh penghantaran",
-  "delivery-date-required": "Tarikh Penghantaran diperlukan!",
+  "delivery-date-required": "Tarikh diperlukan!",
   "delivery-time": "Masa penghantaran",
-  "delivery-time-required": "Masa Penghantaran diperlukan!",
+  "delivery-time-required": "Masa diperlukan!",
+
+  "self-collect-date": "Tarikh mengumpul",
+  "self-collect-date-required": "Tarikh mengumpul diperlukan!",
+  "self-collect-time": "Masa mengumpul",
+  "self-collect-time-required": "Masa mengumpul diperlukan!",
 
   "EDIT": "EDIT",
   "comfirm-delivery-details": "SAHKAN BUTIRAN PENGHANTARAN ANDA",
@@ -46,7 +59,14 @@
   "payment-bank-transfer": "BANK TRANSFER",
   "payment-cod": "CASH ON DELIVERY",
   "payment-fpay": "FPAY ONLINE BANKING",
+  "payment-ipay": "ipay88 Payment Gateway",
+
+  "payment-manual-tng": "Touch N Go EWALLET",
+  "payment-manual-boost": "Boost EWALLET",
+  "payment-manual-duit-now": "Duit Now QR",
+  "payment-manual-sarawak-pay": "Sarawak Pay QR",
   "manual-bank-transfer": "Manual Bank Transfer",
+  
   "send-receipt-whatsapp": "hantarkan resit kepada kami melalui whatsapp",
   "payment-cod-description": "Bayar selepas penghantaran",
 
@@ -74,6 +94,7 @@
   "add-to-cart": "MASUK CART",
   "dont-close-browser":"Jangan Tutup Browser..",
   "about-item":"Pengenalan Produk",
+  "share-item":"Kongsi produk ini:",
   "product-price":"Harga",
   "product-option":"Pilihan",
   "product-option-required":"Diperlukan",
@@ -81,6 +102,36 @@
   "product-option-select-one":"Pilih 1",
   "product-option-select-multiple":"Pilih sehingga",
   "product-option-select-multiple-quantifier":"(pilihan)",
-  "store-closed":"Ditutup"
+  "product-option-at-least-error":"Pilih sekurang-kurangnya ",
+  "product-option-at-least-error-last-word":"",
+  "store-closed":"Ditutup",
+  "store-closed-now":"Kedai tutup",
+  "min-purchase":"Pembelian minimum",
+
+  "clear-cart":"kosong kart",
+
+  "your-order":"Pesanan anda",
+  "has-been-placed":" Berjaya dihantar!",
+  "successfully-placed":"Pesanan anda telah berjaya dihantar!",
+  "direct-question":"Sila kemukakan sebarang pertanyaan yang anda ada kepada ",
+  "store-owner":"pemilik kedai",
+  "thanks-shopping":"Terima kasih kerana membeli-belah dengan kami dalam talian!",
+  "scan-qr":"Imbas Kod QR atau Tangkapan Skrin untuk membuat pembayaran",
+  "online-transfer-below":"Online bankin ke Bank Di bawah",
+  "bank-details":"Our bank",
+  "confirm-payment":"Pastikan anda telah membuat pembayaran sebelum meneruskan.",
+  "address-invalid":"Alamat tidak sah. Isi alamat penuh",
+  "address-error":"Kira Caj Penghantaran Gagal. Sila cuba lagi",
+  "full-address":"Isi alamat penuh",
+  "half-address":"Isi alamat",
+  "upload-receipt":"Upload resit",
+  "success-upload":"Successfully uploaded. Anda akan dialihkan ke whatsapp sekarang",
+  "product-variant":"Select Variasi",
+  "most-order":"Paling laris.",
+  "note-required":"Nota diperlukan",
+  "all":"All",
+  "category":"Kategori",
+  "uncategorised":"Uncategorised"
+
   
 }

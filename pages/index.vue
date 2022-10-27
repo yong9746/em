@@ -1,13 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-        <v-btn
-            color="primary"
-            nuxt
-            to="/snackking"
-          >
-            Continue
-          </v-btn>
-          <v-text-field ></v-text-field>
+      
   </v-row>
 </template>
 

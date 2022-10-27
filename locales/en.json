@@ -11,7 +11,7 @@
     "coupon-discount": "Coupon Discount:",
     "total": "TOTAL:",
     "continue": "CONTINUE",
-    "confirm": "COMFIRM",
+    "confirm": "CONFIRM",
     "back": "BACK",
 
     "personal-detail": "Personal Details",
@@ -22,30 +22,50 @@
     "name-length-30": "Name must be less than 30 characters",
     "email": "Email(Optional)",
     "email-valid": "E-mail must be valid",
+    "city": "City",
+    "city-required": "City is required!",
+    "state": "State",
+    "state-required": "State is required!",
+    "country": "Country",
+    "country-required": "Country is required!",
+    
     "note-length-1000": "Note must be less than 1000 characters",
-    "comfirm": "COMFIRM",
-    "comfirm-personal-details": "COMFIRM YOUR DETAILS",
+    "comfirm": "CONFIRM",
+    "comfirm-personal-details": "CONFIRM YOUR DETAILS",
 
     "delivery-detail": "Delivery Details",
     "DELIVERY": "DELIVERY",
     "SELF-COLLECT": "SELF COLLECT",
+
     "delivery-date": "Delivery Date",
-    "delivery-date-required": "Delivery Date required!",
+    "delivery-date-required": " Date required!",
     "delivery-time": "Delivery Time",
-    "delivery-time-required": "Delivery Time required!",
+    "delivery-time-required": " Time required!",
+
+    "self-collect-date": "Collect Date",
+    "self-collect-date-required": "Collect Date required!",
+    "self-collect-time": "Collect Time",
+    "self-collect-time-required": "Collect Time required!",
+
 
     "EDIT": "EDIT",
-    "comfirm-delivery-details": "COMFIRM YOUR DELIVERY DETAILS",
+    "comfirm-delivery-details": "CONFIRM YOUR DELIVERY DETAILS",
     "address": "address",
     "address-required": "Address is required!",
     "postcode": "postcode",
     "postcode-required": "Postcode is required!",
 
     "payment-detail": "Payment Method",
-    "comfirm-payment-details": "COMFIRM YOUR PAYMENT DETAILS",
+    "comfirm-payment-details": "CONFIRM YOUR PAYMENT DETAILS",
     "payment-bank-transfer": "BANK TRANSER",
     "payment-cod": "CASH ON DELIVERY",
     "payment-fpay": "FPAY ONLINE BANKING",
+    "payment-ipay": "iPay88 Payment Gateway",
+    "payment-manual-tng": "Touch N Go EWALLET",
+    "payment-manual-boost": "Boost EWALLET",
+    "payment-manual-duit-now": "Duit Now QR",
+    "payment-manual-sarawak-pay": "Sarawak Pay QR",
+
     "manual-bank-transfer": "Manual Bank Transfer",
     "send-receipt-whatsapp": "send receipt to us via whatsapp",
     "payment-cod-description": "Pay after delivery",
@@ -74,6 +94,7 @@
     "add-to-cart": "ADD TO CART",
     "dont-close-browser":"Please Do Not Close Browser",
     "about-item":"About this item",
+    "share-item":"Share this item:",
     "product-price":"price",
     "product-option":"Option",
     "product-option-required":"Required",
@@ -81,7 +102,45 @@
     "product-option-select-one":"Select 1",
     "product-option-select-multiple":"Select up to ",
     "product-option-select-multiple-quantifier":"",
-    "store-closed":"Closed"
+    "product-option-at-least-error":"Select at least ",
+    "product-option-at-least-error-last-word":"",
+    "store-closed":"Closed",
+    "store-closed-now":"Store closed",
+    "min-purchase":"Minimum purchase",
+
+    "clear-cart":"clear cart",
+
+    "your-order":"Your order",
+    "has-been-placed":" Has Been Placed!",
+    "successfully-placed":"Your order has been successfully placed!",
+    "direct-question":"Please direct any questions you have to the ",
+    "store-owner":"store owner",
+    "thanks-shopping":"Thanks for shopping with us online!",
+    "scan-qr":"Scan QR Code or Screenshot to make payment",
+    "online-transfer-below":"Online transfer To Bank Below ",
+    "bank-details":"Bank details",
+    "confirm-payment":"Please ensure you have made the payment before proceeding.",
+    "address-invalid":"Address invalid. Type full address",
+    "address-error":"Calculate Shipping Fee Failed. Please Try again",
+    "full-address":"Fill in Full Address",
+    "half-address":"Fill in Address",
+    "upload-receipt":"Upload receipt",
+    "success-upload":"Successfully uploaded. You will be redirect to whatsapp now",
+    "product-variant":"Select Variation",
+    "most-order":"Most ordered right now.",
+    "note-required":"Note is required.",
+    "all":"All",
+    "category":"Category",
+    "uncategorised":"Uncategorised"
+
+
+    
+   
+    
+    
+
+    
+    
     
     
     

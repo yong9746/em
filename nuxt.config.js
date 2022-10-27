@@ -4,12 +4,12 @@
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: true,
+  ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     // titleTemplate: '%s - emenu',
-    title: 'emenu',
+    title: 'WhatsApp Commerce',
     htmlAttrs: {
       lang: 'en'
     },
@@ -38,7 +38,8 @@ export default {
     '~plugins/vuescrollactive.js',
     "~/plugins/i18n.js",
     "~/plugins/geocoder.client.js",
-    // "~/plugins/transition.js",
+    // "~/plugins/vue2-google-maps.js",
+    // "~/plugins/transition.js", 
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -85,8 +86,9 @@ export default {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
     // Set the baseURL to JSONPlaceholder API
-    baseURL: 'https://formtest.lkmng.com/'
-    // baseURL: 'https://cp.emenu.com.my/'
+    // baseURL: 'https://cp.akcredits.com/'
+    // baseURL: 'https://formtest.lkmng.com/'
+    baseURL: 'https://cp.emenu.com.my/'
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -126,3 +128,4 @@ export default {
   }
   
 }
+

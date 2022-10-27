@@ -9,17 +9,39 @@ export const state = () => ({
 
 export const getters = { // = computed properties
     
- 
-    product_used_stock: (state) => (id) => {
-        var stock=0;
-        for(let i =0; i<state.cart.length; i++){
-            if(state.cart[i].product_id==id){
-                stock=stock+state.cart[i].quantity
-            }
-        }
+    product_used_stock: (state) => (id,type,selected_variant_id) => {
 
-        return stock
-      }
+
+        var stock=0;
+        if(type=='0'){
+            for(let i =0; i<state.cart.length; i++){
+                if(state.cart[i].product_id==id){
+                    stock=stock+state.cart[i].quantity
+                }
+            }
+    
+            return stock
+        }else{
+            for(let i =0; i<state.cart.length; i++){
+                if(state.cart[i].product_id==id){
+                    for(let g =0; g<state.cart[i].variant.length; g++){
+                        if(selected_variant_id==state.cart[i].variant[g].id){
+                            if(state.cart[i].variant[g].selected==true){
+                            stock=stock+state.cart[i].quantity
+                                
+                            }
+
+                        }
+                    }
+                    
+                }
+            }
+    
+            return stock
+        }
+        
+      },
+     
 
   }
 
@@ -106,10 +128,11 @@ export const mutations = {
         }
         if(cart_data.stock!==''){
 
-        if(stock_used<cart_data.stock){
-            state.cart[cart_data.index].quantity=state.cart[cart_data.index].quantity+1;
-            localStorage.cart=JSON.stringify(state.cart);
-        }
+            if(stock_used<cart_data.stock){
+                state.cart[cart_data.index].quantity=state.cart[cart_data.index].quantity+1;
+                localStorage.cart=JSON.stringify(state.cart);
+            }
+            
         }else{
             state.cart[cart_data.index].quantity=state.cart[cart_data.index].quantity+1;
             localStorage.cart=JSON.stringify(state.cart);

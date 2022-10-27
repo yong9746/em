@@ -22,6 +22,13 @@
   "name-length-30": "名字必须少于30个字",
   "email": "电子邮件（可选）",
   "email-valid": "须填入有效的电子邮件",
+  "city": "城市",
+  "city-required": "城市必填!",
+  "state": "州",
+  "state-required": "必选一个州!",
+  "country": "国家",
+  "country-required": "必选一个国家!",
+
   "note-length-1000": "注释必须少于1000个字",
   "comfirm": "确认",
   "comfirm-personal-details": "确认您的个人资料",
@@ -29,10 +36,16 @@
   "delivery-detail": "送货详情",
   "DELIVERY": "运送",
   "SELF-COLLECT": "自取",
+
   "delivery-date": "运送日期",
-  "delivery-date-required": "运送日期必填!",
+  "delivery-date-required": "日期必填!",
   "delivery-time": "运送时间",
-  "delivery-time-required": "运送时间必填!",
+  "delivery-time-required": "时间必填!",
+
+  "self-collect-date": "自取日期",
+  "self-collect-date-required": "自取日期必填",
+  "self-collect-time": "自取时间",
+  "self-collect-time-required": "自取时间必填!",
 
   "EDIT": "编辑",
   "comfirm-delivery-details": "确认您的送货详情",
@@ -46,6 +59,13 @@
   "payment-bank-transfer": "银行转帐",
   "payment-cod": "货到付款",
   "payment-fpay": "Fpay 线上转账",
+  "payment-ipay": "ipay88 线上转账",
+
+  "payment-manual-tng": "TNG 二维码转账",
+  "payment-manual-boost": "Boost 二维码转账",
+  "payment-manual-duit-now": "Duit Now 二维码转账",
+  "payment-manual-sarawak-pay": "Sarawak Pay 二维码转账",
+
   "manual-bank-transfer": "银行转账",
   "send-receipt-whatsapp": "通过whatsapp发送单据",
   "payment-cod-description": "收到货才付款",
@@ -75,6 +95,7 @@
   "dont-close-browser":"请勿关闭游览器",
 
   "about-item":"产品介绍",
+  "share-item":"分享此产品:",
   "product-price":"价钱",
   "product-option":"更多选项",
   "product-option-required":"必选",
@@ -82,5 +103,35 @@
   "product-option-select-one":"选择1个",
   "product-option-select-multiple":"可选择多达",
   "product-option-select-multiple-quantifier":"个",
-  "store-closed":"暂不营业"
+  "product-option-at-least-error":"最少选择",
+  "product-option-at-least-error-last-word":"个",
+  "store-closed":"暂不营业",
+  "store-closed-now":"本店暂不营业",
+  "min-purchase":"最低消费",
+
+  "clear-cart":"清空购物车",
+
+  "your-order":"您的订单",
+  "has-been-placed":" 已成功下达!",
+  "successfully-placed":"您已成功下单！!",
+  "direct-question":"如有任何问题可以直接询问",
+  "store-owner":"店主",
+  "thanks-shopping":"感谢您在线上和我们购买产品!",
+  "scan-qr":"扫描 QR 代码或屏幕截图以付款",
+  "online-transfer-below":"自行网上转账至下方银行 ",
+  "bank-details":"银行信息",
+  "confirm-payment":"在继续之前，请确保您已付款",
+  "address-invalid":"地址无效。 请输入完整地址",
+  "address-error":"计算运费失败， 请再试一次",
+  "full-address":"请打上完整的地址",
+  "half-address":"请打上地址",
+  "upload-receipt":"上传单据",
+  "success-upload":"上传成功。您将会转至whatsapp",
+  "product-variant":"选项",
+  "most-order":"畅销产品.",
+  "note-required":"备注必填",
+  "all":"全部",
+  "category":"类别",
+  "uncategorised":"未分类"
+
 }
