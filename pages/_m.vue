@@ -22,11 +22,11 @@
           <div class="page-container">
             
             <section
-              class="vendor-section"
+              class="vendor-section ooo"
               id="category-all"
               :style="'background:' + theme_color"
             >
-            <div></div>
+           
 
           <div v-if="news_ticker!=='' && check_json(news_ticker)" >
               <div v-if="JSON.parse(news_ticker).display==true">
