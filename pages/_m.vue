@@ -11,7 +11,7 @@
        <v-overlay :value="ipay_overlay" z-index="9999">
         <v-progress-circular
           indeterminate
-          size="65"
+          size="66"
         ></v-progress-circular>
           </v-overlay>
          
