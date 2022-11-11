@@ -19,7 +19,7 @@
     <div class="page-wrapper">
       <div class="content-wrapper menu-bg">
         <main>
-          <div class="page-container bbb">
+          <div class="page-container zzz">
             
             <section
               class="vendor-section ooo"
