@@ -12,7 +12,7 @@
     <v-overlay :value="ipay_overlay" z-index="999999">
         <v-progress-circular
           indeterminate
-          size="64"
+          size="62"
         ></v-progress-circular>
           </v-overlay>
          
@@ -26,6 +26,8 @@
               id="category-all"
               :style="'background:' + theme_color"
             >
+            <div></div>
+
           <div v-if="news_ticker!=='' && check_json(news_ticker)" >
               <div v-if="JSON.parse(news_ticker).display==true">
                 <div class="d-flex ">
