@@ -8,7 +8,7 @@
     />
     <meta name="google" content="notranslate">
     <meta name="theme-color" :content="theme_color" />
-       <v-overlay :value="ipay_overlay" z-index="99999w9">
+       <v-overlay :value="ipay_overlay" z-index="999999">
         <v-progress-circular
           indeterminate
           size="64"
