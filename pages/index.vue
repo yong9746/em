@@ -1,7 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-      <testing>testing123</testing>
-      <h1>1112</h1>
+      <h1>Testing!!</h1>
   </v-row>
 </template>
 
