@@ -18,10 +18,10 @@
     <div class="page-wrapper">
       <div class="content-wrapper menu-bg">
         <main>
-          <div class="page-container hhhhh">
+          <div class="page-container ">
             
             <section
-              class="vendor-section"
+              class="vendor-section vebveb"
               id="category-all"
               :style="'background:' + theme_color"
             >
