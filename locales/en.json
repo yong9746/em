@@ -39,6 +39,7 @@
 
     "delivery-date": "Delivery Date",
     "delivery-date-required": " Date required!",
+
     "delivery-time": "Delivery Time",
     "delivery-time-required": " Time required!",
 
@@ -131,7 +132,8 @@
     "note-required":"Note is required.",
     "all":"All",
     "category":"Category",
-    "uncategorised":"Uncategorised"
+    "uncategorised":"Uncategorised",
+    "sold":"sold"
 
 
     

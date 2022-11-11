@@ -230,7 +230,7 @@ export default {
                   
             }
             this.$nextTick(() => {
-                              // this.vari_array[index].quantity=1;
+                              this.vari_array[index].quantity=1;
                               this.$emit("calc", "calc");
                 
             })

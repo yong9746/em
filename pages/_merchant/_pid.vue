@@ -203,6 +203,10 @@
                 <h5 style="color:#0062c4;font-weight:500;font-size:12px;"><b style="color:#495057;font-weight:700;font-size:12px;">{{$t('category')}}:</b>
                  {{product_category_id!==0?product_category_name:$t('uncategorised')}} </h5>
 
+                <h5 v-if="product_sold_quantity!==''" style="color:#0062c4;font-weight:500;font-size:12px;">
+                  <b style="color:#495057;font-weight:700;font-size:12px;">{{$t('sold')}}:</b>
+                 {{product_sold_quantity}} </h5>
+
                     <hr
                   role="separator"
                   aria-orientation="horizontal"
@@ -608,6 +612,7 @@ export default {
         s_color:s_color,
         add_to_cart_loading:false,
         selected_variant_id:'',
+        product_sold_quantity :productResponse.read[0].sold_quantity
       };
     } else {
       window.location.href = "https://emenu.com.my/"+`${params.merchant}`+(this.$route.query.ref?'?ref='+this.$route.query.ref:''); 
