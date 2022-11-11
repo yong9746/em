@@ -8,8 +8,12 @@
     />
     <meta name="google" content="notranslate">
     <meta name="theme-color" :content="theme_color" />
-
-   
+       <v-overlay :value="ipay_overlay" z-index="99999w9">
+        <v-progress-circular
+          indeterminate
+          size="64"
+        ></v-progress-circular>
+          </v-overlay> 
          
     <div class="page-wrapper">
       <div class="content-wrapper menu-bg">
@@ -17,12 +21,10 @@
           <div class="page-container">
             
             <section
-              class="vendor-section ooo"
+              class="vendor-section"
               id="category-all"
               :style="'background:' + theme_color"
             >
-           
-
           <div v-if="news_ticker!=='' && check_json(news_ticker)" >
               <div v-if="JSON.parse(news_ticker).display==true">
                 <div class="d-flex ">
@@ -399,16 +401,7 @@
                                           <span v-html="product.description"> </span>
                                           </p>
                                         </div>
-                                          <!-- :style="{
-                                            
-                                              '(max-width: 767px) {height': product_mobile_image_size!==''?product_mobile_image_size+'px}':'}',
-                                              '(max-width: 767px) {width':product_mobile_image_size!==''?product_mobile_image_size+'px}':'}',
-                                            }" -->
-                                        <picture  
-                                         :style="inner_width>767? 'height:'+product_pc_image_size+'px; width:'+product_pc_image_size+'px;':'height:'+product_mobile_image_size+'px; width:'+product_mobile_image_size+'px;'"
-                                       
-                                            >
-                                          
+                                        <picture>
                                           <div
 
                                             :style="{
@@ -417,7 +410,7 @@
                                                 domain +
                                                 '/product/image.php?m='+merchant_id+'&type=product_list&im=' +
                                                (product.image).replace(/\s+/g, '%20') +
-                                                ')', 'witdh':'198px!important;'
+                                                ')', 'witdh':'98px!important;'
                                             }"
                                             class="photo u-photo b-lazy b-loaded "
                                           >
@@ -460,9 +453,6 @@
                                         ></div> -->
                                         </picture>
                                       </div>
-                                             <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
-                                             style="font-size:12px; ">
-                                            {{product.sold_quantity }} {{ $t('sold')}}</div>
                                       <section class="action-bar">
                                         <div class="action-bar-content">
                                           <div class="price-tags-container">
@@ -481,14 +471,12 @@
                                                   product.display_price
                                               }}</span>
 
-                                          
+                                            <div class="tags-container"></div>
                                           </div>
                                         </div>
                                         <!-- <button class="button" @click="product_onlick(product.product_id)"><v-icon>mdi-plus</v-icon></button> -->
                                         <!-- <v-btn tile x-small :color="p_color" :dark="p_dark" width="24px" height="24px" min-width="24px">+</v-btn> -->
                                       </section>
-
-                                 
                                     </span>
 
                                   </li>
@@ -592,11 +580,7 @@
                                             {{ product.description }}
                                           </p>
                                         </div>
-                                        <picture  :class="[
-                                              grid
-                                                ? 'dish-name fn p-name dish-name-grid-overwrite'
-                                                : 'dish-name fn p-name',
-                                            ]">
+                                        <picture>
                                           <div
                                             :style="{
                                               'background-image':
@@ -621,7 +605,19 @@
                                           
                                           </div>
                                            
-                                         
+                                          <!-- <div
+                                          :style="{
+                                            'background-image':
+                                              'url(' +
+                                              domain +
+                                              'image/image.php?f=' +
+                                              company_folder +
+                                              '&im=' +
+                                              product.inv_image +
+                                              ')',
+                                          }"
+                                          class="photo u-photo b-lazy b-loaded"
+                                        ></div> -->
                                         </picture>
                                       </div>
                                       <section class="action-bar">
@@ -1585,7 +1581,7 @@
                         required
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="6"  v-if="shipping_setting_status=='3' && !request_self_collect && country=='MY'">
+                    <v-col cols="6">
                       <v-text-field
                       v-if="shipping_setting_status=='3' && !request_self_collect && country=='MY'"
                       v-model="city"
@@ -1596,15 +1592,15 @@
                    
                      
                     </v-col>
-                    <v-col cols="12"   v-if="shipping_setting_status=='3' && !request_self_collect && country=='MY'">
+                    <v-col cols="12">
                       <div class="state-select">
                             <v-select v-model="state" outlined :label="$t('state')" :rules="stateRules" 
                           v-if="shipping_setting_status=='3' && !request_self_collect && country=='MY'" :items="state_list" item-text="text" item-value="value">
                         </v-select>
                         </div>
                     </v-col>
-                    <v-col cols="12" v-if="shipping_setting_status=='3' && !request_self_collect" >
-                  <div class="state-select" >
+                    <v-col cols="12">
+                  <div class="state-select">
                         <v-select v-model="country" outlined :label="$t('country')" :rules="countryRules" 
                       v-if="shipping_setting_status=='3' && !request_self_collect" :items="country_list" item-text="text" item-value="value">
                     </v-select>
@@ -1612,8 +1608,8 @@
 
                     </v-col>
                   </v-row>
-                  <v-row dense>
-                    <v-col v-if="delivery_date_option" :cols="delivery_time_option && delivery_date_option?6:12" >
+                  <v-row>
+                    <v-col :cols="delivery_time_option && delivery_date_option?6:12" v-if="delivery_date_option">
                       <v-menu
                         ref="menu1"
                         v-model="menu1"
@@ -1647,7 +1643,7 @@
                       </v-menu>
                     </v-col>
 
-                    <v-col v-if="delivery_time_option && delivery_time_type=='0'" :cols="delivery_time_option && delivery_date_option?6:12" >
+                    <v-col :cols="delivery_time_option && delivery_date_option?6:12" v-if="delivery_time_option">
                       <v-menu
                         ref="menu2"
                         v-model="menu2"
@@ -1686,19 +1682,7 @@
                         ></v-time-picker>
                       </v-menu>
                     </v-col>
-                    <v-col cols="12" v-if="delivery_time_type=='1'">
-                      <v-select
-                        outlined
-                        :rules="timeselectionRules"
-                        v-model="selected_delivery_time_selection"
-                        :items="delivery_time_selection"
-                        label="Delivery Time"
-                      ></v-select>
-
-                     </v-col>
                   </v-row>
-
-                
                   
                   <v-row>
                     <v-col cols="12">
@@ -2632,9 +2616,7 @@ export default {
       stateRules: [
         (v) => !!v || this.$t("state-required")
       ],
-      timeselectionRules: [
-        (v) => !!v || this.$t("delivery-time-required")
-      ],
+      
       state_list: [{
             text: 'Johor',
             value: 'Johor'
@@ -2830,7 +2812,6 @@ export default {
       global_type:-1,
       global_status:-1,
 
-      selected_delivery_time_selection:'',
 
     };
   },
@@ -2842,7 +2823,6 @@ export default {
     formData.append("url", `${params.m}`);
     formData.append("read", "date");
     let formResponse = await $axios.$post("form/index.php", formData);
-    // console.log(formResponse);
     if (formResponse.status !== "1") {
       window.location.href = "https://web.emenu.com.my"; 
       return;
@@ -2925,10 +2905,6 @@ export default {
       if(formResponse.form_function[0].working_time){
       var working_time=JSON.parse(formResponse.form_function[0].working_time);
       }
-
-      if(formResponse.form_function[0].delivery_time_selection!==''){
-      var delivery_time_selection=JSON.parse(formResponse.form_function[0].delivery_time_selection);
-      }
       return {
         merchant_url: `${params.m}`,
         merchant_id: formResponse.form_function[0].merchant_id,
@@ -2960,11 +2936,7 @@ export default {
           formResponse.form_function[0].self_collect == "0" ? true : false,
           self_collect_display_text:formResponse.form_function[0].self_collect_display_text,
         delivery_date_option:formResponse.form_function[0].delivery_date_option == "0"? true: false,
-        delivery_time_option:formResponse.form_function[0].delivery_time_option== "0"? true: false,
-
-        delivery_time_type:formResponse.form_function[0].delivery_time_type,
-        delivery_time_selection:delivery_time_selection,
-
+        delivery_time_option:formResponse.form_function[0].delivery_time_option == "0"? true: false,
         email_option:formResponse.form_function[0].email_option == "0" ? true : false,
         form_description: formResponse.form_function[0].description,
         bank_transfer:formResponse.form_function[0].bank_transfer == "0" ? true : false,
@@ -3010,9 +2982,8 @@ export default {
         facebook_page_link: formResponse.form_function[0].facebook_page_link,
         instagram_link: formResponse.form_function[0].instagram_link,
         phone_number: formResponse.form_function[0].phone_number,
-        product_pc_image_size: formResponse.form_function[0].product_pc_image_size,
-        product_mobile_image_size: formResponse.form_function[0].product_mobile_image_size,
-        
+
+
       };
     } else {
       window.location.href = "https://web.emenu.com.my"; 
@@ -3390,9 +3361,6 @@ export default {
       }
       return total_weight;
 
-    },
-    inner_width(){
-      return window.innerWidth;
     }
 
     // dine_in_mode(){
@@ -3517,8 +3485,7 @@ export default {
 
         params.append(
           "delivery_time",
-          this.delivery_time_option == true && this.delivery_time_type==0? this.delivery_time : 
-          this.delivery_time_option == true && this.delivery_time_type==1? this.selected_delivery_time_selection : ""
+          this.delivery_time_option == true ? this.delivery_time : ""
         );
 
         // console.log(this.request_self_collect == true ? '0' : '1');
@@ -3536,8 +3503,6 @@ export default {
         console.log(this.current_use_coupon_code);
         // params.append("ref",  (this.$route.query.ref?this.$route.query.ref:''));
         params.append("ref",  (localStorage.ref?localStorage.ref:''));
-
-
 
        
         // console.log(JSON.stringify(this.items));
@@ -4645,10 +4610,10 @@ export default {
           console.log(error);
         });
     }, 800),
-    
     clear_search_content() {
       this.search_content = "";
     },
+
 
     delivery_collect_clicked() {
       if (this.delivery_collect == true) {
@@ -5124,7 +5089,6 @@ export default {
         });
       
     },
-
     send_payment_whatsapp_notification_customer(order_id){
       const params = new URLSearchParams();
       params.append("request_upload_receipt  ", '1');
@@ -5190,7 +5154,6 @@ export default {
           console.log(error);
         });
     },
-
     check_json(s){
      try {
         JSON.parse(s, function(k, v) {
@@ -5204,7 +5167,6 @@ export default {
         return false;
       }
     },
-
     check_ref_tier(ref){
         //api check tier
    
@@ -5247,7 +5209,6 @@ export default {
 
 
     },
-
     product_setup(){
       for (var i = 0; i < this.items.length; i++) {
         this.items[i].description = this.items[i].description.replace(/\n/g, "<br/>");
@@ -5278,7 +5239,6 @@ export default {
 
       }
     },
-
     variant_actual_price(price){
       if(this.check_json(price)){
 
@@ -5446,7 +5406,6 @@ export default {
           }
 
     },
-
     product_actual_price(price){
       if(this.check_json(price)){
         
@@ -5916,21 +5875,7 @@ html {
   box-shadow: 0 0px 24px -3px rgb(0 0 0 / 45%) !important;
   transform: scale(1.05);
 }
- .dish-card {
-  padding: 0px!important;
- }
-  .dish-card picture{
-    align-self: center;
-    height: 166px;
-    width: 166px;
- }
-   .with-image .dish-info {
-    max-width: calc(100% - 210px - 16px);
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-bottom: 0px;
-    padding-left: 10px;
-  }
+
 @media (max-width: 767px) {
   .dish-name {
     font-size: 1.6rem;
@@ -5938,8 +5883,7 @@ html {
     white-space: normal;
   }
   .dish-card {
-    /* padding: 16px 16px 8px 16px; */
-    padding: 0px;
+    padding: 16px 16px 8px 16px;
     border-radius: 10px;
     border: none;
     width: 100%;
@@ -5947,20 +5891,14 @@ html {
     
   }
   .with-image .dish-info {
-    max-width: calc(100% - 88px - 16px);
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-bottom: 0px;
-    padding-left: 10px;
+    max-width: calc(100% - 80px - 16px);
   }
   .dish-card picture {
-    align-self: center;
-    height: 110px;
-    width: 110px;
+    height: 70px;
+    width: 70px;
   }
   .dish-card-grid-overwrite {
-    /* padding: 16px 16px 8px 16px; */
-    padding: 0px; 
+    padding: 16px 16px 8px 16px;
     border-radius: 10px;
     border: none !important;
     width: 48.7069% !important;
@@ -5975,9 +5913,9 @@ html {
     width: 100% !important;
   }
 
-  .dish-card-grid-overwrite picture{
-    height: 160px ;
-    width: 160px ;
+  .dish-card-grid-overwrite picture {
+    height: 98px !important;
+    width: 98px !important;
     margin:auto;
     margin-bottom: 0px !important;
   }
@@ -6214,7 +6152,6 @@ html {
 
 }
  .strikethrough-diagonal:before {
-   
 	 position: absolute;
 	 content: '';
 	 left: 0;
@@ -6289,10 +6226,5 @@ html {
 .dish-menu-category-list input {
     opacity: 1!important;
     z-index: 10;
-}
-
-.action-bar{
-  padding-left: 10px;
-  padding-bottom:5px;
 }
 </style>
