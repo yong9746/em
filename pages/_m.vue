@@ -9,12 +9,17 @@
     <meta name="google" content="notranslate">
     <meta name="theme-color" :content="theme_color" />
 
-   
+    <v-overlay :value="ipay_overlay" z-index="999999">
+        <v-progress-circular
+          indeterminate
+          size="62"
+        ></v-progress-circular>
+          </v-overlay>
          
     <div class="page-wrapper">
       <div class="content-wrapper menu-bg">
         <main>
-          <div class="page-container">
+          <div class="page-container nnnn">
             
             <section
               class="vendor-section ooo"
