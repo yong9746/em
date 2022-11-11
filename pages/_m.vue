@@ -39,7 +39,7 @@
               <div
                 v-if="alert_item_added"
                 id="div_block-651-440"
-                class="ct-div-block"
+                class="ct-div-block oooo"
                 style="display: block; background-color: #4caf50; height: 45px"
               >
                 <div id="text_block-663-440" class="ct-text-block" >
