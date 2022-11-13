@@ -22,7 +22,7 @@
           <div class="page-container">
             
             <section
-              class="vendor-section ooo"
+              class="vendor-section"
               id="category-all"
               :style="'background:' + theme_color"
             >
