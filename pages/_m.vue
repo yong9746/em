@@ -385,6 +385,7 @@
                                               ? 'dish-info dish-info-grid-overwrite'
                                               : 'dish-info',
                                           ]"
+                                          style="height:100%"
                                         >
                                           <h2
                                             class=""
@@ -403,7 +404,14 @@
                                           > 
                                           <span v-html="product.description"> </span>
                                           </p>
+                                          <div  style="position:absolute;bottom:22px;">
+                                           
+                                         <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
+                                             style="font-size:12px;">
+                                            {{product.sold_quantity }} {{ $t('sold')}}</div>
                                         </div>
+                                        </div>
+                                          
                                           <!-- :style="{
                                             
                                               '(max-width: 767px) {height': product_mobile_image_size!==''?product_mobile_image_size+'px}':'}',
@@ -439,7 +447,6 @@
                                           </div>
                                           <div
 
-                                         
                                             :style="{
                                               'background-image':
                                                 'url(' +
@@ -450,24 +457,12 @@
                                             }"
                                             class="photo u-photo b-lazy b-loaded"
                                           ></div>
-                                          <!-- <div
-                                          :style="{
-                                            'background-image':
-                                              'url(' +
-                                              domain +
-                                              'image/image.php?f=' + 
-                                              company_folder +
-                                              '&im=' +
-                                              product.inv_image +
-                                              ')',
-                                          }"
-                                          class="photo u-photo b-lazy b-loaded"
-                                        ></div> -->
+                                         
                                         </picture>
                                       </div>
-                                             <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
-                                             style="font-size:12px; ">
-                                            {{product.sold_quantity }} {{ $t('sold')}}</div>
+                                             <!-- <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
+                                             style="font-size:12px; padding-left:10px">
+                                            {{product.sold_quantity }} {{ $t('sold')}}</div> -->
                                       <section class="action-bar">
                                         <div class="action-bar-content">
                                           <div class="price-tags-container">
@@ -629,6 +624,9 @@
                                          
                                         </picture>
                                       </div>
+                                      <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
+                                             style="font-size:12px; padding-left:10px">
+                                            {{product.sold_quantity }} {{ $t('sold')}}</div>
                                       <section class="action-bar">
                                         <div class="action-bar-content">
                                           <div class="price-tags-container">

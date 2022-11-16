@@ -535,7 +535,6 @@ export default {
 
 
 
-
     let productResponse = await $axios.$post("product/index.php", productData);
     console.log(productResponse);
      if (productResponse.status !== "1") {
@@ -547,6 +546,24 @@ export default {
     formData.append("url", `${params.merchant}`);
     formData.append("read", "date");
     let formResponse = await $axios.$post("form/index.php", formData);
+
+
+    let categoryData = new URLSearchParams();
+    categoryData.append("form_id", formResponse.form_function[0].public_url);
+    categoryData.append("get_category", "get_category");
+    let categoryResponse = await $axios.$post("form/index.php", categoryData);
+
+    // category
+        var categories = categoryResponse.category;
+
+        var categories_length = categories.length;
+
+        for (var i = 0; i < categories.length; i++) {
+          if (categories[i].category_id == 0 && categories_length == 1) {
+            categories[i].name = "All";
+          }
+        }
+
 
     if(formResponse.form_function[0].color) {
         var color = JSON.parse(formResponse.form_function[0].color);
@@ -586,6 +603,7 @@ export default {
         catalog_mode: formResponse.form_function[0].catalog_mode,
         theme_color: formResponse.form_function[0].form_color,
         default_language: formResponse.form_function[0].default_language,
+        categories: categories,
         product_id: productResponse.read[0].product_id,
         product_name: productResponse.read[0].name,
         product_image: productResponse.read[0].image,
