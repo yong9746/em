@@ -7,7 +7,7 @@
     />
 
     <meta name="theme-color" :content="theme_color" />
-    <div class="container fill-height container--fluid abcd">
+    <div class="container fill-height container--fluid">
       <!-- <div class="layout justify-center"> -->
         <v-row justify="center">
           <v-col cols="12" xl="6" lg="6" md="8">
@@ -202,10 +202,6 @@
 
                 <h5 style="color:#0062c4;font-weight:500;font-size:12px;"><b style="color:#495057;font-weight:700;font-size:12px;">{{$t('category')}}:</b>
                  {{product_category_id!==0?product_category_name:$t('uncategorised')}} </h5>
-
-                <h5 v-if="product_sold_quantity!==''" style="color:#0062c4;font-weight:500;font-size:12px;">
-                  <b style="color:#495057;font-weight:700;font-size:12px;">{{$t('sold')}}:</b>
-                 {{product_sold_quantity}} </h5>
 
                     <hr
                   role="separator"
@@ -548,6 +544,21 @@ export default {
     formData.append("read", "date");
     let formResponse = await $axios.$post("form/index.php", formData);
 
+    let categoryData = new URLSearchParams();
+    categoryData.append("form_id", formResponse.form_function[0].public_url);
+    categoryData.append("get_category", "get_category");
+    let categoryResponse = await $axios.$post("form/index.php", categoryData);
+     // category
+     var categories = categoryResponse.category;
+
+      var categories_length = categories.length;
+
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].category_id == 0 && categories_length == 1) {
+          categories[i].name = "All";
+        }
+      }
+
     if(formResponse.form_function[0].color) {
         var color = JSON.parse(formResponse.form_function[0].color);
         var p_color = color.primary_color;
@@ -579,13 +590,18 @@ export default {
     
       console.log(JSON.parse(price));
 
-
       return {
+        all_data:formResponse.form_function, //get all the data 
         merchant_url:`${params.merchant}`,
         merchant_id: formResponse.form_function[0].merchant_id,
         catalog_mode: formResponse.form_function[0].catalog_mode,
         theme_color: formResponse.form_function[0].form_color,
         default_language: formResponse.form_function[0].default_language,
+        categories: categories,
+        system_color: formResponse.form_function[0].color,
+        merchant_url: formResponse.form_function[0].url,
+        merchant_domain: formResponse.form_function[0].domain,
+
         product_id: productResponse.read[0].product_id,
         product_name: productResponse.read[0].name,
         product_image: productResponse.read[0].image,
@@ -612,7 +628,6 @@ export default {
         s_color:s_color,
         add_to_cart_loading:false,
         selected_variant_id:'',
-        product_sold_quantity :productResponse.read[0].sold_quantity
       };
     } else {
       window.location.href = "https://emenu.com.my/"+`${params.merchant}`+(this.$route.query.ref?'?ref='+this.$route.query.ref:''); 
@@ -863,7 +878,7 @@ export default {
                 //  this.product_price=parseFloat(price[0].normal);
 
               }
-              if(i==price[0].tier.length-1){
+            if(i==price[0].tier.length-1){
                    console.log('hehe2');
                 
 
@@ -946,6 +961,12 @@ export default {
   created(){
       this.$store.dispatch("fetchCart",this.merchant_url);
       this.$store.dispatch("fetchlocale",this.default_language);
+      this.$store.commit("setFormData",this.all_data);   
+      this.$store.commit("setProductCategories", this.categories);
+      this.$store.commit("setSystemColor", this.system_color);
+      this.$store.commit("setMerchantURL", this.merchant_url)
+      this.$store.commit("setMerchantDomain", this.merchant_domain)
+
       // this.tier_id=1;
       // this.global_rate="10";
       // this.global_type=0;
