@@ -25,7 +25,7 @@
               id="category-all"
               :style="'background:' + theme_color"
             >
-          <div v-if="news_ticker!=='' && check_json(news_ticker)" >
+          <div v-scroll-reveal v-if="news_ticker!=='' && check_json(news_ticker)" >
               <div v-if="JSON.parse(news_ticker).display==true">
                 <div class="d-flex ">
                 <div style="background:#3d3d3d;width:10%;text-align:center" >
@@ -77,7 +77,7 @@
                   </v-row>
                 </v-expand-transition>
               </div>
-              <div v-if="banner_status == 0 && check_json(form_image)">
+              <div v-scroll-reveal="{ delay: 650, scale:1.2, origin:'top'}" v-if="banner_status == 0 && check_json(form_image)">
                 <v-row no-gutters  justify="end" style="height:100%;z-index:9999;position:relative" >
                     <v-col cols="1" >
                       <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header==1"></lang>
@@ -107,7 +107,7 @@
               </v-row>
 
               </div>
-              <div  v-if="banner_status == 0 && !check_json(form_image)" >
+              <div v-scroll-reveal.reset="{ delay: 650, scale:1.2, origin:'top'}" v-if="banner_status == 0 && !check_json(form_image)" >
                   <v-img
                     dense
                     :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + form_image"
@@ -261,7 +261,7 @@
                   <div class="menu__list-wrapper" >
                    
 
-                    <nav class="dish-menu-category-list" >
+                    <nav class="dish-menu-category-list" v-scroll-reveal="{ delay: 750, origin:'left', interval: 300}" >
                       <div style="background:#ffffff" class="mr-0 mb-1">
                               <v-text-field
                       v-model="search_content"
@@ -288,7 +288,7 @@
 
                           <scrollactive :offset="146" :duration="2000" active-class="category-items-selected" style="height:52px;" 
                             ><ul class="pl-0 pr-0 scollul" >
-                              <li
+                              <li 
                                 class="pa-0"
                                 
                               >
@@ -353,7 +353,7 @@
                               <ul class="dish-list scollul">
                                 <!-- product -->
                                 <template v-for="product in items">
-                                  <li
+                                  <li v-scroll-reveal="{ delay: 200, scale:1.1, origin:'bottom', duration: 600}"
                                     :class="[
                                       grid
                                         ? 'dish-card dish-card-grid-overwrite'
@@ -374,7 +374,7 @@
                                             : 'dish-info-container with-image',
                                         ]"
                                       >
-                                        <div
+                                        <div 
                                           :class="[
                                             grid
                                               ? 'dish-info dish-info-grid-overwrite'
@@ -400,8 +400,7 @@
                                           </p>
                                         </div>
                                         <picture>
-                                          <div
-
+                                          <div 
                                             :style="{
                                               'background-image':
                                                 'url(' +
@@ -537,7 +536,7 @@
                                 </div>
                                 <!-- product -->
                                 <template v-for="product in searched_items">
-                                  <li
+                                  <li 
                                     :class="[
                                       grid
                                         ? 'dish-card dish-card-grid-overwrite'
