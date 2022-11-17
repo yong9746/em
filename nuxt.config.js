@@ -46,6 +46,7 @@ export default {
     '~plugins/vuescrollactive.js',
     "~/plugins/i18n.js",
     "~/plugins/geocoder.client.js",
+    { src: '@/plugins/vue-scroll-reveal', ssr: false }
     // "~/plugins/vue2-google-maps.js",
     // "~/plugins/transition.js", 
   ],

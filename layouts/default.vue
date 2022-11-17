@@ -132,7 +132,8 @@
         </div>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="form_data[0].display_header == 0" 
+      <v-app-bar v-scroll-reveal="{ delay: 250, origin:'left', duration: 300}" 
+        v-if="form_data[0].display_header == 1" 
         app color="#ECEFF1" height="80px" 
         hide-on-scroll elevation="4"
         :class="{'px-6': $vuetify.breakpoint.mdAndUp}"> 
@@ -207,6 +208,8 @@
            </v-list-item>
          </v-list>
        </v-menu>
+
+
       </v-app-bar>
     
       <!-------------------- Dialog Box (when user account button has been clicked) ------------------------->
@@ -601,7 +604,9 @@
             <tnc_dialog2 :data_array="tnc_array()"></tnc_dialog2>
              <v-card-actions>
                <v-spacer></v-spacer>
-               <v-btn depressed dark color="green darken-1" @click="dialog.value = false">
+               <v-btn depressed dark 
+                 @click="dialog.value = false"
+                 :style="'backgroundColor:' + system_color.primary_color">
                  Close
                </v-btn>
              </v-card-actions>
