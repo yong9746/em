@@ -133,7 +133,7 @@
       </v-navigation-drawer>
 
       <v-app-bar v-scroll-reveal="{ delay: 250, origin:'left', duration: 300}" 
-        v-if="form_data[0].display_header == 1" 
+        v-if="form_data[0].display_header == 0" 
         app color="#ECEFF1" height="80px" 
         hide-on-scroll elevation="4"
         :class="{'px-6': $vuetify.breakpoint.mdAndUp}"> 

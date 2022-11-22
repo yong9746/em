@@ -76,7 +76,7 @@
                       <v-expand-transition hide-on-leave>
                 <v-row no-gutters  justify="end" style="height:100%">
                     <v-col cols="1" >
-                      <div class="subtitle-2 text-center" style="color:white"> <lang></lang>
+                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
               </div>
                     </v-col>
                   </v-row>
@@ -85,7 +85,7 @@
               <div v-scroll-reveal="{ delay: 650, scale:1.2, origin:'top'}" v-if="banner_status == 0 && check_json(form_image)">
                 <v-row no-gutters  justify="end" style="height:100%;z-index:9999;position:relative" >
                     <v-col cols="1" >
-                      <div class="subtitle-2 text-center" style="color:white"> <lang></lang>
+                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
                     </div>
                     </v-col>
                   </v-row>
@@ -124,7 +124,7 @@
             <v-expand-transition hide-on-leave>
              <v-row no-gutters  justify="end" style="height:100%">
                 <v-col cols="1" >
-                  <div class="subtitle-2 text-center" style="color:white"> <lang></lang>
+                  <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
                 </div>
                 </v-col>
               </v-row>
@@ -3198,6 +3198,10 @@ export default {
   },
 
   computed: {
+    form_data(){
+      return this.$store.state.form_data;
+    },
+
     product_feature(){
       // return this.feature_product;
       var f_product=this.feature_product==''?[]:JSON.parse(this.feature_product);
