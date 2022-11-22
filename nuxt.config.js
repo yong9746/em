@@ -19,7 +19,14 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap' },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href:
+          'https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css'
+      },
     ]
   },
 
@@ -30,6 +37,7 @@ export default {
     '@/assets/css/style3.css',
     '@/assets/css/style4.css',
     '@/assets/css/style5.css',
+    'animate.css/animate.min.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -38,6 +46,7 @@ export default {
     '~plugins/vuescrollactive.js',
     "~/plugins/i18n.js",
     "~/plugins/geocoder.client.js",
+    { src: '@/plugins/vue-scroll-reveal', ssr: false }
     // "~/plugins/vue2-google-maps.js",
     // "~/plugins/transition.js", 
   ],

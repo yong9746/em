@@ -5,6 +5,13 @@ export const state = () => ({
     start_date:'',delivery_time:'',payment_method:0,current_use_coupon_code:'',discount_fee:'',tab1_comfirm:false,tab2_comfirm:false,tab3_comfirm:false},
     locale: "en",
     main_position_y:0,
+    form_data: [{company_name:'', company_logo:'', company_email:'', company_address:'', company_phone:'', company_domain:'', 
+                registration_no:'', color:{primary_color:'', second_color:''}}],
+    merchant_east_west: [],
+    product_categories: [],
+    system_color: {primary_color:'', second_color:''},
+    merchant_url: {},
+    merchant_domain: {},
 })
 
 export const getters = { // = computed properties
@@ -42,9 +49,7 @@ export const getters = { // = computed properties
         
       },
      
-
   }
-
 
 
 
@@ -159,7 +164,6 @@ export const mutations = {
     update_checkout_step_save(state, { object_name, object_data })
     {   
         
-
         if(object_name=='phone'){state.phone=object_data;
         }
         if(object_name=='name'){state.name=object_data;
@@ -190,10 +194,32 @@ export const mutations = {
         }
         if(object_name=='tab3_comfirm'){state.tab3_comfirm=object_data;
         }
-        
-        
+    },     
 
-    }      
+    setFormData (state, data) {
+        state.form_data = data
+    },
+
+    setMerchantShipping (state, data) {
+        state.merchant_east_west = data
+    },
+
+    setProductCategories (state, data) {
+        state.product_categories = data
+    },
+
+    setSystemColor (state, data){
+        state.system_color = JSON.parse(data)
+    },
+
+    setMerchantURL (state, data){
+        state.merchant_url = data
+    },
+
+    setMerchantDomain (state, data){
+        state.merchant_domain = data
+    },
+
 }
 
 
