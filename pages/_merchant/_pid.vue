@@ -598,12 +598,16 @@ export default {
 
 
       return {
+        all_data:formResponse.form_function, //get all the data 
         merchant_url:`${params.merchant}`,
         merchant_id: formResponse.form_function[0].merchant_id,
         catalog_mode: formResponse.form_function[0].catalog_mode,
         theme_color: formResponse.form_function[0].form_color,
         default_language: formResponse.form_function[0].default_language,
         categories: categories,
+        system_color: formResponse.form_function[0].color,
+        merchant_url: formResponse.form_function[0].url,
+        merchant_domain: formResponse.form_function[0].domain,
         product_id: productResponse.read[0].product_id,
         product_name: productResponse.read[0].name,
         product_image: productResponse.read[0].image,
@@ -964,6 +968,12 @@ export default {
   created(){
       this.$store.dispatch("fetchCart",this.merchant_url);
       this.$store.dispatch("fetchlocale",this.default_language);
+      this.$store.commit("setFormData",this.all_data);   
+      this.$store.commit("setProductCategories", this.categories);
+      this.$store.commit("setSystemColor", this.system_color);
+      this.$store.commit("setMerchantURL", this.merchant_url)
+      this.$store.commit("setMerchantDomain", this.merchant_domain)
+
       // this.tier_id=1;
       // this.global_rate="10";
       // this.global_type=0;
