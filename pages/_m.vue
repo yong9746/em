@@ -27,8 +27,8 @@
               :style="'background:' + theme_color"
             >
            
-
-            <div v-scroll-reveal v-if="news_ticker!=='' && check_json(news_ticker)" >
+              <!-- v-scroll-reveal -->
+            <div  v-if="news_ticker!=='' && check_json(news_ticker)" >
               <div v-if="JSON.parse(news_ticker).display==true">
                 <div class="d-flex ">
                 <div style="background:#3d3d3d;width:10%;text-align:center" >
@@ -76,16 +76,17 @@
                       <v-expand-transition hide-on-leave>
                 <v-row no-gutters  justify="end" style="height:100%">
                     <v-col cols="1" >
-                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
+                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="display_header ==1"></lang>
               </div>
                     </v-col>
                   </v-row>
                 </v-expand-transition>
               </div>
-              <div v-scroll-reveal="{ delay: 650, scale:1.2, origin:'top'}" v-if="banner_status == 0 && check_json(form_image)">
+              <!-- v-scroll-reveal="{ delay: 650, scale:1.2, origin:'top'}" -->
+              <div  v-if="banner_status == 0 && check_json(form_image)">
                 <v-row no-gutters  justify="end" style="height:100%;z-index:9999;position:relative" >
                     <v-col cols="1" >
-                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
+                      <div class="subtitle-2 text-center" style="color:white"> <lang v-if="display_header ==1"></lang>
                     </div>
                     </v-col>
                   </v-row>
@@ -112,7 +113,8 @@
               </v-row>
 
               </div>
-              <div v-scroll-reveal.reset="{ delay: 650, scale:1.2, origin:'top'}" v-if="banner_status == 0 && !check_json(form_image)" >
+              <!-- v-scroll-reveal.reset="{ delay: 650, scale:1.2, origin:'top'}" -->
+              <div  v-if="banner_status == 0 && !check_json(form_image)" >
                   <v-img
                     dense
                     :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + form_image"
@@ -124,7 +126,7 @@
             <v-expand-transition hide-on-leave>
              <v-row no-gutters  justify="end" style="height:100%">
                 <v-col cols="1" >
-                  <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
+                  <div class="subtitle-2 text-center" style="color:white"> <lang v-if="display_header ==1"></lang>
                 </div>
                 </v-col>
               </v-row>
@@ -265,8 +267,8 @@
     
                   <div class="menu__list-wrapper" >
                    
-
-                    <nav class="dish-menu-category-list" v-scroll-reveal="{ delay: 750, origin:'left', interval: 300}">
+                    <!-- v-scroll-reveal="{ delay: 750, origin:'left', interval: 300}" -->
+                    <nav class="dish-menu-category-list" >
                       <div style="background:#ffffff" class="mr-0 mb-1">
                               <v-text-field
                       v-model="search_content"
@@ -358,7 +360,8 @@
                               <ul class="dish-list scollul">
                                 <!-- product -->
                                 <template v-for="product in items">
-                                  <li v-scroll-reveal="{ delay: 250, scale:1.1, origin:'bottom', duration: 600}"
+                                  <!-- v-scroll-reveal="{ delay: 250, scale:1.1, origin:'bottom', duration: 600}" -->
+                                  <li 
                                     :class="[
                                       grid
                                         ? 'dish-card dish-card-grid-overwrite'
@@ -2939,6 +2942,7 @@ export default {
         product_categories: categoryResponse.category, //get product categories
         merchant_url: formResponse.form_function[0].url,
         merchant_domain: formResponse.form_function[0].domain,
+        display_header: formResponse.form_function[0].display_header,
 
         merchant_url: `${params.m}`,
         merchant_id: formResponse.form_function[0].merchant_id,
