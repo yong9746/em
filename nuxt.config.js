@@ -37,7 +37,7 @@ export default {
     '@/assets/css/style3.css',
     '@/assets/css/style4.css',
     '@/assets/css/style5.css',
-    'animate.css/animate.min.css'
+    'animate.css/animate.min.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -46,7 +46,8 @@ export default {
     '~plugins/vuescrollactive.js',
     "~/plugins/i18n.js",
     "~/plugins/geocoder.client.js",
-    { src: '@/plugins/vue-scroll-reveal', ssr: false }
+    { src: '@/plugins/vue-scroll-reveal', ssr: false },
+    '~/plugins/phone-input',
     // "~/plugins/vue2-google-maps.js",
     // "~/plugins/transition.js", 
   ],

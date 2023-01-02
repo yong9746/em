@@ -7,13 +7,16 @@ export const state = () => ({
     main_position_y:0,
     form_data: [{company_name:'', company_logo:'', company_email:'', company_address:'', company_phone:'', company_domain:'', 
                 registration_no:'', color:{primary_color:'', second_color:''}}],
-
     merchant_east_west: [],
     product_categories: [],
     system_color: {primary_color:'', second_color:''},
     merchant_url: {},
     merchant_domain: {},
-
+    selectedLink: null,
+    login_data: [{status:'', user_detail:{name:'', email:'', user_id:'', country_code:'', phoneNo:'', login_pw:''}}],
+    pw_status:'',
+    order_data: [{order_id:'', created_at:'', payment_status:'', total_amount:''}], 
+    profile_pic: '',
 })
 
 export const getters = { // = computed properties
@@ -222,6 +225,33 @@ export const mutations = {
         state.merchant_domain = data
     },
 
+    setSelectedLink (state, data){
+        state.selectedLink = data
+    },
+
+    setLoginInfo (state, data){
+        state.login_data = data
+    },
+
+    setPassword (state, data){
+        state.login_data[0].user_detail.login_pw = data  //給他一個單獨的資料 （error: vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers)
+    },
+
+    setPwStatus (state, data){
+        state.pw_status = data  
+    },
+
+    setUserInfo (state, data){
+        state.user_data = data
+    },
+
+    setOrderData (state, data){
+        state.order_data = data
+    },
+
+    setProfilePic (state, data){
+        state.profile_pic = data
+    }
 }
 
 
