@@ -29,18 +29,18 @@ export default {
     return {
       country: [
         {
-          country: "en",
+          country: "EN",
           flag:
             "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png",
 
         },
         {
-          country: "ms",
+          country: "MS",
           flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png",
 
         },
         {
-          country: "zh",
+          country: "ZH",
           flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png",
         },
       ],
@@ -68,7 +68,7 @@ export default {
     this.pointer = 'none'
     setTimeout(() => this.pointer = 'auto', 1000);
     this.$store.commit('changelocale', this.country[index].country);
-    
+
     
     },
   },

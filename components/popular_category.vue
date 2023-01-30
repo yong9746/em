@@ -1,5 +1,5 @@
 <template>
-  <div class="dish-category-section" style="margin: 10px">
+  <div class="dish-category-section" style="margin-top: 16px">
     <div class="inner-category">
       <h2 class="dish-category-title box-flex fd-row">
         <!-- <svg
@@ -220,9 +220,10 @@ export default {
   scrollbar-width: none;
 }
 
+/* 
 .dish-category-section {
   margin-top: 16px;
-}
+} */
 
 .section-container {
   position: relative;
@@ -242,7 +243,7 @@ export default {
   border-radius: 20px !important;
 }
 .dish-category-section {
-  border-radius: 10px;
+  /* border-radius: 10px; */
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 24px;

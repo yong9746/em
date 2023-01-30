@@ -35,7 +35,7 @@
             />
           </template>
 
-          <v-avatar size="140">
+          <v-avatar style="-moz-box-shadow: 0px 3px 5px #ccc; -webkit-box-shadow: 0px 3px 5px #ccc; box-shadow: 0px 3px 5px #ccc;" size="140">
             <v-img
               cover
               :src="

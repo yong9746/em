@@ -559,8 +559,8 @@
           >
             SUCCESS !
           </h2>
-          <p style="font-weight: 300; padding: 10px 20px; line-height: 35px">
-            Your address has been update successfully.
+          <p style="font-weight: 300; padding: 10px 20px; line-height: 30px">
+            Great news! Your address has been successfully updated in our system.
           </p>
 
           <v-btn

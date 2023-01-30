@@ -8,15 +8,16 @@ export const state = () => ({
     form_data: [{company_name:'', company_logo:'', company_email:'', company_address:'', company_phone:'', company_domain:'', 
                 registration_no:'', color:{primary_color:'', second_color:''}}],
     merchant_east_west: [],
-    product_categories: [],
+    product_categories: [], 
     system_color: {primary_color:'', second_color:''},
-    merchant_url: {},
-    merchant_domain: {},
+    merchant_url: '',
+    merchant_domain: '',
     selectedLink: null,
-    login_data: [{status:'', user_detail:{name:'', email:'', user_id:'', country_code:'', phoneNo:'', login_pw:''}}],
+    login_data: [{status:'', user_detail:{name:'', email:'', user_id:'', birth_date:'', country_code:'', phoneNo:'', login_pw:''}}],
     pw_status:'',
     order_data: [{order_id:'', created_at:'', payment_status:'', total_amount:''}], 
     profile_pic: '',
+    review_data: [{user_id:'', name:'', created_at:'', review_content:'', review_rating:'', product_id:'', }]
 })
 
 export const getters = { // = computed properties
@@ -251,8 +252,14 @@ export const mutations = {
 
     setProfilePic (state, data){
         state.profile_pic = data
+    },
+
+    setReviewInfo (state, data){
+        state.review_data = data
     }
 }
+
+
 
 
 

@@ -7,10 +7,11 @@
     />
 
     <meta name="theme-color" :content="theme_color" />
+
     <div class="container fill-height container--fluid">
       <!-- <div class="layout justify-center"> -->
         <v-row justify="center">
-          <v-col cols="12" xl="6" lg="6" md="8">
+          <v-col cols="12" xl="8" lg="8" md="8">
         <div class="w-full">
           <div class="d-flex py-3">
             <div>
@@ -200,6 +201,22 @@
                   v-html="product_description"
                 ></div>
 
+                <div class="d-flex align-center">
+                  <v-rating
+                    :value="formatAverageRating(product_average_rating)" 
+                    color="yellow darken-3"
+                    full-icon="mdi-star"
+                    half-increments
+                    background-color="yellow darken-3"
+                    length="5"
+                    size="18"
+                    :readonly="true"
+                  ></v-rating>
+                 
+                 <h6 style="padding-top:3px; color:#9A9796; font-size:14px" v-if="product_average_rating != '' ">({{ product_average_rating}})</h6>
+               </div>
+               
+
                 <h5 style="color:#0062c4;font-weight:500;font-size:12px;"><b style="color:#495057;font-weight:700;font-size:12px;">{{$t('category')}}:</b>
                  {{product_category_id!==0?product_category_name:$t('uncategorised')}} </h5>
 
@@ -378,9 +395,281 @@
               class="my-3 v-divider theme--light"
             />
           </div>
+
+          <v-overlay :value="page_loading">
+            <v-progress-circular indeterminate size="65"> </v-progress-circular>
+          </v-overlay>
+
+          <div 
+            style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" 
+            v-if="login_data[0].user_detail.userId != '' && login_data[0].user_detail.userId != null && review_available == 1" 
+            class="giving-review-section py-4 px-8 my-14">
+            <h1
+              :class="{
+                'font-size-display4': $vuetify.breakpoint.xs,
+                'font-size-display2': $vuetify.breakpoint.smAndUp,
+              }"
+              style="font-weight: 600"
+              class="text-center py-6"
+            >
+              Leave A Review
+            </h1>
+            <div class="d-flex justify-center align-center flex-column">
+              <h3
+                :class="{
+                  'font-size-headline-3': $vuetify.breakpoint.xs,
+                  'font-size-display4': $vuetify.breakpoint.smAndUp,
+                }"
+                style="
+                  font-weight: 500;
+                  padding-bottom: 10px;
+                  text-align: center;
+                  line-height: 26px;
+                "
+              >
+                Click the stars to rate this product *
+              </h3>
+              <v-rating
+                v-model="review_rating"
+                color="#FFC107"
+                background-color="yellow darken-3"
+                full-icon="mdi-star-settings"
+                length="5"
+                size="35"
+              ></v-rating>
+            </div>
+            <h3
+              :class="{
+                'font-size-headline-3': $vuetify.breakpoint.xs,
+                'font-size-headline': $vuetify.breakpoint.smAndUp,
+              }"
+              style="font-weight: 500"
+              class="mt-10 mb-4"
+            >
+              Review *
+            </h3>
+            <v-form ref="sendReview">
+              <v-textarea
+                ref="textarea"
+                v-model="review_content"
+                :readonly="false"
+                style="font-size: 18px; font-weight: 400"
+                auto-grow
+                placeholder="Text"
+                :counter="225"
+                filled
+                rows="4"
+                row-height="45"
+                :rules="textAreaRules"
+              ></v-textarea>
+
+              <v-container>
+                <v-row style="gap: 20px">
+                  <v-btn
+                    style="text-transform: capitalize; border-radius:30px"
+                    @click="addReview('Good product')"
+                    >Good product</v-btn
+                  >
+                  <v-btn
+                    style="text-transform: capitalize; border-radius:30px"
+                    @click="addReview('Worthy!')"
+                    >Worthy!
+                  </v-btn>
+                  <v-btn
+                    style="text-transform: capitalize; border-radius:30px"
+                    @click="addReview('Not Bad')"
+                    >Not Bad
+                  </v-btn>
+                </v-row>
+              </v-container>
+
+              <v-card-actions class="justify-end mt-6">
+                <v-btn
+                  class="scale-on-hover"                
+                  @click="send_review()"
+                  dark
+                  large
+                  :style="'backgroundColor:' + system_primary_color.primary_color"
+                >
+                  SUBMIT
+                  <v-icon size="18" class="pl-2"> mdi-send </v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-form>
+          </div>
+
+          <div v-if="review_items.length !== 0" class="review-section pt-4 pb-12">
+            <h1 :class="{
+                    'font-size-headline': $vuetify.breakpoint.xs,
+                    'font-size-display3': $vuetify.breakpoint.smAndUp,
+                  } "
+                  style="font-weight:500" class="mt-8 mb-4">REVIEWS ({{ review_items.length }})
+            </h1>
+      
+            <div 
+              v-for="(review_item, i) in parsedReviewRatings.slice(0, itemsPerPage * currentPage)"
+              :key="i"
+              style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; border-radius:10px; margin-bottom:20px;"
+              elevation="2"
+              shape>
+
+                <div class="review-container">
+                  <div class="review-left">
+                    <v-btn 
+                  dark
+                  elevation="4"
+                  class="scale-on-hover edit-btn"                
+                  :style="'backgroundColor:' + system_primary_color.primary_color"
+                  v-if="canEditReview[i]" @click="editReviewContent(review_item)">Edit
+                </v-btn>
+                    <v-avatar size="120" :class="{'mt-4': $vuetify.breakpoint.xs}">
+                      <v-img cover :src="review_item.profile_img ==''?require('@/assets/images/customer-logo.png') : 'https://user.lkmng.com/image/' + form_data[0].merchant_id + '/' + review_item.profile_img"></v-img>
+                    </v-avatar> 
+                    <h3 :class="{
+                      'font-size-headline': $vuetify.breakpoint.xs,
+                      'font-size-headline-3': $vuetify.breakpoint.smAndUp,
+                    } " style="font-weight:400; padding-bottom:15px; text-align:center; line-height:28px"
+                    > {{review_item.name}}
+                    </h3>
+                  </div>
+                  <div class="review-right">
+                    <div class="review-info">
+                      <div class="title-date-container">
+                        <h3 style="font-weight:400; padding-bottom:10px; line-height: 28px; padding-right: 20px;" :class="{
+                          'font-size-headline': $vuetify.breakpoint.xs,
+                          'font-size-display4': $vuetify.breakpoint.smAndUp } ">
+                          Aglio Olio Spaghetti
+                        </h3>
+                        <p style="font-style:italic; margin-top:-6px;">{{review_item.created_at}}</p>
+                      </div>
+                      <div class="rating-container" style="margin-top:-3px">
+
+                        <div class="rating d-flex align-center">
+                          <h3 style="font-weight:400; color:#FF5722; line-height: 28px; padding-right: 10px;" :class="{
+                            'font-size-headline': $vuetify.breakpoint.xs,
+                            'font-size-display4': $vuetify.breakpoint.smAndUp } ">
+                            {{review_item.rating}} / 5
+                          </h3>
+
+                          <v-rating 
+                            readonly 
+                            v-model="review_item.rating"
+                            color="warning"
+                            full-icon="mdi-star-settings"
+                            background-color="yellow darken-3"
+                            hover
+                            length="5"
+                            size="25"
+                            ></v-rating>
+                        </div>
+                        <p style="font-style:italic">Purchased by reviewer</p>
+                      </div>
+                    </div>
+                    <div class="review-description">
+                      <p>{{review_item.review}}!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+             
+              <infinite-loading @infinite="infiniteHandler" spinner="bubbles" :distance="700">
+                <div :class="{'pb-8': $vuetify.breakpoint.xs}" slot="no-more">No more reviews to load</div>
+                <div :class="{'pb-8': $vuetify.breakpoint.xs}" slot="no-results">No reviews found</div>
+              </infinite-loading>    
+
+            </div>
+          
+          <div v-else class="review-section" style="padding: 20px 0 100px 0">
+            <h1 :class="{
+                    'font-size-headline': $vuetify.breakpoint.xs,
+                    'font-size-display3': $vuetify.breakpoint.smAndUp,
+                  } "
+                  style="font-weight:500" class="mt-8 mb-4">REVIEWS
+            </h1>
+            <h4>No Reviews Found!</h4>
+          </div>
+
         </div>
+
+        <v-dialog v-model="reviewInfo_dialog" width="400">
+          <v-card>
+            <div
+              v-if="review_status == 1"
+              class="review-status-container text-center"
+            >
+              <v-img
+                max-height="140"
+                max-width="140"
+                contain
+                :src="require('~/assets/images/check-icon-3.png')"
+              >
+              </v-img>
+              <h2
+                :class="{ 'font-size-headline': $vuetify.breakpoint.xs }"
+                style="
+                  font-family: Montserrat, sans-serif !important;
+                  padding-top: 10px;
+                "
+              >
+                SUCCESS !
+              </h2>
+              <p style="font-weight: 300; padding: 10px 20px; line-height: 28px">
+                Thank you for submitting your review! Your feedback has been received and will be taken into consideration to improve our service.
+              </p>
+
+              <v-btn
+                class="px-16 mt-n3"
+                dark
+                :style="'backgroundColor:' + system_color.primary_color"
+                elevation="0"
+                @click="reviewInfo_dialog = false"
+              >
+                Okay
+              </v-btn>
+            </div>
+
+            <div v-else class="review-status-container text-center">
+              <v-img
+                max-height="140"
+                max-width="140"
+                contain
+                :src="require('~/assets/images/close-icon.png')"
+              >
+              </v-img>
+              <h4
+                :class="{
+                  'font-size-headline': $vuetify.breakpoint.xs,
+                  'font-size-display3': $vuetify.breakpoint.smAndUp,
+                }"
+                class="animate__animated animate__shakeX animate__delay-.5s"
+                style="
+                  font-family: Montserrat, sans-serif !important;
+                  font-weight: bold;
+                  letter-spacing: -1px;
+                  color: #e32727;
+                "
+              >
+                {{error_review_msg}}
+              </h4>
+              <p style="font-weight: 300; padding: 0 20px">
+                We noticed that you have previously submitted a review for this product. You have the option to edit your previous review if desired.
+              </p>
+
+              <v-btn
+                class="px-16 mt-n3"
+                dark
+                :style="'backgroundColor:' + system_color.primary_color"
+                elevation="0"
+                @click="reviewInfo_dialog = false"
+              >
+                Okay
+              </v-btn>
+            </div>
+          </v-card>
+        </v-dialog>
+
         </v-col>
-        </v-row>
+      </v-row>
 
         
       <!-- </div> -->
@@ -483,14 +772,36 @@ import { BASEURL } from "@/api/baseurl";
 import axios from "axios";
 import NumberInputSpinner from "vue-number-input-spinner";
 import rad from "@/components/radio";
+import InfiniteLoading from 'vue-infinite-loading';
+
 export default {
    transition: 'slide',
   components: {
     NumberInputSpinner,
     rad,
+    InfiniteLoading,
   },
   data() {
     return {
+      page_loading: false,
+      currentPage: 1,
+      itemsPerPage: 2,
+      reviewInfo_dialog:'',
+      error_review_msg:'',
+      textAreaRules: [
+        (value) => !!value || "Please leave your review here.",
+        (value) =>
+          (value || "").length <= 225 ||
+          "Your review messages do not more than 225 characters.",
+      ],
+      review_items: [],
+      review_available: '',
+      review_status: '',
+      review_rating: 5,
+      product_review_id: null,
+      original_review_id: null,
+      editingReview: false,
+      review_content: '',
       domain: BASEURL,
       remark: "",
       donemount: false,
@@ -608,6 +919,7 @@ export default {
         product_image_gallery: product_image_gallery,
         product_video: productResponse.read[0].youtube_video,
         product_slug: productResponse.read[0].slug,
+        product_average_rating: productResponse.read[0].average_rating,
 
         // product_description: productResponse.read[0].description,
         product_description: productResponse.read[0].description.replace(/\n/g, "<br/>"),
@@ -672,7 +984,23 @@ export default {
       ]
     }
   },
-  computed: {
+
+  computed: {  
+    canEditReview() {
+      return this.parsedReviewRatings.map(review_item => {
+        return review_item.user_id === this.login_data[0].user_detail.userId;
+      });
+    },
+
+    parsedReviewRatings() {
+      return Array.isArray(this.review_items) ? this.review_items.map((review_item) => {
+        return {
+          ...review_item,
+          rating: Number(review_item.rating),
+        };
+      }) : []
+    },
+
     slider_array(){
 
       var array=[];
@@ -773,9 +1101,25 @@ export default {
     //     }
 
     // }
+    form_data() {
+      return this.$store.state.form_data;
+    },
+
+    login_data() {
+      return this.$store.state.login_data;
+    },
     
+    profile_img() {
+      return this.$store.state.profile_pic;
+    },    
 
+    system_primary_color() {
+      return this.$store.state.system_color;
+    },
 
+    review_data() {
+      return this.$store.state.review_data;
+    }
     
   },
   watch:{
@@ -955,10 +1299,12 @@ export default {
 
         }
       }
-    }
-
+    },
   },
   created(){
+      this.get_review();
+      this.check_review_availablity();
+      this.$store.commit("setSelectedLink", null);  
       this.$store.dispatch("fetchCart",this.merchant_url);
       this.$store.dispatch("fetchlocale",this.default_language);
       this.$store.commit("setFormData",this.all_data);   
@@ -1826,9 +2172,159 @@ export default {
       }
         this.setup_done=true;
         this.update_add_on_total_price();
-    }
+    },
 
+    get_review() {
+      const params = new URLSearchParams();
+      params.append("read_review", 1);
+      params.append("product_id", this.product_id);
+   
+      axios({
+        method: "post",
+        url: "https://user.lkmng.com/review/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log("get response review", response);
+          this.review_items = Array.isArray(response.data.review) ? response.data.review : [];
+   
+          // loop through the review_items and find the review_item of the logged in user
+          for (let i = 0; i < this.review_items.length; i++) {
+            if (this.review_items[i].user_id === this.login_data[0].user_detail.userId) {
+              // remove the review_item of the logged in user from the array, i is the index of the element that you want to remove and 1 is the number of elements to remove
+              const loggedInUserReview = this.review_items.splice(i, 1);
+              // add the review_item of the logged in user to the beginning of the review_items array.
+              this.review_items.unshift(loggedInUserReview[0]);
+              break;
+            }
+          }
+        
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
+     infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.parsedReviewRatings.length <= this.itemsPerPage * this.currentPage) {
+          $state.complete();
+        } else {
+          this.currentPage++;
+          $state.loaded();
+        }
+      }, 1000);
+    },
+
+    addReview(newReview) {
+      if(this.review_content){
+        if (this.review_content.length > 0) {
+          this.review_content += " ";
+        }
+        this.review_content += newReview;
+        this.$nextTick(() => {
+          this.$refs.textarea.focus();
+        }); 
+      }else{
+        this.review_content = newReview
+        this.$nextTick(() => {
+          this.$refs.textarea.focus()
+        })
+      }
+    },
+
+    send_review() {
+      if (this.$refs.sendReview.validate() == false) {
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("submit_review", 1);
+      params.append("review", this.review_content);
+      params.append("rating", this.review_rating);
+      params.append("product_id", this.product_id);
+      params.append("user_id", this.login_data[0].user_detail.userId);
+
+      if (this.editingReview === false) {
+        params.append("product_review_id", "");
+      } else {
+          params.append("product_review_id", this.product_review_id);
+      }
+      console.log('product review id', this.product_review_id)
+
+      axios({
+        method: "post",
+        url: "https://user.lkmng.com/review/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log('send review status', response)
+          this.review_status = response.data.status;
+          if (this.review_status == "1") {
+              this.page_loading = true;
+              setTimeout(() => {
+                  this.get_review();
+                  this.resetForm();
+                  this.page_loading = false;
+                  this.reviewInfo_dialog = true;
+                  this.editingReview = false;
+              }, 2500); 
+          } else{
+            this.page_loading = true;
+              setTimeout(() => {
+                  this.page_loading = false;
+                  this.reviewInfo_dialog = true;
+              }, 2500); 
+              return (this.error_review_msg = response.data.message);
+          }
+      }).catch((error) => {
+          console.log(error);
+      });
+    },
+
+    check_review_availablity() {
+      const params = new URLSearchParams();
+      params.append("check_review", 1);
+      params.append("product_id", this.product_id);
+      params.append("user_id", this.login_data[0].user_detail.userId);
+   
+      axios({
+        method: "post",
+        url: "https://user.lkmng.com/review/index.php",
+        data: params,
+      })
+        .then((response) => {
+          this.review_available = response.data.status;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    resetForm() {
+      this.review_content = "";
+      this.$refs.sendReview.reset();
+    },
+
+    editReviewContent(review_item) {
+      if (review_item.user_id === this.login_data[0].user_detail.userId) {
+        this.editingReview = true;
+        this.review_content = review_item.review;
+        this.review_rating = review_item.rating;
+        this.product_review_id = review_item.product_review_id;
+        this.$nextTick(() => {
+          this.$refs.textarea.focus();
+        });
+      }
+    },
+
+    formatAverageRating(value) {
+      let roundedValue = Math.floor(value);
+        if (value - roundedValue > 0) {
+          roundedValue += 0.5;
+        }
+        return roundedValue;
+    },
 
   },
 };
@@ -1959,5 +2455,141 @@ background-size: cover;
     fieldset {
     color: #eee;
   }
+
+  .review-section{
+  /* padding: 100px; */
+  margin-bottom:100px;
+}
+
+.review-container{
+  display:flex;
+  position:relative
+}
+
+.edit-btn{
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.scale-on-hover:hover {
+  transform: scale(1.05);
+}
+
+.scale-on-hover:active {
+  transform: scale(0.95);
+}
+
+.review-left{
+  position:relative;
+  padding: 40px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 25%;
+  border-right: 4px solid #f8f9fa;
+  gap: 10px;
+  overflow:hidden;
+}
+
+.review-right{
+  padding: 20px 40px;
+  width: 80%;
+}
+
+.review-info{
+  display:flex;
+  justify-content: space-between;
+}
+
+.review-left h3{
+  position: relative;
+  display: inline-block;
+}
+
+.review-left h3::after{
+  margin: 0 auto;
+  position: absolute;
+  content: '';
+  background: black;
+  width: 40px;
+  height: 2px;
+  left: 0;
+  right: 0;
+  bottom:7px;
+}
+
+.review-status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 10px;
+  padding: 30px 0 30px;
+}
+
+@media screen and (max-width: 1268px) {
+  .review-container{
+    zoom:0.85;
+  } 
+
+  .review-info {
+    zoom:0.9;
+  }
+
+  .review-left{
+    padding: 30px 50px;
+    width:30%
+}
+
+  .review-right{
+    padding: 20px 20px;
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .review-section{
+    margin:0 10px;
+  }
+
+ .review-container{
+   flex-direction: column;
+   zoom:0.9;
+} 
+
+  .review-left{
+    width: 100%;
+    border-bottom: 4px solid #f8f9fa;
+  }
+
+  .review-right{
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .giving-review-section{
+    zoom:0.88;
+  }
+
+  .review-container{
+    flex-direction: column;
+    zoom:0.8;
+  } 
+
+  .review-info {
+    zoom:0.82;
+  }
+
+  .review-left{
+    padding:0;
+  }
+
+  .review-right{
+    padding: 20px 20px;
+  }
+}
 
 </style>

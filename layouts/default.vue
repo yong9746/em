@@ -11,7 +11,7 @@
         class="blue-grey lighten-5"
         :class="{
           'nav-drawer-width-lg': $vuetify.breakpoint.smAndUp,
-          'nav-drawer-width-sm': $vuetify.breakpoint.xs
+          'nav-drawer-width-sm': $vuetify.breakpoint.xs,
         }"
       >
         <div class="d-flex justify-space-between align-start pt-2 pr-1">
@@ -185,14 +185,14 @@
       </v-navigation-drawer>
 
       <v-app-bar
-        id="main"
         class="app-bar"
+        style=" 
+        background: linear-gradient(to top, #e7eef7 40%, #FFFFFF 100%);"
         app
-        color="#ECEFF1"
-        height="80px"
+        height="90px"
         hide-on-scroll
-        elevation="4"
-        :class="{ 'px-6': $vuetify.breakpoint.mdAndUp }"
+        elevation="2"
+        :class="{ 'px-12': $vuetify.breakpoint.mdAndUp }"
       >
         <span>
           <v-app-bar-nav-icon @click="sidebar = !sidebar">
@@ -200,7 +200,10 @@
           </v-app-bar-nav-icon>
         </span>
 
-        <div class="ml-2 hidden-xs-only" style="z-index: 10000 !important">
+        <v-spacer v-if="$vuetify.breakpoint.width >= 1024"></v-spacer>
+        <v-spacer v-if="$vuetify.breakpoint.width >= 1024"></v-spacer>
+
+        <div v-show="$vuetify.breakpoint.width > 420" class="ml-2 image-logo" style="z-index: 10000 !important">
           <NuxtLink
             :to="merchant_domain == '' ? '/' + merchant_url : merchant_domain"
           >
@@ -358,7 +361,7 @@
         class="blue-grey lighten-5"
         :class="{
           'nav-drawer-width-lg': $vuetify.breakpoint.smAndUp,
-          'nav-drawer-width-sm': $vuetify.breakpoint.xs
+          'nav-drawer-width-sm': $vuetify.breakpoint.xs,
         }"
       >
         <div class="pl-2 pt-2">
@@ -371,25 +374,15 @@
           >
             <v-hover v-slot="{ hover }">
               <v-icon :style="{ color: hover ? 'black' : '#78909C' }">
-                mdi-close
+                mdi-close 
               </v-icon>
             </v-hover>
           </v-btn>
         </div>
 
         <v-container class="d-flex align-center justify-center flex-column">
-          <v-avatar size="140">
-            <v-img
-              cover
-              :src="
-                profile_img == ''
-                  ? require('@/assets/images/customer-logo.png')
-                  : 'https://user.lkmng.com/image/' +
-                    form_data[0].merchant_id +
-                    '/' +
-                    profile_img
-              "
-            ></v-img>
+          <v-avatar size="140" style="-moz-box-shadow: 0px 6px 5px #ccc; -webkit-box-shadow: 0px 6px 5px #ccc; box-shadow: 0px 10px 5px #ccc;">
+            <v-img cover :src="profile_img ==''?require('@/assets/images/customer-logo.png') : 'https://user.lkmng.com/image/' + form_data[0].merchant_id + '/' + profile_img"></v-img>
           </v-avatar>
           <div style="font-family: Montserrat, sans-serif !important">
             <h4
@@ -491,7 +484,7 @@
                     <vue-tel-input-vuetify
                       v-on:country-changed="countryChangedLogin"
                       @validate="onInputLogin"
-                      :rules="[v => !!v || 'Please enter your phone number']"
+                      :rules="[(v) => !!v || 'Please enter your phone number']"
                       v-bind="vueTelVuetifyLogin.props"
                       v-model="vueTelVuetifyLogin.phoneNo"
                       dense
@@ -618,7 +611,7 @@
                       label="Username"
                       type="text"
                       prepend-inner-icon="mdi-account-outline"
-                      :rules="[v => !!v || 'Please enter your name']"
+                      :rules="[(v) => !!v || 'Please enter your name']"
                     ></v-text-field>
 
                     <v-text-field
@@ -632,6 +625,51 @@
                       prepend-inner-icon="mdi-email-outline"
                       :rules="emailRules"
                     ></v-text-field>
+
+                    <vue-tel-input-vuetify
+                      @validate="onInputRegister"
+                      v-on:country-changed="countryChangedRegister"
+                      :rules="vueTelVuetifyRegister.phoneNoRules"
+                      v-model="vueTelVuetifyRegister.phoneNo"
+                      v-bind="vueTelVuetifyRegister.props"
+                      clear-icon="mdi-close-circle"
+                      dense
+                      clearable
+                      required>
+                    </vue-tel-input-vuetify>
+
+                    <v-menu
+                      ref="menuPicker"
+                      v-model="menuPicker"
+                      :close-on-content-click="false"
+                      :nudge-right="20"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="birth_date"
+                          prepend-inner-icon="mdi-calendar"
+                          label="Date of Birth"
+                          :rules="[(v) => !!v || 'Please enter your birthdate']"
+                          outlined
+                          clearable
+                          hint="YYYY/MM/DD"
+                          dense
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="birth_date"
+                        @input="dateMenu = false"
+                        :active-picker.sync="activePicker"
+                        :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                        @change="saveDate"
+                      ></v-date-picker>
+                    </v-menu>
 
                     <v-text-field
                       outlined
@@ -652,25 +690,12 @@
                     >
                     </v-text-field>
 
-                    <vue-tel-input-vuetify
-                      @validate="onInputRegister"
-                      v-on:country-changed="countryChangedRegister"
-                      :rules="vueTelVuetifyRegister.phoneNoRules"
-                      v-model="vueTelVuetifyRegister.phoneNo"
-                      v-bind="vueTelVuetifyRegister.props"
-                      clear-icon="mdi-close-circle"
-                      dense
-                      clearable
-                      required
-                    >
-                    </vue-tel-input-vuetify>
-
                     <v-checkbox
                       input-value="1"
                       class="mt-n4"
                       :class="{ 'mt-n8': $vuetify.breakpoint.width < 468 }"
                       :rules="[
-                        v => !!v || 'Please ensure you read the condition!'
+                        (v) => !!v || 'Please ensure you read the condition!',
                       ]"
                     >
                       <template v-slot:label>
@@ -755,15 +780,14 @@
             <h2
               :class="{ 'font-size-headline': $vuetify.breakpoint.xs }"
               style="
-                font-family: Montserrat, sans-serif !important;
                 padding-top: 10px;
               "
             >
               WELCOME BACK!
             </h2>
-            <p style="font-weight: 300; padding: 0 20px; line-height: 35px">
-              It's nice to meet you again.<br />
-              Enjoy and continue your shopping journey with us!
+            <p style="font-weight: 300; padding: 0 20px; line-height: 29px">
+              It's great to see you again.<br />
+              We hope you continue to enjoy your shopping experience with us!
             </p>
 
             <v-btn
@@ -789,11 +813,10 @@
             <h4
               :class="{
                 'font-size-headline': $vuetify.breakpoint.xs,
-                'font-size-display3': $vuetify.breakpoint.smAndUp
+                'font-size-display3': $vuetify.breakpoint.smAndUp,
               }"
               class="animate__animated animate__shakeX animate__delay-.5s"
               style="
-                font-family: Montserrat, sans-serif !important;
                 font-weight: bold;
                 letter-spacing: -1px;
                 color: #e32727;
@@ -802,9 +825,8 @@
               {{ login_regis_msg }}
             </h4>
             <p style="font-weight: 300; padding: 0 20px">
-              Sorry, we found that the data you key in do not match our
-              candidates.<br />
-              Please try again and check carefully.
+              Sorry, we found that the information you provided does not match any of our registered candidates.<br />
+              Please double-check your information and try again.
             </p>
 
             <v-btn
@@ -857,7 +879,7 @@
             >
               {{ login_regis_msg }}
             </h2>
-            <p style="font-weight: 300; padding: 0 40px; line-height: 30px">
+            <p style="font-weight: 300; padding: 0 40px; line-height: 29px">
               Thanks for signing up!<br />
               Welcome to {{ form_data[0].company_name }}. We are happy to have
               you on board.
@@ -890,7 +912,7 @@
             <h4
               :class="{
                 'font-size-headline': $vuetify.breakpoint.xs,
-                'font-size-display3': $vuetify.breakpoint.smAndUp
+                'font-size-display3': $vuetify.breakpoint.smAndUp,
               }"
               class="animate__animated animate__shakeX animate__delay-.5s"
               style="
@@ -903,8 +925,7 @@
               {{ login_regis_msg }}
             </h4>
             <p style="font-weight: 300; padding: 0 20px">
-              Sorry, we found that the data you key in has been used for
-              registering as our member. You may
+              Sorry, we noticed that the information you provided has already been used to register as a member with us. Please
               <a
                 @click="
                   tab = 0;
@@ -946,7 +967,7 @@
                   class="shipping-title font-weight-bold"
                   :class="{
                     'font-size-headline': $vuetify.breakpoint.xs,
-                    'font-size-display1': $vuetify.breakpoint.smAndUp
+                    'font-size-display1': $vuetify.breakpoint.smAndUp,
                   }"
                 >
                   SHIPPING DETAILS
@@ -1005,7 +1026,7 @@
                   class="dLogBoxInfo text-center"
                   :class="{
                     'mt-5': $vuetify.breakpoint.xs,
-                    'mt-4': $vuetify.breakpoint.smAndUp
+                    'mt-4': $vuetify.breakpoint.smAndUp,
                   }"
                 >
                   <div class="px-4 pb-2 text-grey">
@@ -1013,7 +1034,7 @@
                       class="font-weight-bold"
                       :class="{
                         'font-size-subtitle-1 text-center':
-                          $vuetify.breakpoint.xs
+                          $vuetify.breakpoint.xs,
                       }"
                     >
                       Delivery and Shipping Fee Calculation
@@ -1038,7 +1059,7 @@
                             :style="'color:' + system_color.primary_color"
                             class="pb-2"
                             :class="{
-                              'font-size-subtitle-2': $vuetify.breakpoint.xs
+                              'font-size-subtitle-2': $vuetify.breakpoint.xs,
                             }"
                           >
                             Western
@@ -1055,14 +1076,14 @@
                         class="justify-center font-size-para"
                         :class="{
                           'd-flex align-start': $vuetify.breakpoint.xs,
-                          'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                          'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                         }"
                       >
                         <v-icon size="20" color="red">mdi-information</v-icon>
                         <span
                           :class="{
                             'pl-1': $vuetify.breakpoint.xs,
-                            'pl-2': $vuetify.breakpoint.mdAndUp
+                            'pl-2': $vuetify.breakpoint.mdAndUp,
                           }"
                         >
                           If purchasing amount more than
@@ -1098,7 +1119,7 @@
                             :style="'color:' + system_color.primary_color"
                             class="pb-2"
                             :class="{
-                              'font-size-subtitle-2': $vuetify.breakpoint.xs
+                              'font-size-subtitle-2': $vuetify.breakpoint.xs,
                             }"
                           >
                             Eastern
@@ -1115,14 +1136,14 @@
                         class="justify-center font-size-para"
                         :class="{
                           'd-flex align-start': $vuetify.breakpoint.xs,
-                          'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                          'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                         }"
                       >
                         <v-icon size="20" color="red">mdi-information</v-icon>
                         <span
                           :class="{
                             'pl-1': $vuetify.breakpoint.xs,
-                            'pl-2': $vuetify.breakpoint.mdAndUp
+                            'pl-2': $vuetify.breakpoint.mdAndUp,
                           }"
                         >
                           If purchasing amount more than
@@ -1146,13 +1167,13 @@
                 v-if="form_data[0].shipping_setting_status == '1'"
                 :class="{
                   'mt-4 text-center': $vuetify.breakpoint.xs,
-                  'mt-8': $vuetify.breakpoint.smAndUp
+                  'mt-8': $vuetify.breakpoint.smAndUp,
                 }"
               >
                 <h4
                   class="pb-2 font-weight-bold"
                   :class="{
-                    'font-size-subtitle-1 text-center': $vuetify.breakpoint.xs
+                    'font-size-subtitle-1 text-center': $vuetify.breakpoint.xs,
                   }"
                 >
                   Delivery and Shipping Fee Calculation
@@ -1160,7 +1181,8 @@
                 <div
                   class="pt-1 px-2 font-size-para"
                   :class="{
-                    'd-flex justify-center align-center': $vuetify.breakpoint.xs
+                    'd-flex justify-center align-center':
+                      $vuetify.breakpoint.xs,
                   }"
                   v-for="(postcode, i) in JSON.parse(
                     form_data[0].shipping_by_postcode
@@ -1180,21 +1202,22 @@
                       </span>
                       <div
                         class="pt-2"
-                        v-for="(shippingCondition,
-                        i) in postcode.advanced_shipping_fee"
+                        v-for="(
+                          shippingCondition, i
+                        ) in postcode.advanced_shipping_fee"
                         :key="i.advanced_shipping_fee"
                       >
                         <div
                           :class="{
                             'd-flex align-start': $vuetify.breakpoint.xs,
-                            'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                            'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                           }"
                         >
                           <v-icon size="20" color="red">mdi-information</v-icon>
                           <span
                             class="pl-1"
                             :class="{
-                              'font-size-caption': $vuetify.breakpoint.xs
+                              'font-size-caption': $vuetify.breakpoint.xs,
                             }"
                           >
                             Amount spending between
@@ -1223,7 +1246,7 @@
                 v-if="form_data[0].shipping_setting_status == '2'"
                 :class="{
                   'mt-4 text-center': $vuetify.breakpoint.xs,
-                  'mt-8': $vuetify.breakpoint.smAndUp
+                  'mt-8': $vuetify.breakpoint.smAndUp,
                 }"
               >
                 <h4
@@ -1235,7 +1258,8 @@
                 <div
                   class="pt-1 px-2 font-size-para"
                   :class="{
-                    'd-flex justify-center align-center': $vuetify.breakpoint.xs
+                    'd-flex justify-center align-center':
+                      $vuetify.breakpoint.xs,
                   }"
                   v-for="(distance, i) in JSON.parse(
                     form_data[0].shipping_by_distance
@@ -1254,14 +1278,15 @@
                       </span>
                       <div
                         class="pt-2"
-                        v-for="(distanceCondition,
-                        i) in distance.advanced_shipping_fee"
+                        v-for="(
+                          distanceCondition, i
+                        ) in distance.advanced_shipping_fee"
                         :key="i.advanced_shipping_fee"
                       >
                         <div
                           :class="{
                             'd-flex align-start': $vuetify.breakpoint.xs,
-                            'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                            'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                           }"
                         >
                           <v-icon class="pr-2" size="20" color="red"
@@ -1270,7 +1295,7 @@
                           <span
                             class="pl-1"
                             :class="{
-                              'font-size-caption': $vuetify.breakpoint.xs
+                              'font-size-caption': $vuetify.breakpoint.xs,
                             }"
                           >
                             Amount spending between
@@ -1309,7 +1334,7 @@
                   class="dLogBoxInfo text-center"
                   :class="{
                     'mt-5': $vuetify.breakpoint.xs,
-                    'mt-4': $vuetify.breakpoint.smAndUp
+                    'mt-4': $vuetify.breakpoint.smAndUp,
                   }"
                 >
                   <div class="px-4 pb-2">
@@ -1318,7 +1343,7 @@
                       class="font-weight-bold pb-2"
                       :class="{
                         'font-size-subtitle-1': $vuetify.breakpoint.xs,
-                        'font-size-headline-2': $vuetify.breakpoint.smAndUp
+                        'font-size-headline-2': $vuetify.breakpoint.smAndUp,
                       }"
                     >
                       * Minimum Spending:
@@ -1329,7 +1354,7 @@
                     <h4
                       class="font-weight-bold"
                       :class="{
-                        'font-size-subtitle-1': $vuetify.breakpoint.xs
+                        'font-size-subtitle-1': $vuetify.breakpoint.xs,
                       }"
                     >
                       Delivery and Shipping Fee Calculation
@@ -1350,14 +1375,14 @@
                       class="justify-center font-size-para"
                       :class="{
                         'd-flex align-start': $vuetify.breakpoint.xs,
-                        'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                        'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                       }"
                     >
                       <v-icon size="20" color="red">mdi-information</v-icon>
                       <span
                         :class="{
                           'pl-1': $vuetify.breakpoint.xs,
-                          'pl-2': $vuetify.breakpoint.mdAndUp
+                          'pl-2': $vuetify.breakpoint.mdAndUp,
                         }"
                         >Check
                         <a
@@ -1389,7 +1414,7 @@
                   class="dLogBoxInfo text-center"
                   :class="{
                     'mt-5': $vuetify.breakpoint.xs,
-                    'mt-4': $vuetify.breakpoint.smAndUp
+                    'mt-4': $vuetify.breakpoint.smAndUp,
                   }"
                 >
                   <div class="px-4 pb-2 text-grey">
@@ -1398,7 +1423,7 @@
                       class="font-weight-bold pb-2"
                       :class="{
                         'font-size-subtitle-1': $vuetify.breakpoint.xs,
-                        'font-size-headline-2': $vuetify.breakpoint.smAndUp
+                        'font-size-headline-2': $vuetify.breakpoint.smAndUp,
                       }"
                     >
                       * Minimum Spending:
@@ -1410,7 +1435,7 @@
                       class="font-weight-bold"
                       :class="{
                         'font-size-subtitle-1 text-center':
-                          $vuetify.breakpoint.xs
+                          $vuetify.breakpoint.xs,
                       }"
                     >
                       Delivery and Shipping Fee Calculation
@@ -1431,14 +1456,14 @@
                       class="justify-center font-size-para"
                       :class="{
                         'd-flex align-start': $vuetify.breakpoint.xs,
-                        'd-flex align-center': $vuetify.breakpoint.mdAndUp
+                        'd-flex align-center': $vuetify.breakpoint.mdAndUp,
                       }"
                     >
                       <v-icon size="20" color="red">mdi-information</v-icon>
                       <span
                         :class="{
                           'pl-1': $vuetify.breakpoint.xs,
-                          'pl-2': $vuetify.breakpoint.mdAndUp
+                          'pl-2': $vuetify.breakpoint.mdAndUp,
                         }"
                         >Check
                         <a
@@ -1646,8 +1671,8 @@
           >
             <a
               v-show="scrollUpIcon"
-              href="#main"
               class="scrollup scrollactive-item"
+              @click="scrollTop()"
             >
               <v-icon :style="{ color: hover ? '#000000' : '#696969' }">
                 mdi-arrow-up-circle
@@ -1661,7 +1686,7 @@
         :class="[
           sidebar ? 'activeBlur' : '',
           accountbar ? 'activeBlur' : '',
-          account_dialog ? 'activeBlur' : ''
+          account_dialog ? 'activeBlur' : '',
         ]"
       />
     </v-main>
@@ -1683,7 +1708,7 @@ export default {
       mobileNav: false,
       scrollUpIcon: 0,
       page_loading: false,
-      profile_pic: "",
+      profile_pic: '',
 
       navLinks: [
         { title: "Home", icon: "mdi-home" },
@@ -1691,7 +1716,7 @@ export default {
         {
           title: "Categories",
           icon: "mdi-shape",
-          subLinks: []
+          subLinks: [],
         },
         { title: "Terms and Services", icon: "mdi-file-document-check" },
         {
@@ -1700,26 +1725,25 @@ export default {
           subLinks: [
             {
               lang: "English",
-              flag:
-                "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
+              flag: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png",
             },
             {
               lang: "BahasaMelayu",
-              flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png"
+              flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png",
             },
             {
               lang: "Mandarin",
-              flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png"
-            }
-          ]
-        }
+              flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png",
+            },
+          ],
+        },
       ],
 
       accountLinks: [
         { title: "Order History", icon: "mdi-clipboard-text-clock" },
         { title: "Profile Editing", icon: "mdi-account-badge" },
         { title: "Address Editing", icon: "mdi-map-marker" },
-        { title: "Logout", icon: "mdi-logout-variant" }
+        { title: "Logout", icon: "mdi-logout-variant" },
       ],
 
       selectedLang: { lang: "English", prefix: "EN" },
@@ -1727,42 +1751,44 @@ export default {
         {
           lang: "English",
           prefix: "EN",
-          flag:
-            "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
+          flag: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png",
         },
         {
           lang: "Bahasa Melayu",
           prefix: "MS",
-          flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png"
+          flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png",
         },
         {
           lang: "中文",
           prefix: "ZH",
-          flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png"
-        }
+          flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png",
+        },
       ],
 
       countries: [
         {
           lang: "English",
           prefix: "EN",
-          flag:
-            "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
+          flag: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png",
         },
         {
           lang: "BahasaMelayu",
           prefix: "MS",
-          flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png"
+          flag: "https://cdn.countryflags.com/thumbs/malaysia/flag-800.png",
         },
         {
           lang: "Mandarin",
           prefix: "ZH",
-          flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png"
-        }
+          flag: "https://cdn.countryflags.com/thumbs/china/flag-800.png",
+        },
       ],
 
       // ----- Account Login Register Section ----- //
       tab: 0,
+      activePicker: null,
+      birth_date: null,
+      menuPicker: false,
+      dateMenu: false,
       userName: "",
       registerEmail: "",
       registerPassword: "",
@@ -1771,20 +1797,20 @@ export default {
       showRegisterPassword: false,
       formHasErrors: false,
       emailRules: [
-        value => !!value || "Please enter your email",
-        value =>
+        (value) => !!value || "Please enter your email",
+        (value) =>
           /.+@.+\..+/.test(value) ||
-          "Email must be valid (e.g. jeremy14@gmail.com) "
+          "Email must be valid (e.g. jeremy14@gmail.com) ",
       ],
 
       rules: {
-        required: value => !!value || "Please enter your password",
-        passValidate: value =>
+        required: (value) => !!value || "Please enter your password",
+        passValidate: (value) =>
           (value &&
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/.test(
               value
             )) ||
-          "Minimum 8 characters, one capital letter, special charater & number"
+          "Minimum 8 characters, one capital letter, special charater & number",
       },
 
       vueTelVuetifyLogin: {
@@ -1804,8 +1830,8 @@ export default {
           label: "Phone number",
           hint: "e.g. +60166998899",
           onlyCountries: ["MY", "SG"],
-          fetchCountry: true
-        }
+          fetchCountry: true,
+        },
       },
 
       vueTelVuetifyRegister: {
@@ -1814,7 +1840,7 @@ export default {
         valid: false,
         countryCode: null,
         phoneNoRules: [
-          v => !!v || "Please enter your phone number"
+          (v) => !!v || "Please enter your phone number",
           // v => /(\+?6?01)[02-46-9]-*[0-9]{7}$|^(\+?6?01)[1]-*[0-9]{8}$/.test(v) || 'Phone No. must be valid',
         ],
         props: {
@@ -1829,8 +1855,8 @@ export default {
           label: "Phone number",
           hint: "e.g. +60166998899",
           onlyCountries: ["MY", "SG"],
-          fetchCountry: true
-        }
+          fetchCountry: true,
+        },
       },
       // xxxxx Account Login Register Section xxxxx- //
 
@@ -1845,7 +1871,7 @@ export default {
       register_dialog: false,
 
       login_regis_msg: "",
-      registerStatus: ""
+      registerStatus: "",
     };
   },
 
@@ -1859,6 +1885,10 @@ export default {
   },
 
   watch: {
+    menuPicker (val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
     //  selected(){
     //      this.$store.commit("setSelectedLink", this.selected);
     //  }
@@ -1871,7 +1901,7 @@ export default {
       },
       set(newSelectedLink) {
         this.$store.commit("setSelectedLink", newSelectedLink);
-      }
+      },
     },
 
     // statusLOGIN: {
@@ -1913,18 +1943,10 @@ export default {
 
     profile_img() {
       return this.$store.state.profile_pic;
-    }
+    },
   },
 
   methods: {
-    countryChangedLogin(country) {
-      this.vueTelVuetifyLogin.countryCode = "+" + country.dialCode;
-    },
-
-    countryChangedRegister(country) {
-      this.vueTelVuetifyRegister.countryCode = "+" + country.dialCode;
-    },
-
     //check the screen size for responsive use
     checkScreen() {
       this.windowWidth = window.innerWidth;
@@ -1936,6 +1958,13 @@ export default {
       this.mobileNav = false;
       return;
     },
+
+    scrollTop: function () {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      },
 
     //check the scroll position
     updateScroll() {
@@ -1957,7 +1986,7 @@ export default {
         } else {
           link = "/" + this.merchant_url;
         }
-        window.location.replace(link);
+        window.location.assign(link);
 
         /*
         const website_url = this.website_url;
@@ -1971,7 +2000,8 @@ export default {
       } else if (i == 1) {
         this.shipping_dialog = true;
       } else if (i == 3) {
-        /*
+
+      /*
       else if(index == 1){
         const shipping_status = this.shipping_setting_status
         switch(shipping_status){  
@@ -2015,6 +2045,18 @@ export default {
       this.$store.commit("changelocale", this.selectedLang.prefix);
     },
 
+    countryChangedLogin(country) {
+      this.vueTelVuetifyLogin.countryCode = "+" + country.dialCode;
+    },
+
+    countryChangedRegister(country) {
+      this.vueTelVuetifyRegister.countryCode = "+" + country.dialCode;
+    },
+
+    saveDate (date) {
+      this.$refs.menuPicker.save(date)
+    },
+
     get_login() {
       if (this.$refs.loginForm.validate() == false) {
         return;
@@ -2026,10 +2068,11 @@ export default {
         return;
       }
 
-      this.vueTelVuetifyLogin.phoneNoTrim = this.vueTelVuetifyLogin.phoneNo.replace(
-        this.vueTelVuetifyLogin.countryCode,
-        ""
-      );
+      this.vueTelVuetifyLogin.phoneNoTrim =
+        this.vueTelVuetifyLogin.phoneNo.replace(
+          this.vueTelVuetifyLogin.countryCode,
+          ""
+        );
       const formattedLoginPhoneNo = this.vueTelVuetifyLogin.phoneNoTrim.replace(
         /[^\d]+/g,
         ""
@@ -2041,13 +2084,13 @@ export default {
       params.append("phone", formattedLoginPhoneNo);
       params.append("country_code", this.vueTelVuetifyLogin.countryCode);
       params.append("merchant_id", this.form_data[0].merchant_id);
-
+  
       axios({
         method: "post",
         url: "https://user.lkmng.com/registration/index.php",
-        data: params
+        data: params,
       })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == "1") {
             this.account_dialog = false;
             this.page_loading = true;
@@ -2062,11 +2105,12 @@ export default {
                     name: response.data.user_detail.name,
                     email: response.data.user_detail.email,
                     userId: response.data.user_detail.user_id,
+                    birth_date:  response.data.user_detail.birth_date,
                     country_code: this.vueTelVuetifyLogin.countryCode,
                     phoneNo: formattedLoginPhoneNo,
-                    login_pw: this.loginPassword
-                  }
-                }
+                    login_pw: this.loginPassword,
+                  },
+                },
               ]);
 
               // this.$store.commit("setLoginInfo", response.data);
@@ -2084,7 +2128,7 @@ export default {
             return (this.login_regis_msg = response.data.user_detail + "!");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -2100,14 +2144,13 @@ export default {
         return;
       }
 
-      this.vueTelVuetifyRegister.phoneNoTrim = this.vueTelVuetifyRegister.phoneNo.replace(
-        this.vueTelVuetifyRegister.countryCode,
-        ""
-      );
-      const formattedRegisterPhoneNo = this.vueTelVuetifyRegister.phoneNoTrim.replace(
-        /[^\d]+/g,
-        ""
-      );
+      this.vueTelVuetifyRegister.phoneNoTrim =
+        this.vueTelVuetifyRegister.phoneNo.replace(
+          this.vueTelVuetifyRegister.countryCode,
+          ""
+        );
+      const formattedRegisterPhoneNo =
+        this.vueTelVuetifyRegister.phoneNoTrim.replace(/[^\d]+/g, "");
 
       const params = new URLSearchParams();
       params.append("register", 1);
@@ -2115,20 +2158,22 @@ export default {
       params.append("email", this.registerEmail);
       params.append("name", this.userName);
       params.append("phone", formattedRegisterPhoneNo);
+      params.append("birth_date", this.birth_date);
       params.append("country_code", this.vueTelVuetifyRegister.countryCode);
       params.append("merchant_id", this.form_data[0].merchant_id);
 
+      console.log('b-date', this.birth_date);
       axios({
         method: "post",
         url: "https://user.lkmng.com/registration/index.php",
-        data: params
+        data: params,
       })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == "1") {
             this.registerStatus = response.data.status;
             this.account_dialog = false;
             this.page_loading = true;
-
+            console.log('registe3r_response', response)
             setTimeout(() => {
               this.page_loading = false;
               this.register_dialog = true;
@@ -2146,7 +2191,7 @@ export default {
             return (this.login_regis_msg = response.data.message);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
 
@@ -2161,13 +2206,13 @@ export default {
       axios({
         method: "post",
         url: "https://formtest.lkmng.com/profile/index.php",
-        data: params
+        data: params,
       })
-        .then(response => {
-          this.profile_pic = response.data.data[0].profile_img;
+        .then((response) => {
+          this.profile_pic = response.data.data[0].profile_img
           this.$store.commit("setProfilePic", this.profile_pic);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -2198,9 +2243,9 @@ export default {
                 userId: "",
                 country_code: "",
                 phoneNo: "",
-                login_pw: ""
-              }
-            }
+                login_pw: "",
+              },
+            },
           ]);
         }, 2000);
       }
@@ -2278,13 +2323,13 @@ export default {
         company_phone: this.form_data[0].company_phone,
         company_email: this.form_data[0].company_email,
         registration_no: this.form_data[0].registration_no,
-        site_url: link
+        site_url: link,
       });
 
       return array;
     },
 
-    onInputLogin: function({ valid }) {
+    onInputLogin: function ({ valid }) {
       this.vueTelVuetifyLogin.valid = valid;
 
       if (this.vueTelVuetifyLogin.valid == true) {
@@ -2292,18 +2337,24 @@ export default {
       }
     },
 
-    onInputRegister: function({ valid }) {
+    onInputRegister: function ({ valid }) {
       this.vueTelVuetifyRegister.valid = valid;
 
       if (this.vueTelVuetifyRegister.valid == true) {
         this.vueTelVuetifyRegister.props.errorMessages = null; //check if the phone is valid,set errmsg to null
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
+*{
+  font-family: "Montserrat", sans-serif !important;
+  letter-spacing: -.6px;
+  zoom:1.006;
+}
+
 :root {
   --main-color: rgb(10, 21, 58);
   --font-size-display1: 34px;
@@ -2312,6 +2363,7 @@ export default {
   --font-size-display4: 26px;
   --font-size-headline: 24px;
   --font-size-headline-2: 16px;
+  --font-size-headline-3: 20px;
   --font-size-subtitle-1: 15px;
   --font-size-paragraph: 14px;
   --font-size-caption: 12px;
@@ -2330,7 +2382,7 @@ export default {
 }
 
 .font-size-display4 {
-  font-size: var(--font-size-display3);
+  font-size: var(--font-size-display4);
 }
 
 .font-size-headline {
@@ -2339,6 +2391,10 @@ export default {
 
 .font-size-headline-2 {
   font-size: var(--font-size-headline-2);
+}
+
+.font-size-headline-3 {
+  font-size: var(--font-size-headline-3);
 }
 
 .font-size-subtitle-1 {
@@ -2395,7 +2451,7 @@ export default {
 /* ------- Header -------- */
 /* for header navigation */
 .nav-drawer-width-lg {
-  width: 300px !important;
+  width: 330px !important;
 }
 
 .nav-drawer-width-sm {
@@ -2489,7 +2545,9 @@ export default {
 
 /* ------- Dialog Box Account (Login/Register) ------- /*
 /* change default border color of input-field */
-.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)
+.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(
+    .v-input--has-state
+  )
   > .v-input__control
   > .v-input__slot
   fieldset {
@@ -2652,8 +2710,17 @@ export default {
 .v-btn:not(.v-btn--round).v-size--large {
   transition: 0.5s ease !important;
 }
+@media screen and (min-width: 1024px) { 
+  .image-logo {
+    padding-left:115px;
+  }
+}
 
 @media screen and (max-width: 599px) {
+  *{
+    zoom:1;
+}
+
   .scrollup {
     left: 45%;
     bottom: 4%;

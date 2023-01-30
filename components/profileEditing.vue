@@ -1,16 +1,10 @@
-<template>
-  
-</template>
+<template></template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
-
-</style>
+<style></style>
 
 <template>
   <div class="account-info-container">
@@ -74,7 +68,48 @@ export default {
           </v-text-field>
         </v-col>
 
-        <v-col cols="12" sm="12">
+        <v-col cols="12" sm="6">
+          <v-menu
+            ref="menuPicker"
+            v-model="menuPicker"
+            :close-on-content-click="false"
+            :nudge-right="20"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="birth_date"
+                prepend-inner-icon="mdi-calendar"
+                label="Date of Birth"
+                :rules="[(v) => !!v || 'Please enter your birthdate']"
+                outlined
+                clearable
+                hint="YYYY/MM/DD"
+                readonly
+                required
+                filled
+                style="margin-top: -20px"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="birth_date"
+              @input="dateMenu = false"
+              :active-picker.sync="activePicker"
+              :max="
+                new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+                  .toISOString()
+                  .substr(0, 10)
+              "
+              @change="saveDate"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
+
+        <v-col cols="12" sm="6">
           <vue-tel-input-vuetify
             @validate="onInputPhoneNo"
             v-on:country-changed="countryChangedLogin"
@@ -222,8 +257,8 @@ export default {
           >
             SUCCESS !
           </h2>
-          <p style="font-weight: 300; padding: 10px 20px; line-height: 35px">
-            Your information has been updated successfully.
+          <p style="font-weight: 300; padding: 10px 20px; line-height: 30px">
+            Congratulations! Your information has been successfully updated.
           </p>
 
           <v-btn
@@ -261,8 +296,8 @@ export default {
             {{ login_regis_msg }}
           </h4>
           <p style="font-weight: 300; padding: 0 20px">
-            Sorry, we found that the data you key in has been used for
-            registering as our member.
+            We apologize, but it seems the information you have provided has already been registered as a member. 
+            Please double-check and try again.
           </p>
 
           <v-btn
@@ -300,8 +335,8 @@ export default {
           >
             SUCCESS !
           </h2>
-          <p style="font-weight: 300; padding: 10px 20px; line-height: 35px">
-            Your password has been changed successfully.
+          <p style="font-weight: 300; padding: 10px 20px; line-height: 30px">
+            Congratulations, your password has been successfully updated.
           </p>
 
           <v-btn
@@ -343,7 +378,7 @@ export default {
             {{ pw_error_msg }}
           </h4>
           <p style="font-weight: 300; padding: 0 20px">
-            Sorry, your old password is invalid.
+            We apologize, but the password you entered does not match our records.
           </p>
           <v-btn
             class="px-16 mt-n3"
@@ -387,6 +422,11 @@ export default {
         (v) => !!v || "E-mail is required (e.g. Shirlyn05@gmail.com)",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
+
+      activePicker: null,
+      birth_date: "",
+      menuPicker: false,
+      dateMenu: false,
 
       phoneNo: "",
       phoneNoRules: [
@@ -446,17 +486,19 @@ export default {
     };
   },
 
-  async asyncData({ params, $axios }) {
-    
-  },
-
-
   created() {
     this.userName = this.login_data[0].user_detail.name;
     this.userEmail = this.login_data[0].user_detail.email;
+      this.birth_date = this.login_data[0].user_detail.birth_date;
     this.vueTelVuetify.phoneNo =
       this.login_data[0].user_detail.country_code +
       this.login_data[0].user_detail.phoneNo;
+  },
+
+  watch: {
+    menuPicker (val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
   },
 
   computed: {
@@ -483,6 +525,10 @@ export default {
   },
 
   methods: {
+    saveDate (date) {
+      this.$refs.menuPicker.save(date)
+    },
+
     change_profile() {
       if (this.$refs.saveBasicInfo.validate() == false) {
         return;
@@ -508,6 +554,7 @@ export default {
       params.append("merchant_id", this.form_data[0].merchant_id);
       params.append("name", this.userName);
       params.append("email", this.userEmail);
+      params.append("birth_date", this.birth_date);
       params.append("country_code", this.vueTelVuetify.countryCode);
       params.append("phone", formattedPhoneNo);
 
@@ -531,6 +578,7 @@ export default {
                     name: this.userName,
                     userId: this.login_data[0].user_detail.userId,
                     email: this.userEmail,
+                    birth_date: this.birth_date,
                     country_code: this.vueTelVuetify.countryCode,
                     phoneNo: formattedPhoneNo,
                     login_pw: this.login_data[0].user_detail.login_pw,

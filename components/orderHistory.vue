@@ -3,6 +3,7 @@
     <v-overlay :value="page_loading">
       <v-progress-circular indeterminate size="65"> </v-progress-circular>
     </v-overlay>
+    
     <h1
       v-show="$vuetify.breakpoint.smAndUp"
       class="account-link-title text-center"
@@ -157,13 +158,13 @@
         </template> -->
 
         <template v-slot:item.action="{ item }">
-          <div class="d-flex align-center justify-center" style="width:100%">
+          <div class="d-flex align-center justify-center" style="width: 100%">
             <v-btn
               @click="get_invoice(item.public_url)"
               dark
               elevation="1"
               :style="'backgroundColor:' + system_color.primary_color"
-              style="padding: 0; font-size: 10px"
+              style="padding: 0; font-size: 12px"
               v-model="item.action"
             >
               View
@@ -174,7 +175,7 @@
               dark
               elevation="1"
               :style="'backgroundColor:' + system_color.primary_color"
-              style="padding: 0; font-size: 10px; margin-left: 10px;"
+              style="padding: 0; font-size: 12px; margin-left: 10px"
               v-model="item.action"
             >
               Upload
@@ -454,11 +455,11 @@ export default {
 }
 
 .v-data-table::v-deep th {
-  font-size: 16px !important;
+  font-size: 20px !important;
 }
 
 .v-data-table::v-deep td {
-  font-size: 14px !important;
+  font-size: 18px !important;
   font-weight: 500;
 }
 

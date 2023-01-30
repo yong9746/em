@@ -3,7 +3,7 @@
   <div :style="show_border_error&&show_error?'border:solid 1px #ff8f8f; padding:5px':''">
 
     <template v-for="(vari, index) in vari_array" >
-      <v-checkbox :key="index" v-model="vari.quantity" @change="click(index)" style="height:30px">
+      <v-checkbox :key="index" v-model="vari.quantity" @change="click(index)">
         <template v-slot:label>
           <span class="radio-text price-font ml-1 mr-2" style="color:#818c94;font-size: 14px !important; font-weight:600;">
             {{ vari.name }}

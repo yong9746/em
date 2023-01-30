@@ -10,9 +10,9 @@ export default ({ app, store }) => {
     locale: store.state.locale,
     fallbackLocale: "en",
     messages: {
-      en: require("~/locales/en.json"),
-      ms: require("~/locales/ms.json"),
-      zh: require("~/locales/zh.json")
+      EN: require("~/locales/en.json"),
+      MS: require("~/locales/ms.json"),
+      ZH: require("~/locales/zh.json")
     }
   });
   app.i18n.locale = store.state.locale;

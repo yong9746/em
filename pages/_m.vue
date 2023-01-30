@@ -1,145 +1,138 @@
-  <template>
-    <div class="menu is-mobile" >
-    
-      <meta name="viewport" content="width=device-width, user-scalable=no" />
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-      />
-      <meta name="google" content="notranslate">
-      <meta name="theme-color" :content="theme_color" />
-
-      <v-overlay :value="ipay_overlay" z-index="999999">
-          <v-progress-circular
-            indeterminate
-            size="65"
-          ></v-progress-circular>
-            </v-overlay>
-          
-      <div class="page-wrapper">
-        <div class="content-wrapper menu-bg">
-          <main>
-            <div class="page-container">
-              
-              <section
-                class="vendor-section"
-                id="category-all"
+<template>
+  <div class="menu is-mobile" >
+  
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="google" content="notranslate">
+    <meta name="theme-color" :content="theme_color" />
+       <v-overlay :value="ipay_overlay" z-index="999999">
+        <v-progress-circular
+          indeterminate
+          size="65"
+        ></v-progress-circular>
+          </v-overlay>
+         
+    <div class="page-wrapper">
+      <div class="content-wrapper menu-bg">
+        <main>
+          <div class="page-container">
+            <section
+              class="vendor-section"
+              id="category-all"
                 :style="'background:' + theme_color"
+            >
+              <!-- style="background: linear-gradient(to top, gray 40%, #eef1f5 100%);" -->
+              <!-- :style="'background:' + theme_color" -->
+          <div v-if="news_ticker!=='' && check_json(news_ticker)" >
+              <div v-if="JSON.parse(news_ticker).display==true">
+                <div class="d-flex ">
+                <div class="animate__animated animate__animated animate__lightSpeedInLeft animate__delay-.5s" style="background:linear-gradient(#28313B, #485461); width:10%;text-align:center" >
+                  <v-icon dark  class="pa-1">mdi-bullhorn</v-icon>
+                  </div>
+              <marquee class="pa-1 animate__animated animate__animated animate__lightSpeedInLeft animate__delay-.5s" style="color:#ffffff; background:linear-gradient(#28313B, #485461);" width="90%"><strong>{{JSON.parse(news_ticker).content}}</strong></marquee>
+                </div>
+
+              </div>
+          </div>
+              <div
+                v-if="alert_item_added"
+                id="div_block-651-440"
+                class="ct-div-block"
+                style="display: block; background-color: #4caf50; height: 45px"
               >
-            
+                <div id="text_block-663-440" class="ct-text-block" >
+                  Item Added
+                </div>
+              </div>
 
-            <div v-if="news_ticker!=='' && check_json(news_ticker)" >
-                <div v-if="JSON.parse(news_ticker).display==true">
-                  <div class="d-flex ">
-                  <div style="background:#3d3d3d;width:10%;text-align:center" >
-                    <v-icon dark  class="pa-1">mdi-bullhorn</v-icon>
+              <div
+                v-if="store_closed"
+                id="div_block-651-440"
+                class="ct-div-block"
+                style="display: block; background-color: #e0e0e0; height: 45px"
+              >
+                <div id="text_block-663-440" class="ct-text-block" style="color:#b1b1b1">
+                  {{$t('store-closed')}}
+                </div>
+              </div>
+                       <!-- :style="'background:' + theme_color" -->      
+                <v-row :style="'background:' + theme_color" style="margin: unset; "  justify="center" >
+                  <v-col style="padding: 0;" xl="7" lg="7" md="7" cols="12">
+                    <div class="videoWrapper" v-if="banner_status == 1">
+                          <iframe
+                            :src="banner_video_link"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                          ></iframe>
+                            <v-expand-transition hide-on-leave>
+                      <v-row no-gutters  justify="end" style="height:100%">
+                          <v-col cols="1" >
+                            <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
                     </div>
-                <marquee bgcolor="#3d3d3d" class="pa-1" style="color:#ffffff" width="90%"><strong>{{JSON.parse(news_ticker).content}}</strong></marquee>
-                  </div>
+                          </v-col>
+                        </v-row>
+                      </v-expand-transition>
+                    </div>
+                    
+                    <div v-if="banner_status == 0 && check_json(form_image)">
+                      <v-row no-gutters  justify="end" style="height:100%;z-index:9999;position:relative" >
+                         <v-col cols="1" >
+                           <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
+                           </div>
+                         </v-col>
+                      </v-row>
+                      <v-row dense no-gutters>
+                         <v-col cols="12" >
+                           <v-carousel width="100%" class="banner-slider banner-container animate__animated animate__fadeInDown  animate__delay-.5s" cycle height="auto" >
+                               
+                                 <v-carousel-item
+                                   v-for="(img, i) in JSON.parse(form_image)"
+                                   :key="i">
+                                 
+                                   <img
+                                     v-if="banner_status == 0"
+                                     :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + img.image"
+                                   >
+                                 </v-carousel-item>
+   
+                           </v-carousel>
+                         </v-col>
+                       </v-row>
 
-                </div>
-            </div>
-                <div
-                  v-if="alert_item_added"
-                  id="div_block-651-440"
-                  class="ct-div-block"
-                  style="display: block; background-color: #4caf50; height: 45px"
-                >
-                  <div id="text_block-663-440" class="ct-text-block" >
-                    Item Added
-                  </div>
-                </div>
+                    </div>
+                    
+                    <div  v-if="banner_status == 0 && !check_json(form_image)" >
+                      <v-img
+                          dense
+                          :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + form_image"
+                          cover
+                          min-height="250px"
+                          max-height="550px"
+                        >
 
-                <div
-                  v-if="store_closed"
-                  id="div_block-651-440"
-                  class="ct-div-block"
-                  style="display: block; background-color: #e0e0e0; height: 45px"
-                >
-                  <div id="text_block-663-440" class="ct-text-block" style="color:#b1b1b1">
-                    {{$t('store-closed')}}
-                  </div>
-                </div>
-
-                                    
-            
-                <v-row  style="margin: unset"  justify="center">
-
-                  <v-col style="padding: unset" xl="6" lg="8" cols="12">
-                <div class="videoWrapper" v-if="banner_status == 1">
-                      <iframe
-                        :src="banner_video_link"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                      ></iframe>
-                        <v-expand-transition hide-on-leave>
+                  <v-expand-transition hide-on-leave>
                   <v-row no-gutters  justify="end" style="height:100%">
-                      <v-col cols="1" >
-                        <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
-                </div>
-                      </v-col>
-                    </v-row>
-                  </v-expand-transition>
-                </div>
-                <div v-if="banner_status == 0 && check_json(form_image)">
-                  <v-row no-gutters  justify="end" style="height:100%;z-index:9999;position:relative" >
                       <v-col cols="1" >
                         <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
                       </div>
                       </v-col>
                     </v-row>
-              <v-row dense no-gutters>
-                <v-col cols="12" >
-                <v-carousel width="100%" class="banner-slider" cycle height="auto" >
-                    
-                      <v-carousel-item
-                        v-for="(img, i) in JSON.parse(form_image)"
-                        :key="i">
-                      
-                        <v-img
-                          v-if="banner_status == 0"
-                          dense
-                          :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + img.image"
-                          cover
-                          min-height="250px"
-                          max-height="550px"
-                        ></v-img>
-                      </v-carousel-item>
-
-                </v-carousel>
-                </v-col>
-                </v-row>
-
-                </div>
-                <div  v-if="banner_status == 0 && !check_json(form_image)" >
-                    <v-img
-                      dense
-                      :src="domain + 'product/image.php?m='+merchant_id+'&type=banner&im=' + form_image"
-                      cover
-                      min-height="250px"
-                      max-height="550px"
-                    >
-
-              <v-expand-transition hide-on-leave>
-              <v-row no-gutters  justify="end" style="height:100%">
-                  <v-col cols="1" >
-                    <div class="subtitle-2 text-center" style="color:white"> <lang v-if="form_data[0].display_header ==1"></lang>
-                  </div>
-                  </v-col>
-                </v-row>
-              </v-expand-transition>
-                    </v-img>
-                    </div>
+                  </v-expand-transition>
+                        </v-img>
+                        </div>
                     <!-- <p>{{ $t("title") }}</p> -->
                   </v-col>
                   <v-col cols="12" style="padding: unset">
                   
                     <div class="vendor-info-container">
-                      <div class="vendor-info-main hreview-aggregate">
-                        <div class="vendor-info-main-headline item">
+                      <div class="vendor-info-main hreview-aggregate" >
+                        <div class="vendor-info-main-headline item">     
+                          <div class="ribbon-vertical"></div>
                           <h1 class="fn">{{ form_title }}</h1>
-                        
                         </div>
 
                         <div class="vendor-info-main-details">
@@ -258,190 +251,220 @@
                   </v-col> -->
                     
                 </v-row>
-                <v-row>
-                </v-row>
-                  <div class="menu__blocks-wrapper">
-                  <div class="menu__blocks">
-      
-                    <div class="menu__list-wrapper" >
-                    
 
-                      <nav class="dish-menu-category-list" >
-                        <div style="background:#ffffff" class="mr-0 mb-1">
-                                <v-text-field
-                        v-model="search_content"
-                        :loading="search_loading"
-                        background-color="#eeeeee"
-                        color="#000000"
-                        class="search-field ml-4 mr-4 mt-4 mb-3"
-                        name="search"
-                        style="background-color:#eeeeee"
-                        solo
-                        @click:clear="clear_search_content"
-                        :label="$t('search')+'...'"
-                        prepend-inner-icon="mdi-magnify"
-                        clearable
-                        
-                        hide-details
-                      >
-                      </v-text-field>
-                    </div>
+              <v-row>
+              </v-row>
+                <div class="menu__blocks-wrapper">
+                <div class="menu__blocks">
+    
+                  <div class="menu__list-wrapper" >
+                   
+
+                    <nav class="dish-menu-category-list" >
+                      <div style="background:#ffffff" class="mr-0 mb-1">
+                              <v-text-field
+                      v-model="search_content"
+                      :loading="search_loading"
+                      background-color="#eeeeee"
+                      color="#000000"
+                      class="search-field ml-4 mr-4 mt-4 mb-3"
+                      name="search"
+                      style="background-color:#eeeeee"
+                      solo
+                      @click:clear="clear_search_content"
+                      :label="$t('search')+'...'"
+                      prepend-inner-icon="mdi-magnify"
+                      clearable
                       
-                        <div  v-if="!searching">
-                          <div class="nav-holder ml-3 mr-3" >
-                            
+                      hide-details
+                    >
+                    </v-text-field>
+                  </div>
+                    
+                      <div  v-if="!searching">
+                        <div class="nav-holder ml-3 mr-3" >
+                          
 
-                            <scrollactive :offset="146" :duration="2000" active-class="category-items-selected" style="height:52px;" 
-                              ><ul class="pl-0 pr-0 scollul" >
-                                <li
-                                  class="pa-0"
-                                  
-                                >
-                                  <a @click="vibrate()"
-                                  :href="'#category-all'"
-                                    class="scrollactive-item nav-item category-items"
-                                    style="font-size:12px;display:flex;height:35px;font-weight:700;color:#6c757d"
-                                    >
-                                    {{$t('all')}}</a
+                          <scrollactive :offset="146" :duration="2000" active-class="category-items-selected" style="height:52px;" 
+                            ><ul class="pl-0 pr-0 scollul" >
+                              <li
+                                class="pa-0"
+                                
+                              >
+                                <a @click="vibrate()"
+                                 :href="'#category-all'"
+                                  class="scrollactive-item nav-item category-items"
+                                  style="font-size:12px;display:flex;height:35px;font-weight:700;color:#6c757d"
                                   >
-                                </li>
+                                  {{$t('all')}}</a
+                                >
+                              </li>
 
-                                <li
-                                  v-for="(category, index) in categories"
-                                  :key="index"
-                                  class="pa-0"
-                                  
-                                >
-                                  <a @click="vibrate()"
-                                    :href="'#category-' + category.category_id"
-                                    class="scrollactive-item nav-item category-items"
-                                    style="font-size:12px;display:flex;height:35px;font-weight:700;color:#6c757d"
-                                    >
-                                    {{ category.name }}({{
-                                      category.count_row
-                                    }})</a
+                              <li
+                                v-for="(category, index) in categories"
+                                :key="index"
+                                class="pa-0"
+                                
+                              >
+                                <a @click="vibrate()"
+                                  :href="'#category-' + category.category_id"
+                                  class="scrollactive-item nav-item category-items"
+                                  style="font-size:12px;display:flex;height:35px;font-weight:700;color:#6c757d"
                                   >
-                                </li>
-                              </ul></scrollactive
-                            >
-                          </div>
+                                  {{ category.name }}({{
+                                    category.count_row
+                                  }})</a
+                                >
+                              </li>
+                            </ul></scrollactive
+                          >
                         </div>
-                      </nav>
+                      </div>
+                    </nav>
 
-                      <div class="menu__list" v-if="!searching">
-            
+                    <div class="menu__list" v-if="!searching">
+          
 
-                        <section
-                          class="menu__items-wrapper"
-                          :style="
-                            !theme_color
-                              ? 'background: f7f7f7;'
-                              : 'background:' + theme_color
+                      <section
+                        class="menu__items-wrapper"
+                        :style="
+                          !theme_color
+                            ? 'background: f7f7f7;'
+                            : 'background:' + theme_color
                           "
                         >
-                            <popular_category v-if="enable_feature=='0'" :category_name="feature_label" :get_params="route_param"
-                            :items="product_feature" :merchant_url="merchant_url" :merchant_id="merchant_id" :domain="domain"></popular_category>
-                          <div class="menu__items" v-if="items.length > 0">
-                            <!-- category + product -->
-                            <div
-                              class="dish-category-section"
-                              style="margin: 10px"
-                              v-for="category_product in categories"
-                              :key="category_product.category_id"
-                              :id="'category-' + category_product.category_id"
-                            >
-                              <div class="dish-category-section__inner-wrapper">
-                                <h2 class="dish-category-title">
-                                  {{ category_product.name }}
-                                </h2>
-
-                                <ul class="dish-list scollul">
-                                  <!-- product -->
-                                  <template v-for="product in items">
-                                    <li
-                                      :class="[
-                                        grid
-                                          ? 'dish-card dish-card-grid-overwrite'
-                                          : 'dish-card',
-                                      ]"
-                                      :key="product.product_id"
-                                      v-if="
-                                        category_product.category_id ==
-                                        product.category_id
-                                      "
-                                      @click="product_onclick(product.product_id,product.slug)"
-                                    >
-                                      <span class="item-react-root">
+                          <popular_category v-if="enable_feature=='0'" :category_name="feature_label" :get_params="route_param"
+                          :items="product_feature" :merchant_url="merchant_url" :merchant_id="merchant_id" :domain="domain"></popular_category>
+                        <div class="menu__items" v-if="items.length > 0">
+                          <!-- category + product -->
+                          <div
+                            data-aos="fade-in" 
+                            data-aos-offset="150"
+                            data-aos-duration="300"
+                            data-aos-easing="ease-in-out"
+                            class="dish-category-section"                            
+                            v-for="category_product in categories"
+                            :key="category_product.category_id"
+                            :id="'category-' + category_product.category_id"
+                          >
+                            <div class="dish-category-section__inner-wrapper">
+                              <h2 class="dish-category-title">
+                                {{ category_product.name }}
+                                <div class="dish-category-vertical-line"></div>
+                              </h2>
+   
+                              <ul class="dish-list scollul">
+                                <!-- product -->
+                                <template v-for="product in items">
+                                  <li style="transition:0.75s"
+                                    data-aos="fade-up" 
+                                    data-aos-offset="200"
+                                    data-aos-delay="450" 
+                                    data-aos-duration="2500"
+                                    data-aos-anchor-placement="center-bottom"
+                                    data-aos-easing="ease-in-out-quart"
+                                    data-mirror="ease-in-out-quart"
+                                    :style="{'borderTop': 'solid 4px #D3D3D3'}"
+                                    :class="[
+                                      grid
+                                        ? 'dish-card dish-card-grid-overwrite'
+                                        : 'dish-card',
+                                    ]"
+                                    :key="product.product_id"
+                                    v-if="
+                                      category_product.category_id ==
+                                      product.category_id
+                                    "
+                                    @click="product_onclick(product.product_id,product.slug)"
+                                  >
+                                    <span class="item-react-root">
+                                      <div 
+                                        :class="[
+                                          grid
+                                            ? 'dish-info-container with-image dish-info-container-grid-overwrite'
+                                            : 'dish-info-container with-image',
+                                        ]"
+                                      >
                                         <div
                                           :class="[
                                             grid
-                                              ? 'dish-info-container with-image dish-info-container-grid-overwrite'
-                                              : 'dish-info-container with-image',
+                                              ? 'dish-info dish-info-grid-overwrite'
+                                              : 'dish-info',
                                           ]"
+                                            style="height:100%"
                                         >
-                                          <div
+                                          <h2
+                                            class=""
                                             :class="[
                                               grid
-                                                ? 'dish-info dish-info-grid-overwrite'
-                                                : 'dish-info',
+                                                ? 'dish-name fn p-name dish-name-grid-overwrite'
+                                                : 'dish-name fn p-name',
                                             ]"
-                                            style="height:100%"
                                           >
-                                            <h2
-                                              class=""
-                                              :class="[
-                                                grid
-                                                  ? 'dish-name fn p-name dish-name-grid-overwrite'
-                                                  : 'dish-name fn p-name',
-                                              ]"
-                                            >
-                                              <span :style="'color:' + p_color" style="font-size:13px;">{{
-                                                product.name
+                                            <span :style="'color:' + p_color" style="font-size:13px;">{{
+                                              product.name
                                               }}</span>
-                                            </h2>
-                                            <p
-                                              class="dish-description e-description ingredients" 
-                                            > 
-                                            <span v-html="product.description"> </span>
-                                            </p>
-                                            <div  style="position:absolute;bottom:22px;">
+                                          </h2>
+                                          <p
+                                            class="dish-description e-description ingredients" 
+                                          > 
+                                          <span v-html="product.description"> </span>
+                                          </p>
+                                          <div  style="position:absolute;bottom:22px;">
                                             
-                                          <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
-                                              style="font-size:12px;">
+                                             <div v-if="product.sold_quantity!=='' &&product.sold_quantity" 
+                                               style="font-size:12px;">
                                               {{product.sold_quantity }} {{ $t('sold')}}</div>
+                                             </div>
+
+                                             <div class="d-flex align-center">
+                                              <v-rating
+                                                :value="formatAverageRating(product.average_rating)" 
+                                                color="yellow darken-3"
+                                                full-icon="mdi-star"
+                                                half-increments
+                                                background-color="yellow darken-3"
+                                                length="5"
+                                                size="15"
+                                                :readonly="true"
+                                              ></v-rating>
+                                              
+                                              <h6 style="color:#9A9796; padding-top:5px" v-if="product.average_rating != '' ">({{ product.average_rating}})</h6>
+                                            </div>
                                           </div>
-                                          </div>
-                                            
-                                            <!-- :style="{
+                                          
+                                             <!-- :style="{
                                               
                                                 '(max-width: 767px) {height': product_mobile_image_size!==''?product_mobile_image_size+'px}':'}',
                                                 '(max-width: 767px) {width':product_mobile_image_size!==''?product_mobile_image_size+'px}':'}',
                                               }" -->
-                                          <picture  
+                                        <picture
                                           :style="inner_width>767? 'height:'+product_pc_image_size+'px; width:'+product_pc_image_size+'px;':'height:'+product_mobile_image_size+'px; width:'+product_mobile_image_size+'px;'"
-                                        
-                                              >
-                                            
-                                            <div
-
-                                              :style="{
-                                                'background-image':
-                                                  'url(' +
-                                                  domain +
-                                                  '/product/image.php?m='+merchant_id+'&type=product_list&im=' +
-                                                (product.image).replace(/\s+/g, '%20') +
+                                            >
+                                          <div 
+                                            style="overflow: hidden;"
+                                            :style="{
+                                              'background-image':
+                                                'url(' +
+                                                domain +
+                                                '/product/image.php?m='+merchant_id+'&type=product_list&im=' +
+                                               (product.image).replace(/\s+/g, '%20') +
                                                   ')', 'witdh':'198px!important;'
-                                              }"
-                                              class="photo u-photo b-lazy b-loaded "
-                                            >
-                                              <v-overlay
-                                            :absolute="true"
-                                            :value="true"
-                                            v-if="product.in_stock==false"
-                                            >
-                                            <!-- <v-img cover src="@/assets/images/sold-out.png">
-                                            </v-img> -->
-                                          <img style="width:100%; flex: 0 0 0%;" src="@/assets/images/sold-out.png" />
+                                            }"
+                                            class="photo u-photo b-lazy b-loaded product-img-container"
+                                          >
+                                          <div v-if="product.in_stock==true" class="add-product">
+                                            <v-icon size="20" color="white"> mdi-plus </v-icon>
+                                          </div>
+                                          
+                                            <v-overlay
+                                          :absolute="true"
+                                          :value="true"
+                                          v-if="product.in_stock==false"
+                                          >
+                                           <!-- <v-img cover src="@/assets/images/sold-out.png">
+                                           </v-img> -->
+                                        <img style="width:100%; flex: 0 0 0%;" src="@/assets/images/sold-out.png" />
 
                                             </v-overlay>
                                             </div>
@@ -2579,3041 +2602,3051 @@
     </div>
   </template>
 
-  <script>
-  // import Logo from '~/components/Logo.vue'
-  // import VuetifyLogo from '~/components/VuetifyLogo.vue'
-  import axios from "axios";
-  import NumberInputSpinner from "vue-number-input-spinner";
-  import * as moment from "moment/moment";
-  import _ from "lodash";
-  import lang from "@/components/language_selector";
-  import Vue from "vue";
-  import { BASEURL } from "@/api/baseurl";
-  import popular_category from "@/components/popular_category";
-  import tnc_dialog from "@/components/tnc_dialog";
-  // import {gmapApi} from 'vue2-google-maps'
-  import * as VueGoogleMaps from 'vue2-google-maps'   
-  import Tnc_dialog from '../components/tnc_dialog.vue';
-  export default {
-    components: {
-      NumberInputSpinner,
-      lang,
-      popular_category,
-      tnc_dialog
-    },
-    layout: 'default',
-    data() {
-      return {
-        domain: BASEURL,
-        tab: null,
-        form_status: false,
-        main_form: true,
-        name: "",
-        nameRules: [
-          (v) => !!v || this.$t("name-required"),
-          (v) => (v && v.length <= 30) || this.$t("name-length-30"),
-        ],
-        email: "", 
-        emailRules: [(v) => /.+@.+\..+/.test(v) || this.$t("email-valid")],
-        address: "",
-        addressRules: [(v) => !!v || "Address is required"],
-        noteRules: [
-          (v) => v.length <= 1000 || "Note must be less than 1000 characters",
-        ],
-        numberRules: [(v) => /^\d+$/.test(v) || "num only"],
-        postcode: "",
-        city:"",
-        cityRules: [
-          (v) => !!v || this.$t("city-required")
-        ],
-        phone: "",
-        phoneRules: [
-          (v) => !!v || this.$t("contact-required"),
-          (v) => v.length > 7||"Invalid Number",
-        ],
-        state:"",
-        stateRules: [
-          (v) => !!v || this.$t("state-required")
-        ],
+<script>
+// import Logo from '~/components/Logo.vue'
+// import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import axios from "axios";
+import NumberInputSpinner from "vue-number-input-spinner";
+import * as moment from "moment/moment";
+import _ from "lodash";
+import lang from "@/components/language_selector";
+import Vue from "vue";
+import { BASEURL } from "@/api/baseurl";
+import popular_category from "@/components/popular_category";
+import tnc_dialog from "@/components/tnc_dialog";
+// import {gmapApi} from 'vue2-google-maps'
+import * as VueGoogleMaps from 'vue2-google-maps'   
+import Tnc_dialog from '../components/tnc_dialog.vue';
+export default {
+  components: {
+    NumberInputSpinner,
+    lang,
+    popular_category,
+    tnc_dialog
+  },
+  layout: 'default',
+  data() {
+    return {
+      domain: BASEURL,
+      tab: null,
+      form_status: false,
+      main_form: true,
+      name: "",
+      nameRules: [
+        (v) => !!v || this.$t("name-required"),
+        (v) => (v && v.length <= 30) || this.$t("name-length-30"),
+      ],
+      email: "", 
+      emailRules: [(v) => /.+@.+\..+/.test(v) || this.$t("email-valid")],
+      address: "",
+      addressRules: [(v) => !!v || "Address is required"],
+      noteRules: [
+        (v) => v.length <= 1000 || "Note must be less than 1000 characters",
+      ],
+      numberRules: [(v) => /^\d+$/.test(v) || "num only"],
+      postcode: "",
+      city:"",
+      cityRules: [
+        (v) => !!v || this.$t("city-required")
+      ],
+      phone: "",
+      phoneRules: [
+        (v) => !!v || this.$t("contact-required"),
+        (v) => v.length > 7||"Invalid Number",
+      ],
+      state:"",
+      stateRules: [
+        (v) => !!v || this.$t("state-required")
+      ],
         timeselectionRules: [
           (v) => !!v || this.$t("delivery-time-required")
         ],
-        state_list: [{
-              text: 'Johor',
-              value: 'Johor'
-            },
-            {
-                text: 'Kedah',
-                value: 'Kedah'
-            },
-            {
-                text: 'Kelantan',
-                value: 'Kelantan'
-            },
-            {
-                text: 'Melaka',
-                value: 'Melaka'
-            },
-            {
-                text: 'Negeri Sembilan',
-                value: 'Negeri Sembilan'
-            },
-            {
-                text: 'Pahang',
-                value: 'Pahang'
-            },
-            {
-                text: 'Perak',
-                value: 'Perak'
-            },
-            {
-                text: 'Perlis',
-                value: 'Perlis'
-            },
-            {
-                text: 'Pulau Pinang',
-                value: 'Pulau Pinang'
-            },
-            {
-                text: 'Selangor',
-                value: 'Selangor'
-            },
-            {
-                text: 'Terengganu',
-                value: 'Terengganu'
-            },
-            {
-                text: 'Kuala Lumpur',
-                value: 'Kuala Lumpur'
-            },
-            {
-                text: 'Putra Jaya',
-                value: 'Putra Jaya'
-            },
-            {
-                text: 'Sarawak',
-                value: 'Sarawak'
-            },
-            {
-                text: 'Sabah',
-                value: 'Sabah'
-            },
-            {
-                text: 'Labuan',
-                value: 'Labuan'
-            },
-          
-          ],
-        country:'MY',
-        countryRules: [
-          (v) => !!v || this.$t("country-required")
+      state_list: [{
+            text: 'Johor',
+            value: 'Johor'
+          },
+          {
+              text: 'Kedah',
+              value: 'Kedah'
+          },
+          {
+              text: 'Kelantan',
+              value: 'Kelantan'
+          },
+          {
+              text: 'Melaka',
+              value: 'Melaka'
+          },
+          {
+              text: 'Negeri Sembilan',
+              value: 'Negeri Sembilan'
+          },
+          {
+              text: 'Pahang',
+              value: 'Pahang'
+          },
+          {
+              text: 'Perak',
+              value: 'Perak'
+          },
+          {
+              text: 'Perlis',
+              value: 'Perlis'
+          },
+          {
+              text: 'Pulau Pinang',
+              value: 'Pulau Pinang'
+          },
+          {
+              text: 'Selangor',
+              value: 'Selangor'
+          },
+          {
+              text: 'Terengganu',
+              value: 'Terengganu'
+          },
+          {
+              text: 'Kuala Lumpur',
+              value: 'Kuala Lumpur'
+          },
+          {
+              text: 'Putra Jaya',
+              value: 'Putra Jaya'
+          },
+          {
+              text: 'Sarawak',
+              value: 'Sarawak'
+          },
+          {
+              text: 'Sabah',
+              value: 'Sabah'
+          },
+          {
+              text: 'Labuan',
+              value: 'Labuan'
+          },
+         
         ],
-        country_list: [{
-              text: 'Malaysia',
-              value: 'MY'
-            },
-            {
-                text: 'Singapore',
-                value: 'SG'
-            }
-          ],
-        delivery_fee: 0,
+      country:'MY',
+      countryRules: [
+        (v) => !!v || this.$t("country-required")
+      ],
+      country_list: [{
+            text: 'Malaysia',
+            value: 'MY'
+          },
+          {
+              text: 'Singapore',
+              value: 'SG'
+          }
+        ],
+      delivery_fee: 0,
 
-        checkbox: false,
-        submit_snackbar: false,
-        submit_snackbar_text: "",
-        error_snackbar: false,
-        error_snackbar_text: "",
+      checkbox: false,
+      submit_snackbar: false,
+      submit_snackbar_text: "",
+      error_snackbar: false,
+      error_snackbar_text: "",
 
-        redirect_dialog: false,
-        redirect_text_en: "Redirect to whatsapp...Later remember to press send",
-        redirect_text_zh: "转着去Whatsapp...等等记得按发送",
-        user_device_type: "",
-        payment_method: "",
-        bank_transfer: false,
-        cash_on_delivery: false,
-        fpay_transfer: false,
-        ipay_transfer:false,
+      redirect_dialog: false,
+      redirect_text_en: "Redirect to whatsapp...Later remember to press send",
+      redirect_text_zh: "转着去Whatsapp...等等记得按发送",
+      user_device_type: "",
+      payment_method: "",
+      bank_transfer: false,
+      cash_on_delivery: false,
+      fpay_transfer: false,
+      ipay_transfer:false,
 
-        image_dialog: false,
-        image_link: "",
-        show_contact: false,
-        dialog_cart: false,
-        cart: false,
-        categories: [],
-        order_loading: false,
+      image_dialog: false,
+      image_link: "",
+      show_contact: false,
+      dialog_cart: false,
+      cart: false,
+      categories: [],
+      order_loading: false,
 
-        search_content: "",
-        searching: false,
-        search_loading:false,
-        // searching_item_list: [],
-        selected_category_id: "",
-        searched_items: [],
-        request_self_collect: false,
+      search_content: "",
+      searching: false,
+      search_loading:false,
+      // searching_item_list: [],
+      selected_category_id: "",
+      searched_items: [],
+      request_self_collect: false,
 
-        // today_date: new Date().toISOString().substr(0, 10),
-        today_date: moment().format("YYYY-MM-DD"),
+      // today_date: new Date().toISOString().substr(0, 10),
+      today_date: moment().format("YYYY-MM-DD"),
 
-        hour:new Date(),
-        minute:new Date(),
-        menu1: false,
-        start_date: "",
-        menu2: false,
-        delivery_time: null,
-        delivery_collect: true,
-        items_gallery: [],
+      hour:new Date(),
+      minute:new Date(),
+      menu1: false,
+      start_date: "",
+      menu2: false,
+      delivery_time: null,
+      delivery_collect: true,
+      items_gallery: [],
 
-        discount_fee: "0",
+      discount_fee: "0",
 
-        coupon_code: "",
-        current_use_coupon_code: "",
-        coupon_error: "",
-        coupon_dialog: "",
-        availableDates: [],
+      coupon_code: "",
+      current_use_coupon_code: "",
+      coupon_error: "",
+      coupon_dialog: "",
+      availableDates: [],
 
-        //map
-        latitude: "",
-        longitude: "",
+      //map
+      latitude: "",
+      longitude: "",
 
-        //tax
-        unsavedChanges: true,
+      //tax
+      unsavedChanges: true,
 
-        //pos menu
-        alert_item_added: false,
-        alert_at_least_one_item: false,
-        scrollInvoked: 0,
+      //pos menu
+      alert_item_added: false,
+      alert_at_least_one_item: false,
+      scrollInvoked: 0,
 
-        step: 1,
-        panel: 0,
+      step: 1,
+      panel: 0,
 
-        error_checkout: true,
-        on_checkout: false,
+      error_checkout: true,
+      on_checkout: false,
 
-        tab1_form: false,
-        tab2_form: false,
-        tab3_form: false,
+      tab1_form: false,
+      tab2_form: false,
+      tab3_form: false,
 
-        tab1_comfirm: false,
-        tab2_comfirm: false,
-        tab2_comfirm_loading: false,
-        tab3_comfirm: false,
+      tab1_comfirm: false,
+      tab2_comfirm: false,
+      tab2_comfirm_loading: false,
+      tab3_comfirm: false,
 
-        tab1_red: false,
-        tab2_red: false,
-        tab3_red: false,
+      tab1_red: false,
+      tab2_red: false,
+      tab3_red: false,
 
-        tab2_error: "",
-        check_stock: [],
+      tab2_error: "",
+      check_stock: [],
 
-        store_closed:false,
+      store_closed:false,
 
-        order_reminder:'',
-        ipay_merchant_code:'',
-        ipay_invoice_id:'',
-        ipay_amount:'',
-        ipay_username:'',
-        ipay_email:'',
-        ipay_contact:'',
-        ipay_signature:'',
-        ipay_response_url:'',
-        ipay_backend_url:'',
-        ipay_overlay:false,
-        note_default_length:-1,
+      order_reminder:'',
+      ipay_merchant_code:'',
+      ipay_invoice_id:'',
+      ipay_amount:'',
+      ipay_username:'',
+      ipay_email:'',
+      ipay_contact:'',
+      ipay_signature:'',
+      ipay_response_url:'',
+      ipay_backend_url:'',
+      ipay_overlay:false,
+      note_default_length:-1,
 
-        dialog_tnc:false,
-        dialog_table_cart:false,
-        dine_in_mode:false,
+      dialog_tnc:false,
+      dialog_table_cart:false,
+      dine_in_mode:false,
 
-        fab:false,
-        windowTop:0,
-        slider_form:['20220724145636725101.png'],
+      fab:false,
+      windowTop:0,
+      slider_form:['20220724145636725101.png'],
 
-        tier_id:-1,
-        global_rate:-1,
-        global_type:-1,
-        global_status:-1,
+      tier_id:-1,
+      global_rate:-1,
+      global_type:-1,
+      global_status:-1,
 
-        selected_delivery_time_selection:'',
+      selected_delivery_time_selection:'',
 
-      };
-    },
+    };
+  },
 
-    async asyncData({ params, $axios }) {
-      // let formData = new FormData();
-      const formData = new URLSearchParams();
+  async asyncData({ params, $axios }) {
+    // let formData = new FormData();
+    const formData = new URLSearchParams();
 
-      formData.append("url", `${params.m}`);
-      formData.append("read", "date");
-      let formResponse = await $axios.$post("form/index.php", formData);
+    formData.append("url", `${params.m}`);
+    formData.append("read", "date");
+    let formResponse = await $axios.$post("form/index.php", formData);
       // console.log(formResponse);
-      if (formResponse.status !== "1") {
+    if (formResponse.status !== "1") {
         window.location.href = "https://web.emenu.com.my"; 
-        return;
+      return;
+    }
+
+    let categoryData = new URLSearchParams();
+    categoryData.append("form_id", formResponse.form_function[0].public_url);
+    categoryData.append("get_category", "get_category");
+    let categoryResponse = await $axios.$post("form/index.php", categoryData);
+
+
+    let productData = new URLSearchParams();
+    productData.append("id", formResponse.form_function[0].public_url);
+    productData.append("read", "get_category");
+    let productResponse = await $axios.$post("product/index.php", productData);
+    console.log(productResponse);
+
+    if (formResponse.status == "1") {
+      // promo dialog
+      if (formResponse.form_function[0].promo_dialog) {
+        var promo_d = JSON.parse(formResponse.form_function[0].promo_dialog);
+        if (promo_d[0].promo_active == true) {
+          var dialog_promo = true;
+        } else {
+          var dialog_promo = false;
+        }
       }
-
-      let categoryData = new URLSearchParams();
-      categoryData.append("form_id", formResponse.form_function[0].public_url);
-      categoryData.append("get_category", "get_category");
-      let categoryResponse = await $axios.$post("form/index.php", categoryData);
-
-
-      let productData = new URLSearchParams();
-      productData.append("id", formResponse.form_function[0].public_url);
-      productData.append("read", "get_category");
-      let productResponse = await $axios.$post("product/index.php", productData);
-      console.log(productResponse);
-
-      if (formResponse.status == "1") {
-        // promo dialog
-        if (formResponse.form_function[0].promo_dialog) {
-          var promo_d = JSON.parse(formResponse.form_function[0].promo_dialog);
-          if (promo_d[0].promo_active == true) {
-            var dialog_promo = true;
-          } else {
-            var dialog_promo = false;
-          }
+      console.log(formResponse.form_function[0]);
+        if (formResponse.form_function[0].color) {
+          var color = JSON.parse(formResponse.form_function[0].color);
+          var p_color = color.primary_color;
+          var s_color = color.second_color;
+        } else {
+          var p_color = "#000000";
+          var s_color = "#666f7b";
         }
-        console.log(formResponse.form_function[0]);
-          if (formResponse.form_function[0].color) {
-            var color = JSON.parse(formResponse.form_function[0].color);
-            var p_color = color.primary_color;
-            var s_color = color.second_color;
-          } else {
-            var p_color = "#000000";
-            var s_color = "#666f7b";
-          }
 
-        // category
-        var categories = categoryResponse.category;
+      // category
+      var categories = categoryResponse.category;
 
-        var categories_length = categories.length;
+      var categories_length = categories.length;
 
-        for (var i = 0; i < categories.length; i++) {
-          if (categories[i].category_id == 0 && categories_length == 1) {
-            categories[i].name = "All";
-          }
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].category_id == 0 && categories_length == 1) {
+          categories[i].name = "All";
         }
-        // product
-        console.log(productResponse.product_function);
+      }
+      // product
+      console.log(productResponse.product_function);
 
-        var product = productResponse.product_function;
-        // for (var i = 0; i < product.length; i++) {
-        //   product[i].description = product[i].description.replace(/\n/g, "<br/>");
-        //   product[i].display_price='';
-        //   product[i].in_stock=false;
-        //   if(parseFloat(product[i].stock)>0|| product[i].stock==''){
-        //     product[i].in_stock=true;
-        //   }
-        //   if(product[i].type=='1' && product[i].variant!==''){
-        //     product[i].in_stock=false;
-        //     var variant=JSON.parse(product[i].variant);
-        //     console.log('variant');
-        //     console.log(variant);
-        //     var smallest=parseFloat(variant[0].price);
+      var product = productResponse.product_function;
+      // for (var i = 0; i < product.length; i++) {
+      //   product[i].description = product[i].description.replace(/\n/g, "<br/>");
+      //   product[i].display_price='';
+      //   product[i].in_stock=false;
+      //   if(parseFloat(product[i].stock)>0|| product[i].stock==''){
+      //     product[i].in_stock=true;
+      //   }
+      //   if(product[i].type=='1' && product[i].variant!==''){
+      //     product[i].in_stock=false;
+      //     var variant=JSON.parse(product[i].variant);
+      //     console.log('variant');
+      //     console.log(variant);
+      //     var smallest=parseFloat(variant[0].price);
 
-        //     for(var g=0; g<variant.length; g++){
-        //       if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
-        //         product[i].in_stock=true;
-        //       }
+      //     for(var g=0; g<variant.length; g++){
+      //       if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
+      //         product[i].in_stock=true;
+      //       }
 
-        //       if(parseFloat(variant[g].price)<smallest){
-        //          smallest=variant[g].price;
-        //       }
+      //       if(parseFloat(variant[g].price)<smallest){
+      //          smallest=variant[g].price;
+      //       }
 
-        //     }
-        //     product[i].display_price= parseFloat(smallest).toFixed(2);
-        //   }
+      //     }
+      //     product[i].display_price= parseFloat(smallest).toFixed(2);
+      //   }
 
-        // }
-        if(formResponse.form_function[0].working_time){
-        var working_time=JSON.parse(formResponse.form_function[0].working_time);
-        }
+      // }
+      if(formResponse.form_function[0].working_time){
+      var working_time=JSON.parse(formResponse.form_function[0].working_time);
+      }
 
         if(formResponse.form_function[0].delivery_time_selection!==''){
         var delivery_time_selection=JSON.parse(formResponse.form_function[0].delivery_time_selection);
         }
-        return {
-          all_data:formResponse.form_function, //get all the data 
-          system_color: formResponse.form_function[0].color, //get theme color (primary, secondary)
-          merchant_east_west: formResponse.merchant_east_west, //get merchant east-west shipping info
-          product_categories: categoryResponse.category, //get product categories
-          merchant_url: formResponse.form_function[0].url,
-          merchant_domain: formResponse.form_function[0].domain,
-
-          merchant_url: `${params.m}`,
-          merchant_id: formResponse.form_function[0].merchant_id,
-          catalog_mode: formResponse.form_function[0].catalog_mode,
-          company_name: formResponse.form_function[0].company_name,
-          company_address: formResponse.form_function[0].address,
-          company_email: formResponse.form_function[0].company_email,
-          registration_no: formResponse.form_function[0].registration_no,
-          company_url: formResponse.form_function[0].url,
-          company_domain: formResponse.form_function[0].domain,
-          company_phone: formResponse.form_function[0].company_phone,
-          news_ticker: formResponse.form_function[0].news_ticker,
-
-          categories: categories,
-          items: product,
-          banner_status: formResponse.form_function[0].banner_status,
-          default_language: formResponse.form_function[0].default_language,
-          whatsapp_number: formResponse.form_function[0].whatsapp_number,
-          banner_video_link: formResponse.form_function[0].banner_video_link,
-          bank_details: formResponse.form_function[0].bank_details,
-          theme_color: formResponse.form_function[0].form_color,
-          form_image: formResponse.form_function[0].form_banner,
-          form_title: formResponse.form_function[0].name,
-          merchant_address:
-            "Shop Address : \n" +
-            formResponse.form_function[0].address,
-          delivery_option:formResponse.form_function[0].delivery_option == "0" ? true : false,
-          self_collect:
-            formResponse.form_function[0].self_collect == "0" ? true : false,
-            self_collect_display_text:formResponse.form_function[0].self_collect_display_text,
-          delivery_date_option:formResponse.form_function[0].delivery_date_option == "0"? true: false,
-          delivery_time_option:formResponse.form_function[0].delivery_time_option== "0"? true: false,
-
-          delivery_time_type:formResponse.form_function[0].delivery_time_type,
-          delivery_time_selection:delivery_time_selection,
-
-          email_option:formResponse.form_function[0].email_option == "0" ? true : false,
-          form_description: formResponse.form_function[0].description,
-          bank_transfer:formResponse.form_function[0].bank_transfer == "0" ? true : false,
-          cash_on_delivery:formResponse.form_function[0].cash_on_delivery == "0" ? true : false,
-          fpay_transfer:formResponse.form_function[0].fpay_transfer == "0" ? true : false,
-          ipay_transfer:formResponse.form_function[0].ipay_transfer == "0" ? true : false,
-
-          tng_manual_payment:formResponse.form_function[0].tng_manual_payment == "0" ? true : false,
-          boost_manual_payment:formResponse.form_function[0].boost_manual_payment == "0" ? true : false,
-          duit_now_manual_payment:formResponse.form_function[0].duit_now_manual_payment == "0" ? true : false,
-          sarawak_pay_manual_payment:formResponse.form_function[0].sarawak_pay_manual_payment == "0" ? true : false,
-
-          allow_discount: formResponse.form_function[0].allow_discount,
-          order_min_day: formResponse.form_function[0].order_min_day,
-          // order_min_time: '50',
-          // order_min_type: '1',
-          order_min_purchase: formResponse.form_function[0].order_min_purchase,
-          working_day: formResponse.form_function[0].working_day,
-          working_time: working_time,
-          note: formResponse.form_function[0].note_default_value,
-          shipping_setting_status:
-            formResponse.form_function[0].shipping_setting_status,
-          tax_percent: formResponse.form_function[0].tax_percent,
-          tax_name: formResponse.form_function[0].tax_name,
-          json_promo_dialog: formResponse.form_function[0].promo_dialog,
-          dialog_promo_dialog: dialog_promo,
-          promo_dialog: promo_d,
-          url: formResponse.form_function[0].public_url,
-          grid:
-            formResponse.form_function[0].product_view_phone == "1"
-              ? true
-              : false,
-          p_color: p_color,
-          s_color: s_color,
-          order_reminder: formResponse.form_function[0].order_reminder,
-          allow_send_whatsapp: formResponse.form_function[0].allow_send_whatsapp,
-          enable_feature: formResponse.form_function[0].enable_feature,
-          feature_label: formResponse.form_function[0].feature_label,
-          feature_product: formResponse.form_function[0].feature_product,
-          note_required: formResponse.form_function[0].note_required,
-
-          messenger_link: formResponse.form_function[0].messenger_link,
-          facebook_page_link: formResponse.form_function[0].facebook_page_link,
-          instagram_link: formResponse.form_function[0].instagram_link,
-          phone_number: formResponse.form_function[0].phone_number,
-          product_pc_image_size: formResponse.form_function[0].product_pc_image_size,
-          product_mobile_image_size: formResponse.form_function[0].product_mobile_image_size,
-          
-        };
-      } else {
-        window.location.href = "https://web.emenu.com.my"; 
-      }
-    },
-
-    head () {
       return {
-        title: this.form_title,
-      }
-    },
-    created() {
-      this.$store.commit("setFormData",this.all_data);   
-      this.$store.commit("setMerchantShipping",this.merchant_east_west);  
-      this.$store.commit("setProductCategories", this.product_categories)
-      this.$store.commit("setSystemColor", this.system_color)
-      this.$store.commit("setMerchantURL", this.merchant_url)
-      this.$store.commit("setMerchantDomain", this.merchant_domain)
+        all_data:formResponse.form_function, //get all the data 
+        system_color: formResponse.form_function[0].color, //get theme color (primary, secondary)
+        merchant_east_west: formResponse.merchant_east_west, //get merchant east-west shipping info
+        product_categories: categoryResponse.category, //get product categories
+        merchant_url: formResponse.form_function[0].url,
+        merchant_domain: formResponse.form_function[0].domain,
 
-      this.name = this.$store.state.checkout_step_save.name;
-      console.log(this.default_language);
-      this.$store.dispatch("fetchlocale",this.default_language);
-      //check promo dialog
-      if(this.dialog_promo_dialog==true){
-        if(process.browser){
-            if(localStorage.getItem('promo_display_date')){
-              if(localStorage.merchant==this.merchant_url){
-                var check_date=moment(localStorage.promo_display_date, 'YYYY-MM-DD HH:mm', true).isValid();
-                  if(check_date){
-                    var diffent_minutes=moment().diff(localStorage.promo_display_date, 'minutes');
-                    console.log('diff');
-                    console.log(diffent_minutes);
-                    if(diffent_minutes<10){
-                        this.dialog_promo_dialog=false;
-                    }
-                    localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
-                  }else{
-                    localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
+        merchant_url: `${params.m}`,
+        merchant_id: formResponse.form_function[0].merchant_id,
+        catalog_mode: formResponse.form_function[0].catalog_mode,
+        company_name: formResponse.form_function[0].company_name,
+        company_address: formResponse.form_function[0].address,
+        company_email: formResponse.form_function[0].company_email,
+        registration_no: formResponse.form_function[0].registration_no,
+        company_url: formResponse.form_function[0].url,
+        company_domain: formResponse.form_function[0].domain,
+        company_phone: formResponse.form_function[0].company_phone,
+        news_ticker: formResponse.form_function[0].news_ticker,
+
+        categories: categories,
+        items: product,
+        banner_status: formResponse.form_function[0].banner_status,
+        default_language: formResponse.form_function[0].default_language,
+        whatsapp_number: formResponse.form_function[0].whatsapp_number,
+        banner_video_link: formResponse.form_function[0].banner_video_link,
+        bank_details: formResponse.form_function[0].bank_details,
+        theme_color: formResponse.form_function[0].form_color,
+        form_image: formResponse.form_function[0].form_banner,
+        form_title: formResponse.form_function[0].name,
+        merchant_address:
+          "Shop Address : \n" +
+          formResponse.form_function[0].address,
+        delivery_option:formResponse.form_function[0].delivery_option == "0" ? true : false,
+        self_collect:
+          formResponse.form_function[0].self_collect == "0" ? true : false,
+          self_collect_display_text:formResponse.form_function[0].self_collect_display_text,
+        delivery_date_option:formResponse.form_function[0].delivery_date_option == "0"? true: false,
+        delivery_time_option:formResponse.form_function[0].delivery_time_option== "0"? true: false,
+ 
+        delivery_time_type:formResponse.form_function[0].delivery_time_type,
+        delivery_time_selection:delivery_time_selection,
+
+        email_option:formResponse.form_function[0].email_option == "0" ? true : false,
+        form_description: formResponse.form_function[0].description,
+        bank_transfer:formResponse.form_function[0].bank_transfer == "0" ? true : false,
+        cash_on_delivery:formResponse.form_function[0].cash_on_delivery == "0" ? true : false,
+        fpay_transfer:formResponse.form_function[0].fpay_transfer == "0" ? true : false,
+        ipay_transfer:formResponse.form_function[0].ipay_transfer == "0" ? true : false,
+
+        tng_manual_payment:formResponse.form_function[0].tng_manual_payment == "0" ? true : false,
+        boost_manual_payment:formResponse.form_function[0].boost_manual_payment == "0" ? true : false,
+        duit_now_manual_payment:formResponse.form_function[0].duit_now_manual_payment == "0" ? true : false,
+        sarawak_pay_manual_payment:formResponse.form_function[0].sarawak_pay_manual_payment == "0" ? true : false,
+
+        allow_discount: formResponse.form_function[0].allow_discount,
+        order_min_day: formResponse.form_function[0].order_min_day,
+        // order_min_time: '50',
+        // order_min_type: '1',
+        order_min_purchase: formResponse.form_function[0].order_min_purchase,
+        working_day: formResponse.form_function[0].working_day,
+        working_time: working_time,
+        note: formResponse.form_function[0].note_default_value,
+        shipping_setting_status:
+          formResponse.form_function[0].shipping_setting_status,
+        tax_percent: formResponse.form_function[0].tax_percent,
+        tax_name: formResponse.form_function[0].tax_name,
+        json_promo_dialog: formResponse.form_function[0].promo_dialog,
+        dialog_promo_dialog: dialog_promo,
+        promo_dialog: promo_d,
+        url: formResponse.form_function[0].public_url,
+        grid:
+          formResponse.form_function[0].product_view_phone == "1"
+            ? true
+            : false,
+        p_color: p_color,
+        s_color: s_color,
+        order_reminder: formResponse.form_function[0].order_reminder,
+        allow_send_whatsapp: formResponse.form_function[0].allow_send_whatsapp,
+        enable_feature: formResponse.form_function[0].enable_feature,
+        feature_label: formResponse.form_function[0].feature_label,
+        feature_product: formResponse.form_function[0].feature_product,
+        note_required: formResponse.form_function[0].note_required,
+
+        messenger_link: formResponse.form_function[0].messenger_link,
+        facebook_page_link: formResponse.form_function[0].facebook_page_link,
+        instagram_link: formResponse.form_function[0].instagram_link,
+        phone_number: formResponse.form_function[0].phone_number,
+        product_pc_image_size: formResponse.form_function[0].product_pc_image_size,
+        product_mobile_image_size: formResponse.form_function[0].product_mobile_image_size,
+
+      };
+    } else {
+      window.location.href = "https://web.emenu.com.my"; 
+    }
+  },
+
+  head () {
+    return {
+      title: this.form_title,
+    }
+  },
+  created() {
+    this.$store.commit("setSelectedLink", null);  
+    this.$store.commit("setFormData",this.all_data);   
+    this.$store.commit("setMerchantShipping",this.merchant_east_west);  
+    this.$store.commit("setProductCategories", this.product_categories)
+    this.$store.commit("setSystemColor", this.system_color)
+    this.$store.commit("setMerchantURL", this.merchant_url)
+    this.$store.commit("setMerchantDomain", this.merchant_domain)
+
+    this.name = this.$store.state.checkout_step_save.name;
+    console.log(this.default_language);
+    this.$store.dispatch("fetchlocale",this.default_language);
+    //check promo dialog
+    if(this.dialog_promo_dialog==true){
+      if(process.browser){
+          if(localStorage.getItem('promo_display_date')){
+             if(localStorage.merchant==this.merchant_url){
+               var check_date=moment(localStorage.promo_display_date, 'YYYY-MM-DD HH:mm', true).isValid();
+                if(check_date){
+                  var diffent_minutes=moment().diff(localStorage.promo_display_date, 'minutes');
+                  console.log('diff');
+                  console.log(diffent_minutes);
+                  if(diffent_minutes<10){
+                      this.dialog_promo_dialog=false;
                   }
-                  
-              }else{
-                localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
-              }
-          }else{
-                localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm');
-          }
-
-          
+                  localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
+                }else{
+                  localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
+                }
+                 
+             }else{
+               localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm'); 
+             }
+        }else{
+              localStorage.promo_display_date=moment().format('YYYY-MM-DD HH:mm');
         }
+
+        
       }
+    }
 
-      //visit calculate
-        if(process.browser){
+    //visit calculate
+      if(process.browser){
 
-          if(localStorage.getItem('visit_date')){
+        if(localStorage.getItem('visit_date')){
 
-            if(localStorage.merchant==this.merchant_url){
-                var check_date=moment(localStorage.visit_date, 'YYYY-MM-DD', true).isValid();
-                  if(check_date){
-                    var current_date=moment().format("YYYY-MM-DD");
+          if(localStorage.merchant==this.merchant_url){
+               var check_date=moment(localStorage.visit_date, 'YYYY-MM-DD', true).isValid();
+                if(check_date){
+                  var current_date=moment().format("YYYY-MM-DD");
 
-                    if(localStorage.visit_date==current_date){
-                      //ok
-                    }else{
-                      localStorage.visit_date=moment().format('YYYY-MM-DD'); 
-                      var array=[];
-                      localStorage.visit_product=JSON.stringify(array); 
-                      console.log('1');
-                      //insert visit query
-                      this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
-                    }
+                  if(localStorage.visit_date==current_date){
+                    //ok
                   }else{
                     localStorage.visit_date=moment().format('YYYY-MM-DD'); 
-                      var array=[];
-                    
-                      localStorage.visit_product=JSON.stringify(array); 
-                      console.log('2');
-
-                    //insert visit query
+                    var array=[];
+                    localStorage.visit_product=JSON.stringify(array); 
+                    console.log('1');
+                     //insert visit query
                     this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
                   }
-                  
-              }else{
-                      console.log('3');
+                }else{
+                  localStorage.visit_date=moment().format('YYYY-MM-DD'); 
+                    var array=[];
+                   
+                    localStorage.visit_product=JSON.stringify(array); 
+                    console.log('2');
 
-                localStorage.visit_date=moment().format('YYYY-MM-DD HH:mm'); 
-                var array=[];
-                      localStorage.visit_product=JSON.stringify(array); 
-                    //insert visit query
-                    this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
-              }
+                  //insert visit query
+                  this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
+                }
+                 
+             }else{
+                    console.log('3');
 
-          }else{
+               localStorage.visit_date=moment().format('YYYY-MM-DD HH:mm'); 
+               var array=[];
+                    localStorage.visit_product=JSON.stringify(array); 
+                  //insert visit query
+                  this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
+             }
 
-            console.log('4');
-
-            localStorage.visit_date=moment().format('YYYY-MM-DD');
-            var array=[];
-            localStorage.visit_product=JSON.stringify(array); 
-                    //insert visit query
-                    this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
-
-          }
-        }
-
-        if(this.$route.query.ref && this.$route.query.ref!=='' ){
-
-          this.check_ref_tier(this.$route.query.ref);
-
-        }else if(localStorage.getItem('ref')){
-          this.check_ref_tier(localStorage.ref);
         }else{
-          this.product_setup();
+
+          console.log('4');
+
+          localStorage.visit_date=moment().format('YYYY-MM-DD');
+          var array=[];
+          localStorage.visit_product=JSON.stringify(array); 
+                  //insert visit query
+                   this.update_visitor(this.merchant_id,moment().format('YYYY-MM-DD'));
+
         }
-
-        // this.global_rate="10";
-        // this.global_type=0;
-        // this.global_status=0;
-        // this.tier_id=1;
-
-        // for (var i = 0; i < this.items.length; i++) {
-        //   this.items[i].description = this.items[i].description.replace(/\n/g, "<br/>");
-        //   this.items[i].display_price='';
-        //   this.items[i].in_stock=false;
-        //   if(parseFloat(this.items[i].stock)>0|| this.items[i].stock==''){
-        //     this.items[i].in_stock=true;
-        //   }
-        //   if(this.items[i].type=='1' && this.items[i].variant!==''){
-        //     this.items[i].in_stock=false;
-        //     var variant=JSON.parse(this.items[i].variant);
-        //     console.log('variant');
-        //     console.log(variant);
-        //     var smallest=parseFloat(this.variant_actual_price(variant[0].price));
-
-        //     for(var g=0; g<variant.length; g++){
-        //       if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
-        //         this.items[i].in_stock=true;
-        //       }
-
-        //       if(parseFloat(this.variant_actual_price(variant[g].price))<smallest){
-        //          smallest=this.variant_actual_price(variant[g].price);
-        //       }
-
-        //     }
-        //     this.items[i].display_price= parseFloat(smallest).toFixed(2);
-        //   }
-
-        // }
-
-        //check delivery available
-      if(this.delivery_option==false){
-            this.delivery_collect=false;
-            this.request_self_collect=true;
       }
-      this.is_working_time();
-  
-    },
-    mounted() {
-        console.log('ge');
-        console.log(this.feature_product);
-        window.onbeforeunload = () => (this.unsavedChanges ? true : null);
-      
-        this.$store.dispatch("fetchCart", this.merchant_url);
-        if(this.note_required==0){
-          
-          this.note_default_length=this.note.length;
 
-        }
-      
-        window.scroll(0, this.$store.state.main_position_y); 
-        window.addEventListener("scroll", this.onScroll)
+      if(this.$route.query.ref && this.$route.query.ref!=='' ){
 
-    },
+        this.check_ref_tier(this.$route.query.ref);
 
-    computed: {
-      form_data(){
+      }else if(localStorage.getItem('ref')){
+        this.check_ref_tier(localStorage.ref);
+      }else{
+        this.product_setup();
+      }
+
+      // this.global_rate="10";
+      // this.global_type=0;
+      // this.global_status=0;
+      // this.tier_id=1;
+
+      // for (var i = 0; i < this.items.length; i++) {
+      //   this.items[i].description = this.items[i].description.replace(/\n/g, "<br/>");
+      //   this.items[i].display_price='';
+      //   this.items[i].in_stock=false;
+      //   if(parseFloat(this.items[i].stock)>0|| this.items[i].stock==''){
+      //     this.items[i].in_stock=true;
+      //   }
+      //   if(this.items[i].type=='1' && this.items[i].variant!==''){
+      //     this.items[i].in_stock=false;
+      //     var variant=JSON.parse(this.items[i].variant);
+      //     console.log('variant');
+      //     console.log(variant);
+      //     var smallest=parseFloat(this.variant_actual_price(variant[0].price));
+
+      //     for(var g=0; g<variant.length; g++){
+      //       if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
+      //         this.items[i].in_stock=true;
+      //       }
+
+      //       if(parseFloat(this.variant_actual_price(variant[g].price))<smallest){
+      //          smallest=this.variant_actual_price(variant[g].price);
+      //       }
+
+      //     }
+      //     this.items[i].display_price= parseFloat(smallest).toFixed(2);
+      //   }
+
+      // }
+
+      //check delivery available
+    if(this.delivery_option==false){
+          this.delivery_collect=false;
+          this.request_self_collect=true;
+    }
+     this.is_working_time();
+ 
+  },
+  mounted() {
+      console.log('ge');
+      console.log(this.feature_product);
+      window.onbeforeunload = () => (this.unsavedChanges ? true : null);
+    
+      this.$store.dispatch("fetchCart", this.merchant_url);
+      if(this.note_required==0){
+        
+        this.note_default_length=this.note.length;
+
+      }
+    
+      window.scroll(0, this.$store.state.main_position_y); 
+      window.addEventListener("scroll", this.onScroll)
+
+  },
+
+  computed: {
+    form_data(){
           return this.$store.state.form_data;
       },
 
-      product_feature(){
-        // return this.feature_product;
-        var f_product=this.feature_product==''?[]:JSON.parse(this.feature_product);
-        var array=[];
-        for(var i=0; i<f_product.length;i++){
+    product_feature(){
+      // return this.feature_product;
+      var f_product=this.feature_product==''?[]:JSON.parse(this.feature_product);
+      var array=[];
+      for(var i=0; i<f_product.length;i++){
 
-          for(var g=0; g<this.items.length;g++){
+        for(var g=0; g<this.items.length;g++){
 
-            if(f_product[i].product_id==this.items[g].product_id){
+          if(f_product[i].product_id==this.items[g].product_id){
 
-                array.push(this.items[g]);
-                break;
-            }
+              array.push(this.items[g]);
+              break;
           }
-
         }
-        return array;
-      },
 
-      scrollpos(){
-        return window.scrollY;
-      },
+      }
+      return array;
+    },
 
-      language(){
-        return this.$store.state.locale;
-      },
+    scrollpos(){
+      return window.scrollY;
+    },
 
-      p_dark: function () {
-        return this.text_color_auto(this.p_color);
-      },
+    language(){
+      return this.$store.state.locale;
+    },
 
-      s_dark: function () {
-        return this.text_color_auto(this.s_color);
-      },
+    p_dark: function () {
+      return this.text_color_auto(this.p_color);
+    },
 
-      date_min: function () {
-        var min_date = new Date(
-          new Date(this.today_date).setDate(
-            new Date(this.today_date).getDate() + parseFloat(this.order_min_day)
-          )
-        );
-        // return this.today_date.setDate(this.today_date.getDate() + 35);
-        return min_date.toISOString().substr(0, 10);
-      },
+    s_dark: function () {
+      return this.text_color_auto(this.s_color);
+    },
 
-      cart_items: function () {
-        return this.$store.state.cart;
-      },
+    date_min: function () {
+      var min_date = new Date(
+        new Date(this.today_date).setDate(
+          new Date(this.today_date).getDate() + parseFloat(this.order_min_day)
+        )
+      );
+      // return this.today_date.setDate(this.today_date.getDate() + 35);
+      return min_date.toISOString().substr(0, 10);
+    },
 
-      product_fee: function () {
-        var total_fee = 0;
-        for (var i = 0; i < this.cart_items.length; i++) {
-          var single_item_variation_fee = 0;
-          if (this.cart_items[i].quantity > 0) {
-            if (this.cart_items[i].product_variation.length > 0) {
+    cart_items: function () {
+      return this.$store.state.cart;
+    },
+
+    product_fee: function () {
+      var total_fee = 0;
+      for (var i = 0; i < this.cart_items.length; i++) {
+        var single_item_variation_fee = 0;
+        if (this.cart_items[i].quantity > 0) {
+          if (this.cart_items[i].product_variation.length > 0) {
+            for (
+              var g = 0;
+              g < this.cart_items[i].product_variation.length;
+              g++
+            ) {
               for (
-                var g = 0;
-                g < this.cart_items[i].product_variation.length;
-                g++
+                var j = 0;
+                j < this.cart_items[i].product_variation[g].variation.length;
+                j++
               ) {
-                for (
-                  var j = 0;
-                  j < this.cart_items[i].product_variation[g].variation.length;
-                  j++
+                if (
+                  this.cart_items[i].product_variation[g].variation[j]
+                    .quantity > 0
                 ) {
-                  if (
-                    this.cart_items[i].product_variation[g].variation[j]
-                      .quantity > 0
-                  ) {
-                    single_item_variation_fee =
-                      single_item_variation_fee +
-                      parseFloat(
-                        this.cart_items[i].product_variation[g].variation[j].price
-                      );
-                  }
+                  single_item_variation_fee =
+                    single_item_variation_fee +
+                    parseFloat(
+                      this.cart_items[i].product_variation[g].variation[j].price
+                    );
                 }
               }
             }
-            total_fee =
-              total_fee +
-              parseFloat(this.cart_items[i].quantity) *
-                (parseFloat(this.cart_items[i].product_price) +
-                  single_item_variation_fee);
           }
+          total_fee =
+            total_fee +
+            parseFloat(this.cart_items[i].quantity) *
+              (parseFloat(this.cart_items[i].product_price) +
+                single_item_variation_fee);
         }
-        return parseFloat(total_fee) > 0
-          ? parseFloat(total_fee).toFixed(2)
-          : "0.00";
-      },
+      }
+      return parseFloat(total_fee) > 0
+        ? parseFloat(total_fee).toFixed(2)
+        : "0.00";
+    },
 
-      product_quantity: function () {
-        var qty = 0;
-        for (var i = 0; i < this.items.length; i++) {
-          // console.log(this.items[i].purchase_quantity);
-          qty = qty + parseFloat(this.items[i].quantity);
-        }
-        return qty;
-      },
+    product_quantity: function () {
+      var qty = 0;
+      for (var i = 0; i < this.items.length; i++) {
+        // console.log(this.items[i].purchase_quantity);
+        qty = qty + parseFloat(this.items[i].quantity);
+      }
+      return qty;
+    },
 
-      total_fee: function () {
-        var fee = 0;
-        fee =
-          parseFloat(this.product_fee) +
-          parseFloat(this.delivery_fee) -
-          parseFloat(this.discount_fee) +
-          parseFloat(this.tax_fee);
-        return parseFloat(fee).toFixed(2) > 0 ? parseFloat(fee).toFixed(2) : 0;
-      },
+    total_fee: function () {
+      var fee = 0;
+      fee =
+        parseFloat(this.product_fee) +
+        parseFloat(this.delivery_fee) -
+        parseFloat(this.discount_fee) +
+        parseFloat(this.tax_fee);
+      return parseFloat(fee).toFixed(2) > 0 ? parseFloat(fee).toFixed(2) : 0;
+    },
 
-      tabs_item: function () {
-        return this.items.filter(
-          (x) => x.category_id == this.selected_category_id
-        );
-      },
-
-
-      min_time: function () {
-        var dt = new Date();
-
-        if (this.delivery_date_option == true && this.start_date == this.today_date) {
-
-            // var timeString = dt.getHours() + ":" + dt.getMinutes();
-            var timeString = dt.getHours()<10?"0"+dt.getHours():dt.getHours() + ":" + dt.getMinutes();
-
-            if(timeString< this.working_time.start){
-              return this.working_time.start;
-            }else{
-              return timeString ;
-            }
-
-        } else {
-
-          return this.working_time.start;
-
-        }
+    tabs_item: function () {
+      return this.items.filter(
+        (x) => x.category_id == this.selected_category_id
+      );
+    },
 
 
-      },
+    min_time: function () {
+      var dt = new Date();
 
-      string_color() {
-        return {
-          color: this.promo_dialog[0].text_color,
-        };
-      },
+      if (this.delivery_date_option == true && this.start_date == this.today_date) {
 
-      tax_fee: function () {
-        var tax = 0;
-        tax = (this.product_fee * this.tax_percent) / 100;
-        return parseFloat(tax).toFixed(2) > 0 ? parseFloat(tax).toFixed(2) : 0;
-      },
+          // var timeString = dt.getHours() + ":" + dt.getMinutes();
+          var timeString = dt.getHours()<10?"0"+dt.getHours():dt.getHours() + ":" + dt.getMinutes();
 
-      tnc_array(){
-
-          var array=[];
-          var link=''
-          if(this.company_domain!==''){
-            link=this.company_domain;
+          if(timeString< this.working_time.start){
+            return this.working_time.start;
           }else{
-            link='www.emenu.com.my/'+this.company_url;
+            return timeString ;
           }
-          // array.push({company_name:this.company_name},{company_address:this.company_address},{company_phone:this.company_phone},{company_email:this.company_email},{site_url:link});
-          array.push({
-                                  company_name: this.company_name,
-                                  company_address: this.company_address,
-                                  company_phone: this.company_phone,
-                                  company_email: this.company_email,
-                                  registration_no: this.registration_no,
-                                  site_url: link,
-                              });
-          return array;
-      },
 
-      route_param(){
-        return  (this.$route.query.ref?this.$route.query.ref:'');
-      },
+      } else {
 
-      customer_details_list() {
-            var array = [];
-            var list = {};
-            list.toStop = 1;
-            list.toContact = {
-              name: 'none',
-              phone: '0123456789'
-            };
-            list.remarks = this.note;
+        return this.working_time.start;
 
-            array.push(list);
-            return array;
-      },
+      }
 
-      sum_weight(){
-        var total_weight = 0;
-        for (var i = 0; i < this.cart_items.length; i++) {
-          if (this.cart_items[i].quantity > 0) {
 
-            if(this.cart_items[i].hasOwnProperty("weight")==false || this.cart_items[i].weight==""){
-              var product_weight=0;
-            }else{
-              var product_weight=this.cart_items[i].weight;
-            }
-    
-            total_weight =
-              total_weight +
-              parseFloat(this.cart_items[i].quantity) *
-                parseFloat(product_weight) ;
-          }
+    },
+
+    string_color() {
+      return {
+        color: this.promo_dialog[0].text_color,
+      };
+    },
+
+    tax_fee: function () {
+      var tax = 0;
+      tax = (this.product_fee * this.tax_percent) / 100;
+      return parseFloat(tax).toFixed(2) > 0 ? parseFloat(tax).toFixed(2) : 0;
+    },
+
+    tnc_array(){
+
+        var array=[];
+        var link=''
+        if(this.company_domain!==''){
+          link=this.company_domain;
+        }else{
+          link='www.emenu.com.my/'+this.company_url;
         }
-        return total_weight;
+        // array.push({company_name:this.company_name},{company_address:this.company_address},{company_phone:this.company_phone},{company_email:this.company_email},{site_url:link});
+        array.push({
+                                company_name: this.company_name,
+                                company_address: this.company_address,
+                                company_phone: this.company_phone,
+                                company_email: this.company_email,
+                                registration_no: this.registration_no,
+                                site_url: link,
+                            });
+        return array;
+    },
+
+    route_param(){
+      return  (this.$route.query.ref?this.$route.query.ref:'');
+    },
+
+    customer_details_list() {
+          var array = [];
+          var list = {};
+          list.toStop = 1;
+          list.toContact = {
+            name: 'none',
+            phone: '0123456789'
+          };
+          list.remarks = this.note;
+
+          array.push(list);
+          return array;
+    },
+
+    sum_weight(){
+      var total_weight = 0;
+      for (var i = 0; i < this.cart_items.length; i++) {
+        if (this.cart_items[i].quantity > 0) {
+
+          if(this.cart_items[i].hasOwnProperty("weight")==false || this.cart_items[i].weight==""){
+            var product_weight=0;
+          }else{
+            var product_weight=this.cart_items[i].weight;
+          }
+  
+          total_weight =
+            total_weight +
+            parseFloat(this.cart_items[i].quantity) *
+              parseFloat(product_weight) ;
+        }
+      }
+      return total_weight;
 
       },
       inner_width(){
         return window.innerWidth;
+    }
+
+    // dine_in_mode(){
+    //   return  (this.$route.query.table?true:false);
+    // },
+
+  },
+  watch: {
+
+    language(){
+      this.$i18n.locale = this.language;
+    },
+    search_content(e) {
+      history.replaceState(null, null, ' ');
+      this.search_loading=true;
+      var self = this;
+      setTimeout(function() {
+             self.search_loading = false;
+              if (e !== "" && e !== null) {
+              self.searching = true;
+
+            self.searched_items = self.items.filter(
+              (m) =>
+                m.name.toLowerCase().indexOf(self.search_content.toLowerCase()) > -1
+            );
+          } else {
+            self.searching = false;
+          }
+        }, 1000);
+
+
+    },
+
+    request_self_collect() {
+      this.check_delivery_fee();
+    },
+
+    alert_item_added() {
+      setTimeout(() => (this.alert_item_added = false), 1500);
+    },
+
+    alert_at_least_one_item() {
+      setTimeout(() => (this.alert_at_least_one_item = false), 2200);
+    },
+    cart_items: {
+      handler: function () {
+        if (this.cart_items.length > 0) {
+          this.check_delivery_fee();
+          console.log("recalculate delivery fee");
+        } else {
+          this.delivery_fee = 0;
+          this.discount_fee = 0;
+        }
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    formatAverageRating(value) {
+      let roundedValue = Math.floor(value);
+        if (value - roundedValue > 0) {
+          roundedValue += 0.5;
+        }
+        return roundedValue;
+    },
+
+
+    onScroll(e) {
+    this.windowTop = window.top.scrollY /* or: e.target.documentElement.scrollTop */
+    },
+    
+    submit() {
+      if(!this.is_working_time()==false){
+            console.log('gg1');
+        return;
       }
 
-      // dine_in_mode(){
-      //   return  (this.$route.query.table?true:false);
-      // },
+      // if (this.tab1_comfirm == false) {
+      //   this.panel = 0;
+      //   this.tab1_red = true;
+      //   this.vibrate();
+      //   return;
+      // }
 
-    },
-    watch: {
+      if (this.tab2_comfirm == false) {
+        this.panel = 0;
+        this.tab2_red = true;
+        this.vibrate();
+        return;
+      }
 
-      language(){
-        this.$i18n.locale = this.language;
-      },
-      search_content(e) {
-        history.replaceState(null, null, ' ');
-        this.search_loading=true;
-        var self = this;
-        setTimeout(function() {
-              self.search_loading = false;
-                if (e !== "" && e !== null) {
-                self.searching = true;
+      // if (this.tab3_comfirm == false) {
+      //   this.panel = 2;
+      //   this.tab3_red = true;
+      //   this.vibrate();
+      //   return;
+      // }
 
-              self.searched_items = self.items.filter(
-                (m) =>
-                  m.name.toLowerCase().indexOf(self.search_content.toLowerCase()) > -1
-              );
-            } else {
-              self.searching = false;
-            }
-          }, 1000);
+      this.order_loading = true;
+      var qty = 0;
+      for (var i = 0; i < this.cart_items.length; i++) {
+        // console.log(this.items[i].purchase_quantity);
+        qty = qty + parseFloat(this.cart_items[i].quantity);
+      }
 
+      if (qty > 0) {
+        const params = new URLSearchParams();
+        params.append("create", "create");
+        params.append("id", this.url);
+        params.append("name", this.name);
+        params.append("phone", this.phone);
+        params.append("email", this.email);
+        params.append("delivery_fee", this.delivery_fee);
+        params.append(
+          "address",
+          this.request_self_collect == true ? "" : this.address
+        );
+        params.append(
+          "postcode",
+          this.request_self_collect == true ? "" : this.postcode
+        );
+        params.append(
+          "request_self_collect",
+          this.request_self_collect == true ? "0" : "1"
+        );
 
-      },
+        params.append(
+          "delivery_date",
+          this.delivery_date_option == true ? this.start_date : ""
+        );
 
-      request_self_collect() {
-        this.check_delivery_fee();
-      },
-
-      alert_item_added() {
-        setTimeout(() => (this.alert_item_added = false), 1500);
-      },
-
-      alert_at_least_one_item() {
-        setTimeout(() => (this.alert_at_least_one_item = false), 2200);
-      },
-      cart_items: {
-        handler: function () {
-          if (this.cart_items.length > 0) {
-            this.check_delivery_fee();
-            console.log("recalculate delivery fee");
-          } else {
-            this.delivery_fee = 0;
-            this.discount_fee = 0;
-          }
-        },
-        deep: true,
-      },
-    },
-    methods: {
-      onScroll(e) {
-      this.windowTop = window.top.scrollY /* or: e.target.documentElement.scrollTop */
-      },
-      
-      submit() {
-        if(!this.is_working_time()==false){
-              console.log('gg1');
-          return;
-        }
-
-        // if (this.tab1_comfirm == false) {
-        //   this.panel = 0;
-        //   this.tab1_red = true;
-        //   this.vibrate();
-        //   return;
-        // }
-
-        if (this.tab2_comfirm == false) {
-          this.panel = 0;
-          this.tab2_red = true;
-          this.vibrate();
-          return;
-        }
-
-        // if (this.tab3_comfirm == false) {
-        //   this.panel = 2;
-        //   this.tab3_red = true;
-        //   this.vibrate();
-        //   return;
-        // }
-
-        this.order_loading = true;
-        var qty = 0;
-        for (var i = 0; i < this.cart_items.length; i++) {
-          // console.log(this.items[i].purchase_quantity);
-          qty = qty + parseFloat(this.cart_items[i].quantity);
-        }
-
-        if (qty > 0) {
-          const params = new URLSearchParams();
-          params.append("create", "create");
-          params.append("id", this.url);
-          params.append("name", this.name);
-          params.append("phone", this.phone);
-          params.append("email", this.email);
-          params.append("delivery_fee", this.delivery_fee);
-          params.append(
-            "address",
-            this.request_self_collect == true ? "" : this.address
-          );
-          params.append(
-            "postcode",
-            this.request_self_collect == true ? "" : this.postcode
-          );
-          params.append(
-            "request_self_collect",
-            this.request_self_collect == true ? "0" : "1"
-          );
-
-          params.append(
-            "delivery_date",
-            this.delivery_date_option == true ? this.start_date : ""
-          );
-
-          params.append(
-            "delivery_time",
+        params.append(
+          "delivery_time",
             this.delivery_time_option == true && this.delivery_time_type==0? this.delivery_time : 
             this.delivery_time_option == true && this.delivery_time_type==1? this.selected_delivery_time_selection : ""
-          );
+        );
 
-          // console.log(this.request_self_collect == true ? '0' : '1');
-          params.append("note", this.note);
-          params.append("user_device_type", this.user_device_type);
-          params.append("payment_method", this.payment_method);
-          // params.append("items", this.items);
-          params.append("items", JSON.stringify(this.cart_items));
-          params.append("coupon_code", this.current_use_coupon_code);
-          params.append("longitude", this.longitude);
-          params.append("latitude", this.latitude);
-          params.append("city", this.city);
-          params.append("state", this.state);
-          params.append("country", this.country);
-          console.log(this.current_use_coupon_code);
-          // params.append("ref",  (this.$route.query.ref?this.$route.query.ref:''));
-          params.append("ref",  (localStorage.ref?localStorage.ref:''));
+        // console.log(this.request_self_collect == true ? '0' : '1');
+        params.append("note", this.note);
+        params.append("user_device_type", this.user_device_type);
+        params.append("payment_method", this.payment_method);
+        // params.append("items", this.items);
+        params.append("items", JSON.stringify(this.cart_items));
+        params.append("coupon_code", this.current_use_coupon_code);
+        params.append("longitude", this.longitude);
+        params.append("latitude", this.latitude);
+        params.append("city", this.city);
+        params.append("state", this.state);
+        params.append("country", this.country);
+        console.log(this.current_use_coupon_code);
+        // params.append("ref",  (this.$route.query.ref?this.$route.query.ref:''));
+        params.append("ref",  (localStorage.ref?localStorage.ref:''));
 
-
+       
 
         
-          // console.log(JSON.stringify(this.items));
-
-          axios({
-            method: "post",
-            // url: baseUrl + "/vege_web_v2/product/product.php",
-            url: this.domain + "/order/index.php",
-            data: params,
-          })
-            .then((response) => {
-              this.unsavedChanges = false;
-                console.log(response);
-
-              if (response.data.status == "1") {
-                this.redirect_dialog = true;
-                
-                // this.redirect_text_en =
-                //   "Redirect to whatsapp...Later remember to press send";
-                // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
-                this.success_vibrate();
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                if(this.allow_send_whatsapp=='0'){
-                  this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                  this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                }
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-
-                // this.$router.push("/" + this.merchant_url+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
-                this.$router.push("/" + this.merchant_url);
-
-                this.dialog_cart = false;
-
-                var v = this;
-                setTimeout(function () {
-                  v.redirect_dialog = false;
-                  // v.reset_form();
-
-                  // window.top.location.href = response.data.order_url;
-                  window.location.href = response.data.order_url;
-                }, 4500);
-
-                // this.$refs.form.reset();
-              } else if (response.data.status == "3") {
-
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('area-not-in-coverage');
-                this.vibrate();
-
-              } else if (response.data.status == "4") {
-                console.log(response.data.fpay_payment_url);
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                if(this.allow_send_whatsapp=='0'){
-                  this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                  this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                }
-
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-                window.location.href = response.data.fpay_payment_url;
-
-
-                
-              } else if (response.data.status == "5") {
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-                this.vibrate();
-              } else if (response.data.status == "6") {
-                this.error_snackbar = true;
-                this.error_snackbar_text =
-                  this.$t('fpay-min-purchase')+ parseFloat(response.data.min).toFixed(2);
-                  this.vibrate();
-              } else if (response.data.status == "7") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-              } else if (response.data.status == "8") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = response.data.message;
-              } else if (response.data.status == "9") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-                this.$store.commit("clearcart");
-              } else if (response.data.status == "10") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('product-price-invalid');
-                this.$store.commit("clearcart");
-              } else if (response.data.status == "11") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text =  this.$t('product-stock-invalid');
-                this.check_stock = response.data.stock;
-                this.stock_change();
-              } else if (response.data.status == "12") {
-                // this.redirect_dialog = true;
-                // this.redirect_text_en =
-                //   "Redirect to whatsapp...Later remember to press send";
-                // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
-              
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-              
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-
-                // this.$router.push("/" + this.merchant_url);
-
-                this.dialog_cart = false;
-
-                  // window.top.location.href = response.data.order_url;
-                  // window.location.href = response.data.order_url;
-                  // console.log( this.merchant_url+"/order-payment/"+ response.data.order_url_link);
-                // this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp+(this.$route.query.ref?'&ref='+this.$route.query.ref:''));
-                this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp);
-
-                this.send_payment_whatsapp_notification_customer(response.data.notifi_order_id)
-                //  if(this.allow_send_whatsapp=='0'){
-                //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                // }
-            
-
-
-                // this.$refs.form.reset();
-              }else if (response.data.status == "13") {
-                this.ipay_overlay=true;
-                // ipay payment 
-
-                // console.log(response.data.fpay_payment_url);
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                if(this.allow_send_whatsapp=='0'){
-                  this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                  this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                }
-
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-                
-          
-                this.ipay_merchant_code=response.data.MerchantCode;
-                this.ipay_invoice_id=response.data.notifi_invoice_id;
-                this.ipay_amount=response.data.Amount;
-                this.ipay_username=response.data.UserName;
-                this.ipay_email=response.data.UserEmail;
-                this.ipay_contact=response.data.UserContact;
-                this.ipay_signature=response.data.signature;
-                this.ipay_response_url=response.data.ResponseURL;
-                this.ipay_backend_url=response.data.BackendURL;
-
-
-                if(this.company_domain!==''){
-
-                  window.location.href = "https://emenu.com.my/ipay-redirect?ipay_redirect=true&ipay_merchant_code="+ this.ipay_merchant_code
-                  +"&ipay_invoice_id="+ this.ipay_invoice_id
-                  +"&ipay_amount="+ this.ipay_amount
-                  +"&ipay_username="+ this.ipay_username
-                  +"&ipay_email="+ this.ipay_email
-                  +"&ipay_contact="+ this.ipay_contact
-                  +"&ipay_signature="+ this.ipay_signature
-                  +"&ipay_response_url="+ this.ipay_response_url
-                  +"&ipay_backend_url="+ this.ipay_backend_url;  
-
-                }else{
-                  this.$nextTick(() => {
-                      this.$refs.submit.click();
-                })
-                this.dialog_cart=false;
-                }
-
-
-                
-                
-              }
-              else {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('order-failed'); 
-                // this.form_status = false;
-                // window.location.href = "https://channelsoft.com.my";
-              }
-
-              this.order_loading = false;
-            })
-            .catch((error) => {
-              console.log(error);
-              this.order_loading = false;
-            });
-        } else {
-          this.error_snackbar = true;
-          this.error_snackbar_text = "Please add at least one items";
-          this.order_loading = false;
-          this.dialog_cart = false;
-        }
-      },
-
-      table_submit() {
-        if(!this.is_working_time()==false){
-              console.log('gg1');
-          return;
-        }
-
-        this.order_loading = true;
-        var qty = 0;
-
-        for (var i = 0; i < this.cart_items.length; i++) {
-          // console.log(this.items[i].purchase_quantity);
-          qty = qty + parseFloat(this.cart_items[i].quantity);
-        }
-
-        if (qty > 0) {
-          const params = new URLSearchParams();
-          params.append("create", "create");
-          params.append("id", this.url);
-          params.append("name", this.table_name);
-          params.append("phone", this.table_name);
-          params.append("email", '');
-          params.append("delivery_fee", '0');
-          params.append("address","");
-          params.append("postcode","");
-          params.append("request_self_collect","2");
-          params.append("delivery_date","");
-          params.append("delivery_time","");
-          params.append("note", this.note);
-          params.append("user_device_type", this.user_device_type);
-          params.append("payment_method", '1');
-          params.append("items", JSON.stringify(this.cart_items));
-          params.append("coupon_code", this.current_use_coupon_code);
-          params.append("longitude", this.longitude);
-          params.append("latitude", this.latitude);
-          
-          // params.append("ref",  (this.$route.query.ref?this.$route.query.ref:''));
-
-      
-          axios({
-            method: "post",
-    
-            url: this.domain + "/order/index.php",
-            data: params,
-          })
-            .then((response) => {
-              this.unsavedChanges = false;
-                console.log(response);
-
-              if (response.data.status == "1") {
-                this.redirect_dialog = true;
-                
-                // this.redirect_text_en =
-                //   "Redirect to whatsapp...Later remember to press send";
-                // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
-                this.success_vibrate();
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                if(this.allow_send_whatsapp=='0'){
-                  this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                  this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                }
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-
-                // this.$router.push("/" + this.merchant_url+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
-                this.$router.push("/" + this.merchant_url);
-
-                this.dialog_cart = false;
-
-                var v = this;
-                setTimeout(function () {
-                  v.redirect_dialog = false;
-                  // v.reset_form();
-
-                  // window.top.location.href = response.data.order_url;
-                  window.location.href = response.data.order_url;
-                }, 4500);
-
-                // this.$refs.form.reset();
-              } else if (response.data.status == "3") {
-
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('area-not-in-coverage');
-                this.vibrate();
-
-              } else if (response.data.status == "4") {
-                console.log(response.data.fpay_payment_url);
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                if(this.allow_send_whatsapp=='0'){
-                  this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                  this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                }
-
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-                window.location.href = response.data.fpay_payment_url;
-
-
-                
-              } else if (response.data.status == "5") {
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-                this.vibrate();
-              } else if (response.data.status == "6") {
-                this.error_snackbar = true;
-                this.error_snackbar_text =
-                  this.$t('fpay-min-purchase')+ parseFloat(response.data.min).toFixed(2);
-                  this.vibrate();
-              } else if (response.data.status == "7") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-              } else if (response.data.status == "8") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = response.data.message;
-              } else if (response.data.status == "9") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('fpay-connect-failed');
-                this.$store.commit("clearcart");
-              } else if (response.data.status == "10") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('product-price-invalid');
-                this.$store.commit("clearcart");
-              } else if (response.data.status == "11") {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text =  this.$t('product-stock-invalid');
-                this.check_stock = response.data.stock;
-                this.stock_change();
-              } else if (response.data.status == "12") {
-                // this.redirect_dialog = true;
-                // this.redirect_text_en =
-                //   "Redirect to whatsapp...Later remember to press send";
-                // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
-              
-                this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-              
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-
-                // this.$router.push("/" + this.merchant_url);
-
-                this.dialog_cart = false;
-
-                  // window.top.location.href = response.data.order_url;
-                  // window.location.href = response.data.order_url;
-                  // console.log( this.merchant_url+"/order-payment/"+ response.data.order_url_link);
-                // this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp+(this.$route.query.ref?'&ref='+this.$route.query.ref:''));
-                this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp);
-
-                //  if(this.allow_send_whatsapp=='0'){
-                //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                // }
-            
-
-
-                // this.$refs.form.reset();
-              }else if (response.data.status == "13") {
-                this.ipay_overlay=true;
-                // ipay payment 
-
-                // console.log(response.data.fpay_payment_url);
-                // this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
-                // if(this.allow_send_whatsapp=='0'){
-                //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
-                //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
-                // }
-
-                this.success_vibrate();
-                this.step=1;
-
-                this.name = "";
-                this.phone = "";
-                this.email = "";
-                this.address = "";
-                this.postcode = "";
-                this.note = "";
-
-                this.tab1_comfirm = false;
-                this.tab2_comfirm = false;
-                this.tab3_comfirm = false;
-                this.start_date = "";
-                this.delivery_time = "";
-                this.current_use_coupon_code = "";
-
-                this.$store.commit("clearcart");
-                
-                
-          
-                this.ipay_merchant_code=response.data.MerchantCode;
-                this.ipay_invoice_id=response.data.notifi_invoice_id;
-                this.ipay_amount=response.data.Amount;
-                this.ipay_username=response.data.UserName;
-                this.ipay_email=response.data.UserEmail;
-                this.ipay_contact=response.data.UserContact;
-                this.ipay_signature=response.data.signature;
-                this.ipay_response_url=response.data.ResponseURL;
-                this.ipay_backend_url=response.data.BackendURL;
-
-
-                this.$nextTick(() => {
-
-                      this.$refs.submit.click();
-
-                })
-                this.dialog_cart=false;
-                
-              }
-              else {
-                this.vibrate();
-                this.error_snackbar = true;
-                this.error_snackbar_text = this.$t('order-failed'); 
-                // this.form_status = false;
-                // window.location.href = "https://channelsoft.com.my";
-              }
-
-              this.order_loading = false;
-            })
-            .catch((error) => {
-              console.log(error);
-              this.order_loading = false;
-            });
-        } else {
-          this.error_snackbar = true;
-          this.error_snackbar_text = "Please add at least one items";
-          this.order_loading = false;
-          this.dialog_cart = false;
-        }
-      },
-
-      get_product(url) {
-        const params = new URLSearchParams();
-        params.append("read", url);
-        params.append("id", url);
-
-        axios({
-          method: "post",
-          url: this.domain + "/product/index.php",
-          data: params,
-        })
-          .then((response) => {
-            if (response.data.status == "1") {
-              this.form_status = true;
-              this.items = response.data.product_function;
-              console.log(JSON.stringify(this.items));
-
-              for (var i = 0; i < this.items.length; i++) {
-                this.items[i].description = this.items[i].description.replace(
-                  /\n/g,
-                  "<br/>"
-                );
-                console.log(this.items[i].description);
-                this.$set(this.items[i], "quantity", "0");
-                this.$set(this.items[i], "remark", "");
-                this.$set(this.items[i], "rows", "1");
-                this.$set(this.items[i], "self_index", [i]);
-              }
-            } else {
-              // this.form_status = false;
-              // window.location.href = "https://channelsoft.com.my";
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      get_category(url) {
-        const params = new URLSearchParams();
-        params.append("get_category", "get_category");
-        params.append("form_id", url);
+        // console.log(JSON.stringify(this.items));
 
         axios({
           method: "post",
           // url: baseUrl + "/vege_web_v2/product/product.php",
-          url: this.domain + "/form/index.php",
+          url: this.domain + "/order/index.php",
           data: params,
         })
           .then((response) => {
-            console.log(response);
+            this.unsavedChanges = false;
+              console.log(response);
+
             if (response.data.status == "1") {
-              this.categories = response.data.category;
-
-              var categories_length = this.categories.length;
-
-              for (var i = 0; i < this.categories.length; i++) {
-                if (
-                  this.categories[i].category_id == 0 &&
-                  categories_length == 1
-                ) {
-                  this.categories[i].name = "All";
-                }
+              this.redirect_dialog = true;
+              
+              // this.redirect_text_en =
+              //   "Redirect to whatsapp...Later remember to press send";
+              // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
+              this.success_vibrate();
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              if(this.allow_send_whatsapp=='0'){
+                this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+                this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
               }
-              this.selected_category_id = this.categories[0].category_id;
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
 
-              this.get_product(url);
-            } else {
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+
+              // this.$router.push("/" + this.merchant_url+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
+              this.$router.push("/" + this.merchant_url);
+
+              this.dialog_cart = false;
+
+              var v = this;
+              setTimeout(function () {
+                v.redirect_dialog = false;
+                // v.reset_form();
+
+                // window.top.location.href = response.data.order_url;
+                window.location.href = response.data.order_url;
+              }, 4500);
+
+              // this.$refs.form.reset();
+            } else if (response.data.status == "3") {
+
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('area-not-in-coverage');
+              this.vibrate();
+
+            } else if (response.data.status == "4") {
+              console.log(response.data.fpay_payment_url);
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              if(this.allow_send_whatsapp=='0'){
+                this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+                this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
+              }
+
+              this.success_vibrate();
+              this.step=1;
+
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+              window.location.href = response.data.fpay_payment_url;
+
+
+              
+            } else if (response.data.status == "5") {
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+              this.vibrate();
+            } else if (response.data.status == "6") {
+              this.error_snackbar = true;
+              this.error_snackbar_text =
+                this.$t('fpay-min-purchase')+ parseFloat(response.data.min).toFixed(2);
+                this.vibrate();
+            } else if (response.data.status == "7") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+            } else if (response.data.status == "8") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = response.data.message;
+            } else if (response.data.status == "9") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+              this.$store.commit("clearcart");
+            } else if (response.data.status == "10") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('product-price-invalid');
+              this.$store.commit("clearcart");
+            } else if (response.data.status == "11") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text =  this.$t('product-stock-invalid');
+              this.check_stock = response.data.stock;
+              this.stock_change();
+            } else if (response.data.status == "12") {
+              // this.redirect_dialog = true;
+              // this.redirect_text_en =
+              //   "Redirect to whatsapp...Later remember to press send";
+              // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
+            
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+             
+              this.success_vibrate();
+              this.step=1;
+
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+
+              // this.$router.push("/" + this.merchant_url);
+
+              this.dialog_cart = false;
+
+                // window.top.location.href = response.data.order_url;
+                // window.location.href = response.data.order_url;
+                // console.log( this.merchant_url+"/order-payment/"+ response.data.order_url_link);
+              // this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp+(this.$route.query.ref?'&ref='+this.$route.query.ref:''));
+              this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp);
+
+              this.send_payment_whatsapp_notification_customer(response.data.notifi_order_id)
+              //  if(this.allow_send_whatsapp=='0'){
+              //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+              //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
+              // }
+          
+
+
+              // this.$refs.form.reset();
+            }else if (response.data.status == "13") {
+              this.ipay_overlay=true;
+              // ipay payment 
+
+              // console.log(response.data.fpay_payment_url);
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              if(this.allow_send_whatsapp=='0'){
+                this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+                this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
+              }
+
+              this.success_vibrate();
+              this.step=1;
+
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+              
+         
+              this.ipay_merchant_code=response.data.MerchantCode;
+              this.ipay_invoice_id=response.data.notifi_invoice_id;
+              this.ipay_amount=response.data.Amount;
+              this.ipay_username=response.data.UserName;
+              this.ipay_email=response.data.UserEmail;
+              this.ipay_contact=response.data.UserContact;
+              this.ipay_signature=response.data.signature;
+              this.ipay_response_url=response.data.ResponseURL;
+              this.ipay_backend_url=response.data.BackendURL;
+
+
+              if(this.company_domain!==''){
+
+                 window.location.href = "https://emenu.com.my/ipay-redirect?ipay_redirect=true&ipay_merchant_code="+ this.ipay_merchant_code
+                 +"&ipay_invoice_id="+ this.ipay_invoice_id
+                 +"&ipay_amount="+ this.ipay_amount
+                 +"&ipay_username="+ this.ipay_username
+                 +"&ipay_email="+ this.ipay_email
+                 +"&ipay_contact="+ this.ipay_contact
+                 +"&ipay_signature="+ this.ipay_signature
+                 +"&ipay_response_url="+ this.ipay_response_url
+                 +"&ipay_backend_url="+ this.ipay_backend_url;  
+
+              }else{
+                this.$nextTick(() => {
+                    this.$refs.submit.click();
+              })
+              this.dialog_cart=false;
+              }
+
+
+                
+                
+            }
+            else {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('order-failed'); 
               // this.form_status = false;
               // window.location.href = "https://channelsoft.com.my";
             }
+
+            this.order_loading = false;
           })
           .catch((error) => {
             console.log(error);
+            this.order_loading = false;
           });
-      },
+      } else {
+        this.error_snackbar = true;
+        this.error_snackbar_text = "Please add at least one items";
+        this.order_loading = false;
+        this.dialog_cart = false;
+      }
+    },
 
-      check_user_device_type() {
-        if (
-          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          )
-        ) {
-          this.user_device_type = "1";
-        } else {
-          this.user_device_type = "2";
-        }
-      },
+    table_submit() {
+      if(!this.is_working_time()==false){
+            console.log('gg1');
+        return;
+      }
 
-      check_delivery_fee(from) {
-        if(from=='panel'){
-          this.tab2_comfirm_loading=true;
-        }
-        if (this.request_self_collect == true) {
-          this.delivery_fee = 0;
-          if (from == "panel") {
-            this.tab2_comfirm = true;
-            this.tab2_red = false;
-            this.panel = 1;
-            // if (this.tab3_comfirm == false) {
-            //   this.panel = 1;
-            // } else {
-            //   this.panel = null;
-            // }
-          }
-          this.recheck_coupon_fee();
-          this.tab2_comfirm_loading=false;
-          return;
-        }
+      this.order_loading = true;
+      var qty = 0;
 
-        if (this.shipping_setting_status == "2" && this.address.length == 0) {
-          this.tab2_comfirm_loading=false;
-          this.recheck_coupon_fee();
-          return;
-        }
+      for (var i = 0; i < this.cart_items.length; i++) {
+        // console.log(this.items[i].purchase_quantity);
+        qty = qty + parseFloat(this.cart_items[i].quantity);
+      }
 
-        if (this.postcode.length == 0 && this.shipping_setting_status != "2") {
-          this.tab2_comfirm_loading=false;
-          this.recheck_coupon_fee();
-          return;
-        }
-
-        // if (
-        //   this.longitude == "" &&
-        //   this.latitude == "" &&
-        //   this.shipping_setting_status == "2"
-        // ) {
-        //   this.recheck_coupon_fee();
-        //   return;
-        // }
-
+      if (qty > 0) {
         const params = new URLSearchParams();
-        params.append("get_delivery_fee", "get_delivery_fee");
-        params.append("postcode", this.postcode);
-        params.append("latitude", this.latitude);
+        params.append("create", "create");
+        params.append("id", this.url);
+        params.append("name", this.table_name);
+        params.append("phone", this.table_name);
+        params.append("email", '');
+        params.append("delivery_fee", '0');
+        params.append("address","");
+        params.append("postcode","");
+        params.append("request_self_collect","2");
+        params.append("delivery_date","");
+        params.append("delivery_time","");
+        params.append("note", this.note);
+        params.append("user_device_type", this.user_device_type);
+        params.append("payment_method", '1');
+        params.append("items", JSON.stringify(this.cart_items));
+        params.append("coupon_code", this.current_use_coupon_code);
         params.append("longitude", this.longitude);
-        params.append("address", this.address);
-        params.append("total_amount", this.product_fee);
-        params.append("url", this.url);
+        params.append("latitude", this.latitude);
+        
+        // params.append("ref",  (this.$route.query.ref?this.$route.query.ref:''));
 
-        params.append("merchant_id", this.merchant_id);
-        params.append("customer_details_list", JSON.stringify(this.customer_details_list));
-        params.append("state", this.state);
-        params.append("country", this.country);
-        params.append("sum_weight", this.sum_weight);
-
-
+    
         axios({
           method: "post",
+  
           url: this.domain + "/order/index.php",
           data: params,
         })
           .then((response) => {
-            console.log(response);
-            this.tab2_comfirm_loading=false;
+            this.unsavedChanges = false;
+              console.log(response);
+
             if (response.data.status == "1") {
-              this.delivery_fee = response.data.delivery_fee;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-                // if (this.tab3_comfirm == false) {
-                //   this.panel = 2;
-                // } else {
-                //   this.panel = null;
-                // }
+              this.redirect_dialog = true;
+              
+              // this.redirect_text_en =
+              //   "Redirect to whatsapp...Later remember to press send";
+              // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
+              this.success_vibrate();
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              if(this.allow_send_whatsapp=='0'){
+                this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+                this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
               }
-              this.tab2_error = "";
-            } else if (response.data.status == "2") {
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('area-not-in-coverage');
-            }
-            else if (response.data.status == "3") {
-              console.log('doublecheck');
-              this.recheck_delivery_fee(from);
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+
+              // this.$router.push("/" + this.merchant_url+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
+              this.$router.push("/" + this.merchant_url);
+
+              this.dialog_cart = false;
+
+              var v = this;
+              setTimeout(function () {
+                v.redirect_dialog = false;
+                // v.reset_form();
+
+                // window.top.location.href = response.data.order_url;
+                window.location.href = response.data.order_url;
+              }, 4500);
+
+              // this.$refs.form.reset();
+            } else if (response.data.status == "3") {
+
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('area-not-in-coverage');
+              this.vibrate();
 
             } else if (response.data.status == "4") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('address-invalid');
-            }
-            else if (response.data.status == "5") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.data;
-            }
-            else if (response.data.status == "6") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.data;
-            }else if(response.data.status == "7"){
-
-                var lalamove_extra_charge=response.data.lalamove_extra_charge!==''?response.data.lalamove_extra_charge:0;
-
-              this.delivery_fee = parseFloat( response.data.data.totalFee)+ parseFloat(lalamove_extra_charge);
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-          
+              console.log(response.data.fpay_payment_url);
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              if(this.allow_send_whatsapp=='0'){
+                this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+                this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
               }
-              this.tab2_error = "";
-            }
-            else if(response.data.status == "7.5"){
-    
-              this.delivery_fee =0;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-          
-              }
-              this.tab2_error = "";
-            }
-            else if(response.data.status == "8"){
 
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.message;
-            }
-            else if(response.data.status == "9"){
+              this.success_vibrate();
+              this.step=1;
 
-              this.delivery_fee = response.data.price;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+              window.location.href = response.data.fpay_payment_url;
+
+
+              
+            } else if (response.data.status == "5") {
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+              this.vibrate();
+            } else if (response.data.status == "6") {
+              this.error_snackbar = true;
+              this.error_snackbar_text =
+                this.$t('fpay-min-purchase')+ parseFloat(response.data.min).toFixed(2);
+                this.vibrate();
+            } else if (response.data.status == "7") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+            } else if (response.data.status == "8") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = response.data.message;
+            } else if (response.data.status == "9") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('fpay-connect-failed');
+              this.$store.commit("clearcart");
+            } else if (response.data.status == "10") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('product-price-invalid');
+              this.$store.commit("clearcart");
+            } else if (response.data.status == "11") {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text =  this.$t('product-stock-invalid');
+              this.check_stock = response.data.stock;
+              this.stock_change();
+            } else if (response.data.status == "12") {
+              // this.redirect_dialog = true;
+              // this.redirect_text_en =
+              //   "Redirect to whatsapp...Later remember to press send";
+              // this.redirect_text_zh = "转着去Whatsapp...等等记得按发送";
+            
+              this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+             
+              this.success_vibrate();
+              this.step=1;
+
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+
+              // this.$router.push("/" + this.merchant_url);
+
+              this.dialog_cart = false;
+
+                // window.top.location.href = response.data.order_url;
+                // window.location.href = response.data.order_url;
+                // console.log( this.merchant_url+"/order-payment/"+ response.data.order_url_link);
+              // this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp+(this.$route.query.ref?'&ref='+this.$route.query.ref:''));
+              this.$router.push("/" + this.merchant_url+"/order-payment/"+ response.data.order_url_link+"?oid="+response.data.notifi_order_id+"&allow_w="+this.allow_send_whatsapp);
+
+              //  if(this.allow_send_whatsapp=='0'){
+              //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+              //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
+              // }
           
-              }
-              this.tab2_error = "";
+
+
+              // this.$refs.form.reset();
+            }else if (response.data.status == "13") {
+              this.ipay_overlay=true;
+              // ipay payment 
+
+              // console.log(response.data.fpay_payment_url);
+              // this.trigger_notification(""+response.data.notifi_merchant_id,response.data.notifi_invoice_id);
+              // if(this.allow_send_whatsapp=='0'){
+              //   this.send_whatsapp_notification_customer(response.data.notifi_order_id);
+              //   this.send_whatsapp_notification_merchant(response.data.notifi_order_id);
+              // }
+
+              this.success_vibrate();
+              this.step=1;
+
+              this.name = "";
+              this.phone = "";
+              this.email = "";
+              this.address = "";
+              this.postcode = "";
+              this.note = "";
+
+              this.tab1_comfirm = false;
+              this.tab2_comfirm = false;
+              this.tab3_comfirm = false;
+              this.start_date = "";
+              this.delivery_time = "";
+              this.current_use_coupon_code = "";
+
+              this.$store.commit("clearcart");
+              
+              
+         
+              this.ipay_merchant_code=response.data.MerchantCode;
+              this.ipay_invoice_id=response.data.notifi_invoice_id;
+              this.ipay_amount=response.data.Amount;
+              this.ipay_username=response.data.UserName;
+              this.ipay_email=response.data.UserEmail;
+              this.ipay_contact=response.data.UserContact;
+              this.ipay_signature=response.data.signature;
+              this.ipay_response_url=response.data.ResponseURL;
+              this.ipay_backend_url=response.data.BackendURL;
+
+
+              this.$nextTick(() => {
+
+                    this.$refs.submit.click();
+
+              })
+              this.dialog_cart=false;
+              
             }
-            else{
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('address-error');
-              this.recheck_delivery_fee(from);
+            else {
+              this.vibrate();
+              this.error_snackbar = true;
+              this.error_snackbar_text = this.$t('order-failed'); 
+              // this.form_status = false;
+              // window.location.href = "https://channelsoft.com.my";
             }
-            this.recheck_coupon_fee();
+
+            this.order_loading = false;
           })
           .catch((error) => {
             console.log(error);
+            this.order_loading = false;
           });
-      },
+      } else {
+        this.error_snackbar = true;
+        this.error_snackbar_text = "Please add at least one items";
+        this.order_loading = false;
+        this.dialog_cart = false;
+      }
+    },
 
-      recheck_delivery_fee(from) {
+    get_product(url) {
+      const params = new URLSearchParams();
+      params.append("read", url);
+      params.append("id", url);
 
-        if (this.request_self_collect == true) {
-          this.delivery_fee = 0;
-          if (from == "panel") {
-            this.tab2_comfirm = true;
-            this.tab2_red = false;
-            this.panel = 1;
-            // if (this.tab3_comfirm == false) {
-            //   this.panel = 1;
-            // } else {
-            //   this.panel = null;
-            // }
+      axios({
+        method: "post",
+        url: this.domain + "/product/index.php",
+        data: params,
+      })
+        .then((response) => {
+          if (response.data.status == "1") {
+            this.form_status = true;
+            this.items = response.data.product_function;
+            console.log(JSON.stringify(this.items));
+
+            for (var i = 0; i < this.items.length; i++) {
+              this.items[i].description = this.items[i].description.replace(
+                /\n/g,
+                "<br/>"
+              );
+              console.log(this.items[i].description);
+              this.$set(this.items[i], "quantity", "0");
+              this.$set(this.items[i], "remark", "");
+              this.$set(this.items[i], "rows", "1");
+              this.$set(this.items[i], "self_index", [i]);
+            }
+          } else {
+            // this.form_status = false;
+            // window.location.href = "https://channelsoft.com.my";
           }
-          this.recheck_coupon_fee();
-          this.tab2_comfirm_loading=false;
-          return;
-        }
-
-        if (this.shipping_setting_status == "2" && this.address.length == 0) {
-          this.recheck_coupon_fee();
-          this.tab2_comfirm_loading=false;
-          return;
-        }
-
-        if (this.postcode.length == 0 && this.shipping_setting_status != "2") {
-          this.recheck_coupon_fee();
-          this.tab2_comfirm_loading=false;
-          return;
-        }
-
-        // if (
-        //   this.longitude == "" &&
-        //   this.latitude == "" &&
-        //   this.shipping_setting_status == "2"
-        // ) {
-        //   this.recheck_coupon_fee();
-        //   return;
-        // }
-
-        const params = new URLSearchParams();
-        params.append("get_delivery_fee", "get_delivery_fee");
-        params.append("postcode", this.postcode);
-        params.append("latitude", this.latitude);
-        params.append("longitude", this.longitude);
-        params.append("address", this.address);
-        params.append("total_amount", this.product_fee);
-        params.append("url", this.url);
-
-        params.append("merchant_id", this.merchant_id);
-        params.append("customer_details_list", JSON.stringify(this.customer_details_list));
-
-          params.append("state", this.state);
-          params.append("country", this.country);
-        params.append("sum_weight", this.sum_weight);
-
-        axios({
-          method: "post",
-          url: this.domain + "/order/index.php",
-          data: params,
         })
-          .then((response) => {
-            console.log(response);
-            this.tab2_comfirm_loading=false;
-            if (response.data.status == "1") {
-              this.delivery_fee = response.data.delivery_fee;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-                // if (this.tab3_comfirm == false) {
-                //   this.panel = 2;
-                // } else {
-                //   this.panel = null;
-                // }
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    get_category(url) {
+      const params = new URLSearchParams();
+      params.append("get_category", "get_category");
+      params.append("form_id", url);
+
+      axios({
+        method: "post",
+        // url: baseUrl + "/vege_web_v2/product/product.php",
+        url: this.domain + "/form/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.status == "1") {
+            this.categories = response.data.category;
+
+            var categories_length = this.categories.length;
+
+            for (var i = 0; i < this.categories.length; i++) {
+              if (
+                this.categories[i].category_id == 0 &&
+                categories_length == 1
+              ) {
+                this.categories[i].name = "All";
               }
-              this.tab2_error = "";
-            } else if (response.data.status == "2") {
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('area-not-in-coverage');
             }
-            else if (response.data.status == "3") {
+            this.selected_category_id = this.categories[0].category_id;
+
+            this.get_product(url);
+          } else {
+            // this.form_status = false;
+            // window.location.href = "https://channelsoft.com.my";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    check_user_device_type() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        this.user_device_type = "1";
+      } else {
+        this.user_device_type = "2";
+      }
+    },
+
+    check_delivery_fee(from) {
+      if(from=='panel'){
+        this.tab2_comfirm_loading=true;
+      }
+      if (this.request_self_collect == true) {
+        this.delivery_fee = 0;
+        if (from == "panel") {
+          this.tab2_comfirm = true;
+          this.tab2_red = false;
+          this.panel = 1;
+          // if (this.tab3_comfirm == false) {
+          //   this.panel = 1;
+          // } else {
+          //   this.panel = null;
+          // }
+        }
+        this.recheck_coupon_fee();
+        this.tab2_comfirm_loading=false;
+        return;
+      }
+
+      if (this.shipping_setting_status == "2" && this.address.length == 0) {
+         this.tab2_comfirm_loading=false;
+        this.recheck_coupon_fee();
+        return;
+      }
+
+      if (this.postcode.length == 0 && this.shipping_setting_status != "2") {
+         this.tab2_comfirm_loading=false;
+        this.recheck_coupon_fee();
+        return;
+      }
+
+      // if (
+      //   this.longitude == "" &&
+      //   this.latitude == "" &&
+      //   this.shipping_setting_status == "2"
+      // ) {
+      //   this.recheck_coupon_fee();
+      //   return;
+      // }
+
+      const params = new URLSearchParams();
+      params.append("get_delivery_fee", "get_delivery_fee");
+      params.append("postcode", this.postcode);
+      params.append("latitude", this.latitude);
+      params.append("longitude", this.longitude);
+      params.append("address", this.address);
+      params.append("total_amount", this.product_fee);
+      params.append("url", this.url);
+
+      params.append("merchant_id", this.merchant_id);
+      params.append("customer_details_list", JSON.stringify(this.customer_details_list));
+      params.append("state", this.state);
+      params.append("country", this.country);
+      params.append("sum_weight", this.sum_weight);
+
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+          this.tab2_comfirm_loading=false;
+          if (response.data.status == "1") {
+            this.delivery_fee = response.data.delivery_fee;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+              // if (this.tab3_comfirm == false) {
+              //   this.panel = 2;
+              // } else {
+              //   this.panel = null;
+              // }
+            }
+            this.tab2_error = "";
+          } else if (response.data.status == "2") {
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('area-not-in-coverage');
+          }
+          else if (response.data.status == "3") {
+            console.log('doublecheck');
+            this.recheck_delivery_fee(from);
+
+          } else if (response.data.status == "4") {
             
-              console.log('dcheck3result');
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('address-error');
-              
-            }else if (response.data.status == "4") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = this.$t('address-invalid');
-            } else if (response.data.status == "5") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.data;
-            }
-            else if (response.data.status == "6") {
-              
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.data;
-            }else if(response.data.status == "7"){
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('address-invalid');
+          }
+          else if (response.data.status == "5") {
+            
+            this.delivery_fee = "0";
+            this.tab2_error = response.data.data;
+          }
+          else if (response.data.status == "6") {
+            
+            this.delivery_fee = "0";
+            this.tab2_error = response.data.data;
+          }else if(response.data.status == "7"){
 
               var lalamove_extra_charge=response.data.lalamove_extra_charge!==''?response.data.lalamove_extra_charge:0;
 
-              this.delivery_fee = parseFloat(response.data.data.totalFee) + parseFloat(lalamove_extra_charge);
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-          
-              }
-              this.tab2_error = "";
-            }
-            else if(response.data.status == "7.5"){
-    
-              this.delivery_fee =0;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-          
-              }
-              this.tab2_error = "";
-            }
-            else if(response.data.status == "8"){
-
-              this.delivery_fee = "0";
-              this.tab2_error = response.data.message;
-            }
-            else if(response.data.status == "9"){
-
-              this.delivery_fee = response.data.price;
-              if (from == "panel") {
-                this.tab2_comfirm = true;
-                this.tab2_red = false;
-                this.panel = 1;
-          
-              }
-              this.tab2_error = "";
-            }
-            else{
-              console.log('else_error');
-
-              this.delivery_fee = "0";
-              this.tab2_error = 'Try again';
-            }
-            this.recheck_coupon_fee();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      check_coupon_fee() {
-        if (this.coupon_code == "") {
-          this.coupon_error = "Enter coupon";
-          return;
-        }
-        this.current_use_coupon_code = "";
-        this.discount_fee = "0";
-
-        const params = new URLSearchParams();
-        params.append("check_coupon", "check_coupon");
-        params.append("coupon_code", this.coupon_code);
-        params.append("public_url", this.url);
-        params.append("phone", this.phone);
-        params.append("total_amount", this.product_fee);
-        params.append("total_quantity", this.product_quantity);
-        params.append("items", JSON.stringify(this.cart_items));
-
-        axios({
-          method: "post",
-          url: this.domain + "/order/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response)
-            if (response.data.status == "1") {
-              this.current_use_coupon_code = this.coupon_code;
-              this.coupon_code = "";
-              this.coupon_dialog = false;
-              this.discount_fee = response.data.discount_value;
-              this.submit_snackbar = true;
-              this.submit_snackbar_text = this.$t('coupon-added');
-            } else if (response.data.status == "2") {
-              this.discount_fee = "0";
-              this.coupon_error = response.data.message;
-            } else if (response.data.status == "3") {
-              this.discount_fee = this.delivery_fee;
-              this.current_use_coupon_code = this.coupon_code;
-              this.coupon_code = "";
-              this.submit_snackbar = true;
-              this.coupon_dialog = false;
-              this.submit_snackbar_text =this.$t('coupon-free-shipping');
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      recheck_coupon_fee() {
-        console.log("recheck co");
-        if (this.current_use_coupon_code == "") {
-          return;
-        }
-        this.discount_fee = "0";
-        const params = new URLSearchParams();
-        params.append("check_coupon", "check_coupon");
-        params.append("coupon_code", this.current_use_coupon_code);
-        params.append("public_url", this.url);
-        params.append("phone", this.phone);
-        params.append("total_amount", this.product_fee);
-        params.append("total_quantity", this.product_quantity);
-        params.append("items", JSON.stringify(this.cart_items));
-
-        axios({
-          method: "post",
-          url: this.domain + "/order/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-
-            if (response.data.status == "1") {
-              this.discount_fee = response.data.discount_value;
-            } else if (response.data.status == "2") {
-              this.discount_fee = "0";
-              this.current_use_coupon_code = "";
-              this.error_snackbar = true;
-              this.error_snackbar_text = response.data.message;
-            } else if (response.data.status == "3") {
-              this.discount_fee = this.delivery_fee;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      get_customer_details: _.debounce(function () {
-        const params = new URLSearchParams();
-        params.append("get_customer_details", "get_customer_details");
-        params.append("url", this.url);
-        params.append("phone", this.phone);
-
-        axios({
-          method: "post",
-          url: this.domain + "/order/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-            if (response.data.status == "1") {
-              if (this.name.length == 0) {
-                this.name = response.data.details[0].name;
-              }
-
-              if (this.email.length == 0) {
-                this.email = response.data.details[0].email;
-              }
-
-              if (this.address.length == 0) {
-                this.address = response.data.details[0].address;
-              }
-
-              if (this.postcode.length == 0) {
-                this.postcode = response.data.details[0].postcode;
-                this.get_city_state_from_postcode();
-              }
-
-              if (this.state.length  == 0) {
-                this.state= response.data.details[0].state;
-              }
-
-              if (this.city.length  == 0) {
-                this.city = response.data.details[0].city;
-              }
-
-              // this.check_delivery_fee();
-            } else {
-              console.log(response);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, 800),
-
-      get_city_state_from_postcode: _.debounce(function () {
-
-        if (this.city.length !== 0 && this.state.length !== 0 && this.shipping_setting_status!=='3' && this.request_self_collect) {
-            return;
-        }
-
-        if(this.country=='SG'){
-          return;
-        }
-
-        const params = new URLSearchParams();
-        params.append("get_city_state_from_postcode", "get_city_state_from_postcode");
-        params.append("postcode", this.postcode);
-
-        axios({
-          method: "post",
-          url: this.domain + "/order/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-            if (response.data.status == "1") {
-
-              if (this.state.length  == 0) {
-                this.state= response.data.details[0].state;
-              }
-
-              if (this.city.length  == 0) {
-                this.city = response.data.details[0].city;
-              }
-
-              // this.check_delivery_fee();
-            } else {
-              console.log(response);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, 800),
-      
-      clear_search_content() {
-        this.search_content = "";
-      },
-
-      delivery_collect_clicked() {
-        if (this.delivery_collect == true) {
-          console.log("1");
-          this.delivery_collect = true;
-          this.request_self_collect = false;
-        } else {
-          console.log("2");
-
-          this.delivery_collect = false;
-          this.request_self_collect = true;
-        }
-      },
-
-      request_self_collect_clicked() {
-        if(this.delivery_option==true){
-
-        if (this.request_self_collect == true) {
-          console.log("1");
-          this.request_self_collect = true;
-          this.delivery_collect = false;
-        } else {
-          console.log("2");
-
-          this.request_self_collect = false;
-          this.delivery_collect = true;
-        }
-        }else{
-              this.$nextTick(() => {
-                this.request_self_collect = true;
-
-            })
-        }
-
-      },
-
-      allowedDates(a) {
-        return this.availableDates.includes(a);
-      },
-
-      pickerUpdate: function (val) {
-        let totalDay = moment(val, "YYYY-MM").daysInMonth();
-        console.log(totalDay);
-
-        let availableDates = [];
-
-        let monthNow = moment().format("M");
-        let yearNow = moment().format("YYYY");
-        let monthSelected = moment(val).format("M");
-        let day;
-
-        if (monthNow == monthSelected && val.split("-")[0] == yearNow)
-          day = moment().format("D");
-        else day = 1;
-
-        for (let i = day; i <= totalDay; i++) {
-          let date = moment()
-            .year(val.split("-")[0])
-            .month(val.split("-")[1] - 1)
-            .date(i)
-            .format("YYYY-MM-DD");
-
-          var workday = JSON.parse(this.working_day);
-
-          if(date==moment().format('YYYY-MM-DD')){
-
-            if((this.delivery_date_option==true && this.delivery_time_option==false)|| (this.delivery_date_option==true && this.delivery_time_option==true)){
-              var d = new Date(); 
-              //  var d = new Date("JULY 11, 2021 01:55:00");
-              var getHours= d.getHours(); 
-              var getMinutes= d.getMinutes(); 
-              getHours = ("0" + getHours).slice(-2);
-              getMinutes = ("0" + getMinutes).slice(-2);
-
-              if( ((getHours+":"+getMinutes) >= this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end) ||
-                ((getHours+":"+getMinutes) <= this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end) ){
-
-                // availableDates.push(date);
-                if (workday[moment(date).day()] == "0") {
-                    availableDates.push(date);
-                }
-
-                continue;
-              }else{
-                continue;
-              }
-            }
-          }
-
-        if (workday[moment(date).day()] == "0") {
-            availableDates.push(date);
-          }
-
-
-          // if (moment(date).day() == 0 && workday[0] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 1 && workday[1] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 2 && workday[2] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 3 && workday[3] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 4 && workday[4] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 5 && workday[5] == "0") {
-          //   availableDates.push(date);
-          // }
-          // if (moment(date).day() == 6 && workday[6] == "0") {
-          //   availableDates.push(date);
-          // }
-        }
-        this.availableDates = availableDates;
-        this.allowedDates();
-      },
-
-      theFormat(number) {
-        return number.toFixed(2);
-      },
-
-      product_onclick(product_id,slug) {
-        this.vibrate();
-        // window.navigator.vibrate(25); 
-        // const canVibrate = window.navigator.vibrate
-        // if (canVibrate) {window.navigator.vibrate(25)}
-
-        console.log('poos');
-        console.log(this.scrollpos);
-        this.$store.commit('changeposition_y', this.scrollpos);
+             this.delivery_fee = parseFloat( response.data.data.totalFee)+ parseFloat(lalamove_extra_charge);
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
         
-        // this.$router.push('/'+this.merchant_url + "/" + (slug!==''?slug+'-':'') + product_id+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
-        this.$router.push('/'+this.merchant_url + "/" + (slug!==''?slug+'-':'') + product_id);
-      },
-
-      minus_cart_quantity(index) {
-        this.$store.commit("minuscartqty", index);
-      },
-
-      add_cart_quantity(index, product_id) {
-        for (var j = 0; j < this.items.length; j++) {
-          if (product_id == this.items[j].product_id) {
-            this.$store.commit("addcartqty", {
-              index: index,
-              stock: this.items[j].stock,
-            });
-            console.log(this.items[j].stock);
-            return;
+            }
+            this.tab2_error = "";
           }
-        }
-        this.$store.commit("addcartqty", { index: index, stock: "" });
-      },
+          else if(response.data.status == "7.5"){
+  
+             this.delivery_fee =0;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+        
+            }
+            this.tab2_error = "";
+          }
+           else if(response.data.status == "8"){
 
-      // tab1_comfirm_btn() {
-      //   this.$refs.tab1_form.validate();
+             this.delivery_fee = "0";
+            this.tab2_error = response.data.message;
+          }
+          else if(response.data.status == "9"){
 
-      //   if (this.tab1_form) {
-      //     // this.$store.commit("update_checkout_step_save",  'name', this.name);
-      //     this.tab1_comfirm = true;
-      //     this.tab1_red = false;
-      //     if (this.tab2_comfirm == false) {
-      //       this.panel = 1;
-      //     } else if (this.tab3_comfirm == false) {
-      //       this.panel = 2;
-      //     } else {
-      //       this.panel = null;
-      //     }
-      //   }
-      // },
+             this.delivery_fee = response.data.price;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+        
+            }
+            this.tab2_error = "";
+          }
+          else{
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('address-error');
+            this.recheck_delivery_fee(from);
+          }
+          this.recheck_coupon_fee();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
-      tab2_comfirm_btn() {
-        this.$refs.tab2_form.validate();
-        // console.log(this.tab2_form);
-        if (this.tab2_form) {
-          // if (
-          //   this.shipping_setting_status == "2" &&
-          //   this.request_self_collect == false
-          // ) {
-          //   Vue.$geocoder.setDefaultMode("address"); // this is default
-          //   var addressObj = {
-          //     address_line_1: this.address,
-          //   };
+    recheck_delivery_fee(from) {
 
-          //   Vue.$geocoder.send(addressObj, (response) => {
-          //     console.log(response);
-
-          //     if (response.status == "OK") {
-          //       console.log(response.results[0].geometry.location.lat);
-          //       this.latitude = response.results[0].geometry.location.lat;
-          //       this.longitude = response.results[0].geometry.location.lng;
-          //       this.check_delivery_fee("panel");
-          //     } else {
-          //       this.tab2_error =
-          //         "Your Address Not Found. Please Enter Valid Address";
-          //     }
-          //   });
+      if (this.request_self_collect == true) {
+        this.delivery_fee = 0;
+        if (from == "panel") {
+          this.tab2_comfirm = true;
+          this.tab2_red = false;
+          this.panel = 1;
+          // if (this.tab3_comfirm == false) {
+          //   this.panel = 1;
           // } else {
-            this.check_delivery_fee("panel");
-          //}
-        }
-      },
-
-      // tab3_comfirm_btn() {
-      //   this.$refs.tab3_form.validate();
-
-      //   if (this.tab3_form) {
-      //     this.tab3_red = false;
-      //     this.tab3_comfirm = true;
-      //     this.panel = null;
-      //   }
-      // },
-
-      text_color_auto(hexcolor) {
-        // If a leading # is provided, remove it
-        if (hexcolor.slice(0, 1) === "#") {
-          hexcolor = hexcolor.slice(1);
-        }
-
-        // If a three-character hexcode, make six-character
-        if (hexcolor.length === 3) {
-          hexcolor = hexcolor
-            .split("")
-            .map(function (hex) {
-              return hex + hex;
-            })
-            .join("");
-        }
-
-        // Convert to RGB value
-        var r = parseInt(hexcolor.substr(0, 2), 16);
-        var g = parseInt(hexcolor.substr(2, 2), 16);
-        var b = parseInt(hexcolor.substr(4, 2), 16);
-
-        // Get YIQ ratio
-        var yiq = (r * 299 + g * 587 + b * 114) / 1000;
-
-        // Check contrast
-        return yiq >= 128 ? false : true;
-      },
-
-      stock_change() {
-        this.step = 1;
-        for (var i = 0; i < this.check_stock.length; i++) {
-          if (this.check_stock[i].quantity > this.check_stock[i].stock) {
-            for (var j = 0; j < this.items.length; j++) {
-              if (this.check_stock[i].product_id == this.items[j].product_id) {
-                this.items[j].stock = this.check_stock[i].stock;
-                break;
-              }
-            }
-          }
-        }
-      },
-
-      cart_checking_stock(product_id) {
-        var cart_total_quantity = 0;
-        for (var i = 0; i < this.cart_items.length; i++) {
-
-          if(this.cart_items[i].type =='0'){
-            if (this.cart_items[i].product_id == product_id) {
-              cart_total_quantity =
-                cart_total_quantity + parseFloat(this.cart_items[i].quantity);
-            }
-
-          }else{
-            
-            if (this.cart_items[i].product_id == product_id) {
-              cart_total_quantity =
-                cart_total_quantity + parseFloat(this.cart_items[i].quantity);
-            }
-            
-          }
-          
-
-        }
-
-        for (var j = 0; j < this.items.length; j++) {
-          if (product_id == this.items[j].product_id) {
-            if (this.items[j].stock == "") {
-              return "";
-            } else {
-
-              if(this.items[j].type=='0'){
-                  if (cart_total_quantity > parseFloat(this.items[j].stock)) {
-                  return this.items[j].stock;
-              }else{
-                return '';
-              }
-              }
-              
-            }
-          }
-        }
-      },
-
-      full_cart_checking_stock() {
-        for (var i = 0; i < this.cart_items.length; i++) {
-          var stock = this.cart_checking_stock(this.cart_items[i].product_id);
-          if (stock) {
-            this.error_snackbar = true;
-            this.error_snackbar_text = this.$t('item-out-of-stock');
-            return;
-          }
-        }
-        
-        if(this.is_working_time()==true){
-          this.error_snackbar = true;
-          this.error_snackbar_text = this.$t('store-closed-now');
-          return;
-        }
-        if(parseFloat(this.product_fee)<parseFloat(this.order_min_purchase)){
-          this.error_snackbar = true;
-          this.error_snackbar_text = this.$t('min-purchase') +' :RM'+this.order_min_purchase;
-          return;
-        }
-        this.step = 2;
-      },
-
-      scrollposition(){
-        console.log(window.scrollY);
-      },
-
-      open_cart(){
-        this.vibrate();
-          // if(this.dine_in_mode){
-          //     this.dialog_table_cart = true;
-          // }else{
-              this.dialog_cart = true;
+          //   this.panel = null;
           // }
+        }
+        this.recheck_coupon_fee();
+         this.tab2_comfirm_loading=false;
+        return;
+      }
+
+      if (this.shipping_setting_status == "2" && this.address.length == 0) {
+        this.recheck_coupon_fee();
+         this.tab2_comfirm_loading=false;
+        return;
+      }
+
+      if (this.postcode.length == 0 && this.shipping_setting_status != "2") {
+        this.recheck_coupon_fee();
+         this.tab2_comfirm_loading=false;
+        return;
+      }
+
+      // if (
+      //   this.longitude == "" &&
+      //   this.latitude == "" &&
+      //   this.shipping_setting_status == "2"
+      // ) {
+      //   this.recheck_coupon_fee();
+      //   return;
+      // }
+
+      const params = new URLSearchParams();
+      params.append("get_delivery_fee", "get_delivery_fee");
+      params.append("postcode", this.postcode);
+      params.append("latitude", this.latitude);
+      params.append("longitude", this.longitude);
+      params.append("address", this.address);
+      params.append("total_amount", this.product_fee);
+      params.append("url", this.url);
+
+      params.append("merchant_id", this.merchant_id);
+      params.append("customer_details_list", JSON.stringify(this.customer_details_list));
+
+        params.append("state", this.state);
+        params.append("country", this.country);
+      params.append("sum_weight", this.sum_weight);
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+          this.tab2_comfirm_loading=false;
+          if (response.data.status == "1") {
+            this.delivery_fee = response.data.delivery_fee;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+              // if (this.tab3_comfirm == false) {
+              //   this.panel = 2;
+              // } else {
+              //   this.panel = null;
+              // }
+            }
+            this.tab2_error = "";
+          } else if (response.data.status == "2") {
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('area-not-in-coverage');
+          }
+           else if (response.data.status == "3") {
+          
+            console.log('dcheck3result');
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('address-error');
+            
+          }else if (response.data.status == "4") {
+            
+            this.delivery_fee = "0";
+            this.tab2_error = this.$t('address-invalid');
+          } else if (response.data.status == "5") {
+            
+            this.delivery_fee = "0";
+            this.tab2_error = response.data.data;
+          }
+          else if (response.data.status == "6") {
+            
+            this.delivery_fee = "0";
+            this.tab2_error = response.data.data;
+          }else if(response.data.status == "7"){
+
+            var lalamove_extra_charge=response.data.lalamove_extra_charge!==''?response.data.lalamove_extra_charge:0;
+
+             this.delivery_fee = parseFloat(response.data.data.totalFee) + parseFloat(lalamove_extra_charge);
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
         
-      },
+            }
+            this.tab2_error = "";
+          }
+          else if(response.data.status == "7.5"){
+  
+             this.delivery_fee =0;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+        
+            }
+            this.tab2_error = "";
+          }
+          else if(response.data.status == "8"){
 
-      vibrate(){
-        // window.navigator.vibrate(25); 
-        const canVibrate = window.navigator.vibrate
-        if (canVibrate) {window.navigator.vibrate(25)}
-      },
+             this.delivery_fee = "0";
+            this.tab2_error = response.data.message;
+          }
+          else if(response.data.status == "9"){
 
-      success_vibrate(){
-        // window.navigator.vibrate([25,25]); 
-        const canVibrate = window.navigator.vibrate
-        if (canVibrate) {window.navigator.vibrate([25,25])}
-      },
+             this.delivery_fee = response.data.price;
+            if (from == "panel") {
+              this.tab2_comfirm = true;
+              this.tab2_red = false;
+              this.panel = 1;
+        
+            }
+            this.tab2_error = "";
+          }
+          else{
+            console.log('else_error');
 
-      is_working_time(){
-        //1) date_open time_closed
-        if((this.delivery_date_option==true && this.delivery_time_option==false) || (this.delivery_date_option==true && this.delivery_time_option==true)){
-          var d = new Date(); 
-    
-            // if((d.getHours()+":"+d.getMinutes())>=this.working_time.start && (d.getHours()+":"+d.getMinutes())<=this.working_time.end){
-              
-            // }
-          console.log('closed1');
-          this.store_closed=false;
-          return false;
+            this.delivery_fee = "0";
+            this.tab2_error = 'Try again';
+          }
+          this.recheck_coupon_fee();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    check_coupon_fee() {
+      if (this.coupon_code == "") {
+        this.coupon_error = "Enter coupon";
+        return;
+      }
+      this.current_use_coupon_code = "";
+      this.discount_fee = "0";
+
+      const params = new URLSearchParams();
+      params.append("check_coupon", "check_coupon");
+      params.append("coupon_code", this.coupon_code);
+      params.append("public_url", this.url);
+      params.append("phone", this.phone);
+      params.append("total_amount", this.product_fee);
+      params.append("total_quantity", this.product_quantity);
+      params.append("items", JSON.stringify(this.cart_items));
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response)
+          if (response.data.status == "1") {
+            this.current_use_coupon_code = this.coupon_code;
+            this.coupon_code = "";
+            this.coupon_dialog = false;
+            this.discount_fee = response.data.discount_value;
+            this.submit_snackbar = true;
+            this.submit_snackbar_text = this.$t('coupon-added');
+          } else if (response.data.status == "2") {
+            this.discount_fee = "0";
+            this.coupon_error = response.data.message;
+          } else if (response.data.status == "3") {
+            this.discount_fee = this.delivery_fee;
+            this.current_use_coupon_code = this.coupon_code;
+            this.coupon_code = "";
+            this.submit_snackbar = true;
+            this.coupon_dialog = false;
+            this.submit_snackbar_text =this.$t('coupon-free-shipping');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    recheck_coupon_fee() {
+      console.log("recheck co");
+      if (this.current_use_coupon_code == "") {
+        return;
+      }
+      this.discount_fee = "0";
+      const params = new URLSearchParams();
+      params.append("check_coupon", "check_coupon");
+      params.append("coupon_code", this.current_use_coupon_code);
+      params.append("public_url", this.url);
+      params.append("phone", this.phone);
+      params.append("total_amount", this.product_fee);
+      params.append("total_quantity", this.product_quantity);
+      params.append("items", JSON.stringify(this.cart_items));
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+
+          if (response.data.status == "1") {
+            this.discount_fee = response.data.discount_value;
+          } else if (response.data.status == "2") {
+            this.discount_fee = "0";
+            this.current_use_coupon_code = "";
+            this.error_snackbar = true;
+            this.error_snackbar_text = response.data.message;
+          } else if (response.data.status == "3") {
+            this.discount_fee = this.delivery_fee;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    get_customer_details: _.debounce(function () {
+      const params = new URLSearchParams();
+      params.append("get_customer_details", "get_customer_details");
+      params.append("url", this.url);
+      params.append("phone", this.phone);
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.status == "1") {
+            if (this.name.length == 0) {
+              this.name = response.data.details[0].name;
+            }
+
+            if (this.email.length == 0) {
+              this.email = response.data.details[0].email;
+            }
+
+            if (this.address.length == 0) {
+              this.address = response.data.details[0].address;
+            }
+
+            if (this.postcode.length == 0) {
+              this.postcode = response.data.details[0].postcode;
+              this.get_city_state_from_postcode();
+            }
+
+            if (this.state.length  == 0) {
+              this.state= response.data.details[0].state;
+            }
+
+             if (this.city.length  == 0) {
+              this.city = response.data.details[0].city;
+            }
+
+            // this.check_delivery_fee();
+          } else {
+            console.log(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 800),
+
+    get_city_state_from_postcode: _.debounce(function () {
+
+      if (this.city.length !== 0 && this.state.length !== 0 && this.shipping_setting_status!=='3' && this.request_self_collect) {
+           return;
+      }
+
+      if(this.country=='SG'){
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("get_city_state_from_postcode", "get_city_state_from_postcode");
+      params.append("postcode", this.postcode);
+
+      axios({
+        method: "post",
+        url: this.domain + "/order/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.status == "1") {
+
+            if (this.state.length  == 0) {
+              this.state= response.data.details[0].state;
+            }
+
+             if (this.city.length  == 0) {
+              this.city = response.data.details[0].city;
+            }
+
+            // this.check_delivery_fee();
+          } else {
+            console.log(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 800),
+      
+    clear_search_content() {
+      this.search_content = "";
+    },
+
+
+    delivery_collect_clicked() {
+      if (this.delivery_collect == true) {
+        console.log("1");
+        this.delivery_collect = true;
+        this.request_self_collect = false;
+      } else {
+        console.log("2");
+
+        this.delivery_collect = false;
+        this.request_self_collect = true;
+      }
+    },
+
+    request_self_collect_clicked() {
+      if(this.delivery_option==true){
+
+      if (this.request_self_collect == true) {
+        console.log("1");
+        this.request_self_collect = true;
+        this.delivery_collect = false;
+      } else {
+        console.log("2");
+
+        this.request_self_collect = false;
+        this.delivery_collect = true;
+      }
+      }else{
+            this.$nextTick(() => {
+              this.request_self_collect = true;
+
+          })
+      }
+
+    },
+
+    allowedDates(a) {
+      return this.availableDates.includes(a);
+    },
+
+    pickerUpdate: function (val) {
+      let totalDay = moment(val, "YYYY-MM").daysInMonth();
+      console.log(totalDay);
+
+      let availableDates = [];
+
+      let monthNow = moment().format("M");
+      let yearNow = moment().format("YYYY");
+      let monthSelected = moment(val).format("M");
+      let day;
+
+      if (monthNow == monthSelected && val.split("-")[0] == yearNow)
+        day = moment().format("D");
+      else day = 1;
+
+      for (let i = day; i <= totalDay; i++) {
+        let date = moment()
+          .year(val.split("-")[0])
+          .month(val.split("-")[1] - 1)
+          .date(i)
+          .format("YYYY-MM-DD");
+
+        var workday = JSON.parse(this.working_day);
+
+        if(date==moment().format('YYYY-MM-DD')){
+
+          if((this.delivery_date_option==true && this.delivery_time_option==false)|| (this.delivery_date_option==true && this.delivery_time_option==true)){
+             var d = new Date(); 
+            //  var d = new Date("JULY 11, 2021 01:55:00");
+            var getHours= d.getHours(); 
+            var getMinutes= d.getMinutes(); 
+            getHours = ("0" + getHours).slice(-2);
+            getMinutes = ("0" + getMinutes).slice(-2);
+
+            if( ((getHours+":"+getMinutes) >= this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end) ||
+              ((getHours+":"+getMinutes) <= this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end) ){
+
+              // availableDates.push(date);
+              if (workday[moment(date).day()] == "0") {
+                  availableDates.push(date);
+              }
+
+              continue;
+            }else{
+              continue;
+            }
+          }
         }
 
-        if(!this.working_time){
-          this.store_closed=false;
-          console.log('closed2');
-          return false;
+      if (workday[moment(date).day()] == "0") {
+          availableDates.push(date);
         }
 
-        let date = moment().format("YYYY-MM-DD");
-          var workday = JSON.parse(this.working_day);
 
-          var todayday=moment(date).day();
-          if (workday[todayday] == "1") {
-            console.log('closed5');
-            this.store_closed=true; 
-            return true;
+        // if (moment(date).day() == 0 && workday[0] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 1 && workday[1] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 2 && workday[2] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 3 && workday[3] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 4 && workday[4] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 5 && workday[5] == "0") {
+        //   availableDates.push(date);
+        // }
+        // if (moment(date).day() == 6 && workday[6] == "0") {
+        //   availableDates.push(date);
+        // }
+      }
+      this.availableDates = availableDates;
+      this.allowedDates();
+    },
+
+    theFormat(number) {
+      return number.toFixed(2);
+    },
+
+    product_onclick(product_id,slug) {
+      this.vibrate();
+      // window.navigator.vibrate(25); 
+      // const canVibrate = window.navigator.vibrate
+      // if (canVibrate) {window.navigator.vibrate(25)}
+
+      console.log('poos');
+      console.log(this.scrollpos);
+      this.$store.commit('changeposition_y', this.scrollpos);
+      
+      // this.$router.push('/'+this.merchant_url + "/" + (slug!==''?slug+'-':'') + product_id+(this.$route.query.ref?'?ref='+this.$route.query.ref:''));
+      this.$router.push('/'+this.merchant_url + "/" + (slug!==''?slug+'-':'') + product_id);
+    },
+
+    minus_cart_quantity(index) {
+      this.$store.commit("minuscartqty", index);
+    },
+
+    add_cart_quantity(index, product_id) {
+      for (var j = 0; j < this.items.length; j++) {
+        if (product_id == this.items[j].product_id) {
+          this.$store.commit("addcartqty", {
+            index: index,
+            stock: this.items[j].stock,
+          });
+          console.log(this.items[j].stock);
+          return;
+        }
+      }
+      this.$store.commit("addcartqty", { index: index, stock: "" });
+    },
+
+    // tab1_comfirm_btn() {
+    //   this.$refs.tab1_form.validate();
+
+    //   if (this.tab1_form) {
+    //     // this.$store.commit("update_checkout_step_save",  'name', this.name);
+    //     this.tab1_comfirm = true;
+    //     this.tab1_red = false;
+    //     if (this.tab2_comfirm == false) {
+    //       this.panel = 1;
+    //     } else if (this.tab3_comfirm == false) {
+    //       this.panel = 2;
+    //     } else {
+    //       this.panel = null;
+    //     }
+    //   }
+    // },
+
+    tab2_comfirm_btn() {
+      this.$refs.tab2_form.validate();
+      // console.log(this.tab2_form);
+      if (this.tab2_form) {
+        // if (
+        //   this.shipping_setting_status == "2" &&
+        //   this.request_self_collect == false
+        // ) {
+        //   Vue.$geocoder.setDefaultMode("address"); // this is default
+        //   var addressObj = {
+        //     address_line_1: this.address,
+        //   };
+
+        //   Vue.$geocoder.send(addressObj, (response) => {
+        //     console.log(response);
+
+        //     if (response.status == "OK") {
+        //       console.log(response.results[0].geometry.location.lat);
+        //       this.latitude = response.results[0].geometry.location.lat;
+        //       this.longitude = response.results[0].geometry.location.lng;
+        //       this.check_delivery_fee("panel");
+        //     } else {
+        //       this.tab2_error =
+        //         "Your Address Not Found. Please Enter Valid Address";
+        //     }
+        //   });
+        // } else {
+          this.check_delivery_fee("panel");
+        //}
+      }
+    },
+
+    // tab3_comfirm_btn() {
+    //   this.$refs.tab3_form.validate();
+
+    //   if (this.tab3_form) {
+    //     this.tab3_red = false;
+    //     this.tab3_comfirm = true;
+    //     this.panel = null;
+    //   }
+    // },
+
+    text_color_auto(hexcolor) {
+      // If a leading # is provided, remove it
+      if (hexcolor.slice(0, 1) === "#") {
+        hexcolor = hexcolor.slice(1);
+      }
+
+      // If a three-character hexcode, make six-character
+      if (hexcolor.length === 3) {
+        hexcolor = hexcolor
+          .split("")
+          .map(function (hex) {
+            return hex + hex;
+          })
+          .join("");
+      }
+
+      // Convert to RGB value
+      var r = parseInt(hexcolor.substr(0, 2), 16);
+      var g = parseInt(hexcolor.substr(2, 2), 16);
+      var b = parseInt(hexcolor.substr(4, 2), 16);
+
+      // Get YIQ ratio
+      var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+
+      // Check contrast
+      return yiq >= 128 ? false : true;
+    },
+
+    stock_change() {
+      this.step = 1;
+      for (var i = 0; i < this.check_stock.length; i++) {
+        if (this.check_stock[i].quantity > this.check_stock[i].stock) {
+          for (var j = 0; j < this.items.length; j++) {
+            if (this.check_stock[i].product_id == this.items[j].product_id) {
+              this.items[j].stock = this.check_stock[i].stock;
+              break;
+            }
+          }
+        }
+      }
+    },
+
+    cart_checking_stock(product_id) {
+      var cart_total_quantity = 0;
+      for (var i = 0; i < this.cart_items.length; i++) {
+
+        if(this.cart_items[i].type =='0'){
+          if (this.cart_items[i].product_id == product_id) {
+            cart_total_quantity =
+              cart_total_quantity + parseFloat(this.cart_items[i].quantity);
           }
 
-          //calc new date
-
-          var d = new Date(); 
+        }else{
           
-          var getHours= d.getHours(); 
-          var getMinutes= d.getMinutes(); 
-          getHours = ("0" + getHours).slice(-2);
-          getMinutes = ("0" + getMinutes).slice(-2);
-            if((getHours+":"+getMinutes)>=this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end){
-              this.store_closed=false;
-              console.log('closed3');
-              return false;
+          if (this.cart_items[i].product_id == product_id) {
+            cart_total_quantity =
+              cart_total_quantity + parseFloat(this.cart_items[i].quantity);
           }
           
-          console.log('closed4');
+        }
+        
+
+      }
+
+      for (var j = 0; j < this.items.length; j++) {
+        if (product_id == this.items[j].product_id) {
+          if (this.items[j].stock == "") {
+            return "";
+          } else {
+
+            if(this.items[j].type=='0'){
+                if (cart_total_quantity > parseFloat(this.items[j].stock)) {
+                return this.items[j].stock;
+            }else{
+              return '';
+            }
+            }
+            
+          }
+        }
+      }
+    },
+
+    full_cart_checking_stock() {
+      for (var i = 0; i < this.cart_items.length; i++) {
+        var stock = this.cart_checking_stock(this.cart_items[i].product_id);
+        if (stock) {
+          this.error_snackbar = true;
+          this.error_snackbar_text = this.$t('item-out-of-stock');
+          return;
+        }
+      }
+      
+      if(this.is_working_time()==true){
+        this.error_snackbar = true;
+        this.error_snackbar_text = this.$t('store-closed-now');
+        return;
+      }
+      if(parseFloat(this.product_fee)<parseFloat(this.order_min_purchase)){
+        this.error_snackbar = true;
+        this.error_snackbar_text = this.$t('min-purchase') +' :RM'+this.order_min_purchase;
+        return;
+      }
+      this.step = 2;
+    },
+
+    scrollposition(){
+      console.log(window.scrollY);
+    },
+
+    open_cart(){
+      this.vibrate();
+        // if(this.dine_in_mode){
+        //     this.dialog_table_cart = true;
+        // }else{
+            this.dialog_cart = true;
+        // }
+      
+    },
+
+    vibrate(){
+      // window.navigator.vibrate(25); 
+      const canVibrate = window.navigator.vibrate
+      if (canVibrate) {window.navigator.vibrate(25)}
+    },
+
+    success_vibrate(){
+      // window.navigator.vibrate([25,25]); 
+      const canVibrate = window.navigator.vibrate
+      if (canVibrate) {window.navigator.vibrate([25,25])}
+    },
+
+    is_working_time(){
+      //1) date_open time_closed
+      if((this.delivery_date_option==true && this.delivery_time_option==false) || (this.delivery_date_option==true && this.delivery_time_option==true)){
+         var d = new Date(); 
+   
+          // if((d.getHours()+":"+d.getMinutes())>=this.working_time.start && (d.getHours()+":"+d.getMinutes())<=this.working_time.end){
+            
+          // }
+        console.log('closed1');
+        this.store_closed=false;
+        return false;
+      }
+
+      if(!this.working_time){
+        this.store_closed=false;
+        console.log('closed2');
+        return false;
+      }
+
+      let date = moment().format("YYYY-MM-DD");
+        var workday = JSON.parse(this.working_day);
+
+        var todayday=moment(date).day();
+        if (workday[todayday] == "1") {
+          console.log('closed5');
           this.store_closed=true; 
           return true;
-
-      },
-
-      clear_cart_item(){
-        this.$store.commit("clearcart");
-      },
-
-      contact_store(type){
-
-        
-        if(type=='1'){
-          //whatsapp
-            window.location.href = "https://api.whatsapp.com/send?phone=" + this.whatsapp_number;
-
-        }else if(type=='2'){
-          //messenger_link
-          window.location.href = this.messenger_link;
         }
-        else if(type=='3'){
-          //facebook_page_link
-          window.location.href = this.facebook_page_link;
-        }else if(type=='4'){
-          //instagram_link
-          window.location.href = this.instagram_link;
-        }else if(type=='5'){
-          //phone_number
-          window.location.href = 'tel://' + this.phone_number;
+
+        //calc new date
+
+        var d = new Date(); 
+        
+        var getHours= d.getHours(); 
+        var getMinutes= d.getMinutes(); 
+        getHours = ("0" + getHours).slice(-2);
+        getMinutes = ("0" + getMinutes).slice(-2);
+          if((getHours+":"+getMinutes)>=this.working_time.start && (getHours+":"+getMinutes)<=this.working_time.end){
+            this.store_closed=false;
+            console.log('closed3');
+            return false;
         }
         
-      },
+        console.log('closed4');
+        this.store_closed=true; 
+        return true;
 
-      trigger_notification(merchant_id,invoice_id) {
-  
-        console.log('notification');
-        const params = new URLSearchParams();
-        params.append("merchant_id", merchant_id);
-        params.append("invoice_id", invoice_id);
-    
-        axios({
-          method: "post",
-          url: "https://mobile.emenu.com.my/mobile_api/notification/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
+    },
 
-      check_boss(){
-        axios.get("https://bossboleh.com/wp-json/ssm/v1/getSSMName/channel%20soft")
-          .then((response) => {
-            // console.log(response.status);
-            console.log(response);
-          });
+    clear_cart_item(){
+      this.$store.commit("clearcart");
+    },
 
-      },
+    contact_store(type){
 
-      send_whatsapp_notification_customer(order_id){
-
-        
-        console.log('notification');
-        const params = new URLSearchParams();
-        params.append("message_customer", '1');
-        params.append("id", order_id);
-    
-
-        axios({
-          method: "post",
-          url: this.domain + "/whatsapp/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        
-      },
-
-      send_payment_whatsapp_notification_customer(order_id){
-        const params = new URLSearchParams();
-        params.append("request_upload_receipt  ", '1');
-        params.append("id", order_id);
-    
-
-        axios({
-          method: "post",
-          url: this.domain + "/whatsapp/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      send_whatsapp_notification_merchant(order_id){
-        
-        console.log('notification');
-        const params = new URLSearchParams();
-        params.append("message_merchant", '1');
-        params.append("id", order_id);
-    
-
-        axios({
-          method: "post",
-          url: this.domain + "/whatsapp/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        
-      },
-
-      testipay(){
-          // this.$refs.epayment.submit();
-          this.$refs.submit.click();
-      },
-
-      update_visitor(merchant_id,date) {
-        const params = new URLSearchParams();
-        params.append("update_visitor", 'update_visitor');
-        params.append("merchant_id", merchant_id);
-        params.append("date", date);
-
-        axios({
-          method: "post",
-          url: this.domain + "/form/index.php",
-          data: params,
-        })
-          .then((response) => {
-            console.log(response);
-          
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-
-      check_json(s){
-      try {
-          JSON.parse(s, function(k, v) {
-            if (k === "" && typeof v === "number") {
-              throw "Invalid JSON";
-            }
-            return v;
-          });
-          return true;
-        } catch (e) {
-          return false;
-        }
-      },
-
-      check_ref_tier(ref){
-          //api check tier
-    
-                console.log('check tier');
-
-            const params = new URLSearchParams();
-            params.append("check_tier", '1');
-            params.append("ref", ref);
-            params.append("merchant_id", this.merchant_id);
-        
-
-            axios({
-              method: "post",
-              url: this.domain + "/order/index.php",
-              data: params,
-            })
-              .then((response) => {
-                console.log(response);
-                if (response.data.status == "1") {
-                  localStorage.ref=ref; 
-                  this.tier_id=response.data.data[0].tier_id;
-                  this.global_rate=response.data.data[0].global_rate;
-                  this.global_status=response.data.data[0].global_status;
-                  this.global_type=response.data.data[0].global_type;
-                  this.product_setup();
-                }else{
-                  localStorage.ref=''; 
-                  this.tier_id=-1;
-                  this.global_rate=-1;
-                  this.global_status=-1;
-                  this.global_type=-1;
-                  this.product_setup();
-
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-
-
-
-      },
-
-      product_setup(){
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].description = this.items[i].description.replace(/\n/g, "<br/>");
-          this.items[i].display_price='';
-          this.items[i].in_stock=false;
-          if(parseFloat(this.items[i].stock)>0|| this.items[i].stock==''){
-            this.items[i].in_stock=true;
-          }
-          if(this.items[i].type=='1' && this.items[i].variant!==''){
-            this.items[i].in_stock=false;
-            var variant=JSON.parse(this.items[i].variant);
-            console.log('variant');
-            console.log(variant);
-            var smallest=parseFloat(this.variant_actual_price(variant[0].price));
-
-            for(var g=0; g<variant.length; g++){
-              if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
-                this.items[i].in_stock=true;
-              }
-
-              if(parseFloat(this.variant_actual_price(variant[g].price))<smallest){
-                smallest=this.variant_actual_price(variant[g].price);
-              }
-
-            }
-            this.items[i].display_price= parseFloat(smallest).toFixed(2);
-          }
-
-        }
-      },
-
-      variant_actual_price(price){
-        if(this.check_json(price)){
-
-            var price=JSON.parse(price);
-            if(!price[0].hasOwnProperty('tier')){
-                if(this.global_status==0){
-                              if(this.global_type==0){
-                                return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                                  
-                              }else {
-                                    var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p;
-                                    }
-                              }
-                            }else{
-                              
-                              return parseFloat(price[0].normal);
-                              
-                            }
-            }
-
-            for(var i=0; i<price[0].tier.length; i++){
-
-                if(price[0].tier[i].tier_id==this.tier_id){
-
-                  if(parseFloat(price[0].price_type)==0){
-                      if(price[0].tier[i].rate==''){
-                        //  return parseFloat(price[0].normal) 
-                        
-                          if(this.global_status==0){
-                              if(this.global_type==0){
-                                return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                                  
-                              }else {
-                                    var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p;
-                                    }
-                                  
-                              }
-                            }else{
-                              
-                              return parseFloat(price[0].normal);
-                              
-                            }
-
-
-
-                    }
-                    return parseFloat(price[0].normal)-
-                    (parseFloat(price[0].normal)*parseFloat(price[0].tier[i].rate)/100);
-                    
-
-                  }else{
-                    if(price[0].tier[i].rate==''){
-
-                      if(this.global_status==0){
-                              if(this.global_type==0){
-                                return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                                  
-                              }else {
-                                    var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p;
-                                    }
-                                    break;
-                              }
-                            }else{
-                              
-                              return parseFloat(price[0].normal);
-                              
-                            }
-
-                        //  return parseFloat(price[0].normal)  
-                    }
-                    var p= parseFloat(price[0].normal)-(parseFloat(price[0].tier[i].rate));
-
-                      if(p<0){
-                        return 0;
-                      }else{
-                        return p;
-                      }
-                
-                
-                  }
-                // console.log('pricekeke:'+ this.product_price);
-
-                //  this.product_price=parseFloat(price[0].normal);
-
-                }
-                if(i==price[0].tier.length-1){
-              
-
-                          if(this.global_status==0){
-              
-                              if(this.global_type==0){
-
-
-                              return parseFloat(price[0].normal)-
-                                (parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                      
-                              }else {
-                                  var p=parseFloat(price[0].normal)-(parseFloat(this.global_rate));
-                                    
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p
-                                    }
-
-                              }
-                              
-                            }else{      
-                                // variant , no tier found, no global
-                                
-                                return parseFloat(price[0].normal);
-
-                            }
-
-
-                }
-
-
-            }
-
-              
-            }else{
-
-    if(this.global_status==0){
-              
-              if(this.global_type==0){
-
-                return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
       
-              }else {
+      if(type=='1'){
+        //whatsapp
+          window.location.href = "https://api.whatsapp.com/send?phone=" + this.whatsapp_number;
 
-                    var p= parseFloat(price)-parseFloat(this.global_rate);
-                    
-                    if(p<0){
-                      return 0;
-                    }else{
-                      return p;
-                    }
+      }else if(type=='2'){
+        //messenger_link
+        window.location.href = this.messenger_link;
+      }
+      else if(type=='3'){
+        //facebook_page_link
+        window.location.href = this.facebook_page_link;
+      }else if(type=='4'){
+        //instagram_link
+        window.location.href = this.instagram_link;
+      }else if(type=='5'){
+        //phone_number
+        window.location.href = 'tel://' + this.phone_number;
+      }
+       
+    },
 
-              }
-              
-            }else{
+    trigger_notification(merchant_id,invoice_id) {
+ 
+      console.log('notification');
+      const params = new URLSearchParams();
+      params.append("merchant_id", merchant_id);
+      params.append("invoice_id", invoice_id);
+  
+      axios({
+        method: "post",
+        url: "https://mobile.emenu.com.my/mobile_api/notification/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
-              return price;
+    check_boss(){
+      axios.get("https://bossboleh.com/wp-json/ssm/v1/getSSMName/channel%20soft")
+        .then((response) => {
+          // console.log(response.status);
+          console.log(response);
+        });
 
+    },
+
+    send_whatsapp_notification_customer(order_id){
+
+      
+      console.log('notification');
+      const params = new URLSearchParams();
+      params.append("message_customer", '1');
+      params.append("id", order_id);
+  
+
+      axios({
+        method: "post",
+        url: this.domain + "/whatsapp/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      
+    },
+
+    send_payment_whatsapp_notification_customer(order_id){
+      const params = new URLSearchParams();
+      params.append("request_upload_receipt  ", '1');
+      params.append("id", order_id);
+  
+
+      axios({
+        method: "post",
+        url: this.domain + "/whatsapp/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    send_whatsapp_notification_merchant(order_id){
+      
+      console.log('notification');
+      const params = new URLSearchParams();
+      params.append("message_merchant", '1');
+      params.append("id", order_id);
+  
+
+      axios({
+        method: "post",
+        url: this.domain + "/whatsapp/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      
+    },
+
+    testipay(){
+        // this.$refs.epayment.submit();
+        this.$refs.submit.click();
+    },
+
+    update_visitor(merchant_id,date) {
+      const params = new URLSearchParams();
+      params.append("update_visitor", 'update_visitor');
+      params.append("merchant_id", merchant_id);
+      params.append("date", date);
+
+      axios({
+        method: "post",
+        url: this.domain + "/form/index.php",
+        data: params,
+      })
+        .then((response) => {
+          console.log(response);
+        
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    check_json(s){
+     try {
+        JSON.parse(s, function(k, v) {
+          if (k === "" && typeof v === "number") {
+            throw "Invalid JSON";
+          }
+          return v;
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    check_ref_tier(ref){
+        //api check tier
+   
+              console.log('check tier');
+
+          const params = new URLSearchParams();
+          params.append("check_tier", '1');
+          params.append("ref", ref);
+          params.append("merchant_id", this.merchant_id);
+      
+
+          axios({
+            method: "post",
+            url: this.domain + "/order/index.php",
+            data: params,
+          })
+            .then((response) => {
+              console.log(response);
+               if (response.data.status == "1") {
+                localStorage.ref=ref; 
+                this.tier_id=response.data.data[0].tier_id;
+                this.global_rate=response.data.data[0].global_rate;
+                this.global_status=response.data.data[0].global_status;
+                this.global_type=response.data.data[0].global_type;
+                this.product_setup();
+               }else{
+                localStorage.ref=''; 
+                this.tier_id=-1;
+                this.global_rate=-1;
+                this.global_status=-1;
+                this.global_type=-1;
+                this.product_setup();
+
+               }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+
+
+    },
+
+    product_setup(){
+      for (var i = 0; i < this.items.length; i++) {
+        this.items[i].description = this.items[i].description.replace(/\n/g, "<br/>");
+        this.items[i].display_price='';
+        this.items[i].in_stock=false;
+        if(parseFloat(this.items[i].stock)>0|| this.items[i].stock==''){
+          this.items[i].in_stock=true;
+        }
+        if(this.items[i].type=='1' && this.items[i].variant!==''){
+          this.items[i].in_stock=false;
+          var variant=JSON.parse(this.items[i].variant);
+          console.log('variant');
+          console.log(variant);
+          var smallest=parseFloat(this.variant_actual_price(variant[0].price));
+
+          for(var g=0; g<variant.length; g++){
+            if(parseFloat(variant[g].stock)>0|| variant[g].stock==''){
+              this.items[i].in_stock=true;
             }
 
-
-
-
-
-
+            if(parseFloat(this.variant_actual_price(variant[g].price))<smallest){
+               smallest=this.variant_actual_price(variant[g].price);
             }
 
-      },
+          }
+          this.items[i].display_price= parseFloat(smallest).toFixed(2);
+        }
 
-      product_actual_price(price){
-        if(this.check_json(price)){
-          
-              //not variant product and price json
-              price=JSON.parse(price);
+      }
+    },
 
+    variant_actual_price(price){
+      if(this.check_json(price)){
 
-            for(var i=0; i<price[0].tier.length; i++){
-
-                if(price[0].tier[i].tier_id==this.tier_id){
-
-                  if(price[0].price_type==0){
-                    
-
-                    if(price[0].tier[i].rate==''){
-
-                      if(this.global_status==0){
-                              if(this.global_type==0){
-                                return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                                  
-                              }else{
-                                    var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p;
-                                    }
+           var price=JSON.parse(price);
+           if(!price[0].hasOwnProperty('tier')){
+              if(this.global_status==0){
+                            if(this.global_type==0){
+                              return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
                                 
-                              }
-                            }else{
-                              
-                              return parseFloat(price[0].normal);
-                              
+                            }else {
+                                  var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p;
+                                  }
                             }
+                          }else{
+                            
+                            return parseFloat(price[0].normal);
+                            
+                          }
+           }
 
-                        //  return parseFloat(price[0].normal)  
-                    }
-                    return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(price[0].tier[i].rate)/100);
-                    
+          for(var i=0; i<price[0].tier.length; i++){
 
-                  }else {
+              if(price[0].tier[i].tier_id==this.tier_id){
 
-                      if(price[0].tier[i].rate==''){
+                if(parseFloat(price[0].price_type)==0){
+                    if(price[0].tier[i].rate==''){
+                      //  return parseFloat(price[0].normal) 
+                      
                         if(this.global_status==0){
-                              if(this.global_type==0){
-                                return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
-                                  
-                              }else {
-                                    var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
-                                    if(p<0){
-                                      return 0;
-                                    }else{
-                                      return p;
-                                    }
-                                  
-                              }
-                            }else{
-                              
-                              return parseFloat(price[0].normal);
-                              
+                            if(this.global_type==0){
+                              return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
+                                
+                            }else {
+                                  var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p;
+                                  }
+                                
                             }
+                          }else{
+                            
+                            return parseFloat(price[0].normal);
+                            
+                          }
 
-                        //  return parseFloat(price[0].normal)  
-                    }
+
+
+                  }
+                  return parseFloat(price[0].normal)-
+                  (parseFloat(price[0].normal)*parseFloat(price[0].tier[i].rate)/100);
+                  
+
+                }else{
+                  if(price[0].tier[i].rate==''){
+
+                    if(this.global_status==0){
+                            if(this.global_type==0){
+                              return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
+                                
+                            }else {
+                                  var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p;
+                                  }
+                                  break;
+                            }
+                          }else{
+                            
+                            return parseFloat(price[0].normal);
+                            
+                          }
+
+                      //  return parseFloat(price[0].normal)  
+                  }
                   var p= parseFloat(price[0].normal)-(parseFloat(price[0].tier[i].rate));
 
                     if(p<0){
                       return 0;
                     }else{
-                      return p
-                    }
-
-                  }
-
-                } 
-                  // not variant, no tier found check global
-                if(i ==price[0].tier.length-1){
-
-                          if(this.global_status==0){
-              
-                              if(this.global_type==0){
-
-                                return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
-                      
-                              }else {
-
-                                  var p=parseFloat(price)-parseFloat(this.global_rate);
-                                    
-                                    if(p<0){
-                                      return 0;
-                                    }else {
-                                      return p
-                                    }
-
-                              }
-                              
-                            }else{
-
-                              return parseFloat(price[0].normal);
-
-
-                            }
-
-                }
-
-                
-            }
-
-          }else{
-            // not variant and price not json
-
-            if(this.global_status==0){
-              
-              if(this.global_type==0){
-
-                return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
-      
-              }else {
-
-                    var p= parseFloat(price)-parseFloat(this.global_rate);
-                    
-                    if(p<0){
-                      return 0;
-                    }else{
                       return p;
                     }
+              
+              
+                }
+              // console.log('pricekeke:'+ this.product_price);
+
+              //  this.product_price=parseFloat(price[0].normal);
 
               }
-              
-            }else{
+              if(i==price[0].tier.length-1){
+             
 
-              return price;
+                        if(this.global_status==0){
+            
+                            if(this.global_type==0){
+
+
+                            return parseFloat(price[0].normal)-
+                              (parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
+                    
+                            }else {
+                                var p=parseFloat(price[0].normal)-(parseFloat(this.global_rate));
+                                  
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p
+                                  }
+
+                            }
+                            
+                          }else{      
+                              // variant , no tier found, no global
+                              
+                              return parseFloat(price[0].normal);
+
+                          }
+
+
+              }
+
+
+          }
+
+            
+          }else{
+
+  if(this.global_status==0){
+            
+            if(this.global_type==0){
+
+               return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
+    
+             }else {
+
+                  var p= parseFloat(price)-parseFloat(this.global_rate);
+                  
+                  if(p<0){
+                    return 0;
+                  }else{
+                    return p;
+                  }
 
             }
             
+          }else{
+
+            return price;
+
           }
-      }
-        
+
+
+
+
+
+
+          }
 
     },
-  };
-  </script>
+
+    product_actual_price(price){
+      if(this.check_json(price)){
+        
+            //not variant product and price json
+            price=JSON.parse(price);
+
+
+          for(var i=0; i<price[0].tier.length; i++){
+
+              if(price[0].tier[i].tier_id==this.tier_id){
+
+                if(price[0].price_type==0){
+                  
+
+                  if(price[0].tier[i].rate==''){
+
+                    if(this.global_status==0){
+                            if(this.global_type==0){
+                              return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
+                                
+                            }else{
+                                  var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p;
+                                  }
+                               
+                            }
+                          }else{
+                            
+                            return parseFloat(price[0].normal);
+                            
+                          }
+
+                      //  return parseFloat(price[0].normal)  
+                  }
+                  return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(price[0].tier[i].rate)/100);
+                  
+
+                }else {
+
+                    if(price[0].tier[i].rate==''){
+                      if(this.global_status==0){
+                            if(this.global_type==0){
+                              return parseFloat(price[0].normal)-(parseFloat(price[0].normal)*parseFloat(this.global_rate)/100);
+                                
+                            }else {
+                                  var p=parseFloat(price[0].normal)-parseFloat(this.global_rate);
+                                  if(p<0){
+                                    return 0;
+                                  }else{
+                                    return p;
+                                  }
+                                
+                            }
+                          }else{
+                            
+                            return parseFloat(price[0].normal);
+                            
+                          }
+
+                      //  return parseFloat(price[0].normal)  
+                  }
+                 var p= parseFloat(price[0].normal)-(parseFloat(price[0].tier[i].rate));
+
+                  if(p<0){
+                    return 0;
+                  }else{
+                    return p
+                  }
+
+                }
+
+              } 
+                // not variant, no tier found check global
+              if(i ==price[0].tier.length-1){
+
+                        if(this.global_status==0){
+            
+                            if(this.global_type==0){
+
+                              return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
+                    
+                            }else {
+
+                                 var p=parseFloat(price)-parseFloat(this.global_rate);
+                                  
+                                  if(p<0){
+                                    return 0;
+                                  }else {
+                                    return p
+                                  }
+
+                            }
+                            
+                          }else{
+
+                            return parseFloat(price[0].normal);
+
+
+                          }
+
+              }
+
+              
+          }
+
+        }else{
+          // not variant and price not json
+
+          if(this.global_status==0){
+            
+            if(this.global_type==0){
+
+               return parseFloat(price)-(parseFloat(price)*parseFloat(this.global_rate)/100);
+    
+             }else {
+
+                  var p= parseFloat(price)-parseFloat(this.global_rate);
+                  
+                  if(p<0){
+                    return 0;
+                  }else{
+                    return p;
+                  }
+
+            }
+            
+          }else{
+
+            return price;
+
+          }
+          
+        }
+    },
+
+  },
+};
+</script>
   <style >
   .centered-input input {
-    text-align: center;
-    max-width: 27px;
+  text-align: center;
+  max-width: 27px;
   }
   .scroller {
     height: 100%;
@@ -5752,12 +5785,26 @@
     display: none !important;
   }
 
+  .banner-container{
+    position:relative;
+  }
+
+  .banner-container img {
+    width: 100%;
+    height: 620px;
+    object-fit: cover;
+    overflow: hidden;
+    min-height:250px;
+    max-height:600px;
+  }
+
+
   .promo-title {
-    text-align: center;
-    line-height:1;
-    font-weight: 700;
-    font-size: 20px;
-    color: rgb(255, 255, 255);
+  text-align: center;
+  line-height:1;
+  font-weight: 700;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
   }
 
   .containe_padding {
@@ -5918,40 +5965,144 @@
     align-self: center !important;
   }
 
+  .add-product{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:absolute;
+    opacity: 0.8;
+    bottom:2%;
+    right:2%;
+    border-radius:50%;
+    width:40px;
+    height:40px;
+    border:2px solid white;
+    background: black;
+  }
+
+  .v-rating button {
+    padding: 1px !important;
+  }
+
   .dish-card picture {
     background: none !important;
     background-position-x: center;
     background-position-y: center;
     background-size: 100%;
     background-repeat: no-repeat;
+    align-self: center;
+    height: 130px;
+    width: 130px;
+    /* height: 166px;
+    width: 166px; */
   }
 
   .dish-card {
     border-radius: 10px;
-    box-shadow: 0 0.5rem 0.9rem rgb(0 0 0 / 25%);
-
+    /* box-shadow: 0 0.5rem 0.9rem rgb(0 0 0 / 25%); */
+    box-shadow: 0 0.1rem 0.5rem rgb(0 0 0 / 15%);
     margin-top: 10px !important;
-    border: none;
-  }
-  .dish-card:hover {
-    box-shadow: 0 0px 24px -3px rgb(0 0 0 / 45%) !important;
-    transform: scale(1.05);
-  }
-  .dish-card {
+    background: linear-gradient(rgb(245, 245, 245), rgba(255, 255, 255, 0.4)80%);
+    margin-bottom:12px;
+    transition: .3s ease;
     padding: 0px!important;
   }
-    .dish-card picture{
-      align-self: center;
-      height: 166px;
-      width: 166px;
+
+  .dish-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;  
+   /* box-shadow: 0 0px 24px -3px rgb(0 0 0 / 35%) !important; */
+   /* transform: scale(1.05) !important; */
   }
-    .with-image .dish-info {
-      max-width: calc(100% - 210px - 16px);
-      padding-top: 10px;
-      padding-right: 5px;
-      padding-bottom: 0px;
-      padding-left: 10px;
+
+  .product-img-container{
+    position: relative;
+    transition: 0.25s ease-in-out !important;
+    filter: brightness(70%);
+  }
+
+  .dish-card:hover .product-img-container {
+    transform: scale(1.05);
+    filter: brightness(100%);
+  }
+
+  .with-image .dish-info {
+    max-width: calc(100% - 210px - 16px);
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+  }
+
+  @media (max-width:1325px){
+  .banner-container img {
+    max-height:450px;
+  }
+}
+
+  @media (max-width:1024px){
+    .banner-container img {
+      height: 100%;
+      object-fit: cover;
     }
+  }
+
+  @media (min-width: 960px){
+    .banner-container{
+      margin: 30px 0;
+      background: white;
+      box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+      z-index:1;
+      border-radius: 5px
+    }
+
+    .banner-container img {
+      border-radius:5px;
+    }
+
+    .dish-category-title{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    overflow:hidden;
+    margin-bottom:20px;
+    }
+
+    .dish-category-title:before,
+    .dish-category-title:after {
+      background-color: rgb(129, 129, 129);
+      content: "";
+      display: inline-block;
+      height: 2px;
+      position: relative;
+      vertical-align: middle;
+      width: 8%;
+    }
+
+  .dish-category-title:before {
+      right: 0.8em;
+      margin-left: -50%;
+    }
+
+    .dish-category-title:after {
+      left: 0.8em;
+      margin-right: -50%;
+    }
+
+    .ribbon-vertical {
+      position: absolute;
+      overflow: hidden;
+      top: -3px;
+      left:0%;
+      border: 13px solid #000000;      
+      border-top: 0;                     
+      border-bottom: 10px solid transparent; 
+      height: 52px;                 
+      width: 0;
+      z-index: 1;
+      filter: drop-shadow(6px 5px 2px rgba(0, 0, 0, 0.3));
+    }
+  }
+ 
   @media (max-width: 767px) {
     .dish-name {
       font-size: 1.6rem;
@@ -6194,7 +6345,7 @@
     font-size: 1.3rem;
   }
   .dish-category-section {
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
   .menu__items-wrapper {
     margin-top: 0px;
@@ -6275,10 +6426,10 @@
     font-weight: 500;
   }
   .banner-slider .v-carousel__controls .v-icon{
-    font-size:8px!important;
+    font-size:10px!important;
   } 
   .banner-slider  .v-carousel__controls{
-    height:30px;
+    height:80px;
   }
 
   .category-items{

@@ -46,8 +46,11 @@ export default {
     '~plugins/vuescrollactive.js',
     "~/plugins/i18n.js",
     "~/plugins/geocoder.client.js",
+    '~/plugins/aos.client.js',
     { src: '@/plugins/vue-scroll-reveal', ssr: false },
     '~/plugins/phone-input',
+    {src: '~/plugins/infinite-loading.js', ssr: false}
+
     // "~/plugins/vue2-google-maps.js",
     // "~/plugins/transition.js", 
   ],
@@ -97,8 +100,8 @@ export default {
     // See https://github.com/nuxt-community/axios-module#options
     // Set the baseURL to JSONPlaceholder API
     // baseURL: 'https://cp.akcredits.com/'
-    // baseURL: 'https://formtest.lkmng.com/'
-    baseURL: 'https://cp.emenu.com.my/'
+    baseURL: 'https://formtest.lkmng.com/'
+    // baseURL: 'https://cp.emenu.com.my/'
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
