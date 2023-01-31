@@ -1431,19 +1431,19 @@
                       </h3>
                     </v-col>
                     <v-col cols="12" v-if="tab2_comfirm">
-                      <div id="checkout-contact-information" class="mb-2">
+                      <div id="checkout-contact-information" class="mb-2" style="line-height:20px">
                         <div class="checkout__contact-information__full-name">
-                          <span style="font-size:16px;!important"><b>{{ name }}</b></span>
+                          <span style="font-size:16px;!important"><b>Name: </b>{{ name }}</span>
                         </div>
                         <div class="checkout__contact-information__full-name">
-                              <span style="font-size:14px;font-weight:400;color:#181818;">{{ phone }}</span>
+                              <span style="font-size:14px;font-weight:400;color:#181818;"><b>Phone Number: </b>{{ phone }}</span>
 
                         </div>
                         <div
                           class="checkout__contact-information__full-name"
                           v-if="email.length > 0"
                         >
-                              <span style="font-size:14px;font-weight:400;color:#181818;">{{ email }}</span>
+                              <span style="font-size:14px;font-weight:400;color:#181818;"><b>Email: </b>{{ email }}</span>
                         </div>
                       </div>
                       <div id="checkout-contact-information">
